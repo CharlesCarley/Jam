@@ -41,7 +41,7 @@ namespace Jam::Editor::Testing
         ss << "   <leaf type=\"1\"/>";
         ss << " </branch>";
         ss << "</tree>";
-        _test = new MainArea(QString::fromStdString(ss.str()));
+        _test = new MainArea(ss.str());
 
         const AreaNode* root = _test->root();
         QVERIFY(root != nullptr);

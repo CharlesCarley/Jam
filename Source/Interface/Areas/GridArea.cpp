@@ -28,7 +28,6 @@
 #include "Interface/Constants.h"
 #include "Interface/Events/LayerSelectEvent.h"
 #include "Interface/Extensions.h"
-#include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/StackedPanel.h"
 
 namespace Jam::Editor
@@ -57,6 +56,8 @@ namespace Jam::Editor
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
 
+        _area->setWidget(new GridPropertiesPage(0));
+
         setLayout(layout);
     }
 
@@ -64,13 +65,11 @@ namespace Jam::Editor
     {
         switch ((AreaEvents)event->type())
         {
-        case ProjectClosed:
-            delete _area->widget();
-            break;
-        case ProjectChanged:
         case ProjectOpened:
             _area->setWidget(new GridPropertiesPage(0));
             break;
+        case ProjectChanged:
+        case ProjectClosed:
         case LayerSelect:
         case SplitEvent:
         case MergeLeftEvent:

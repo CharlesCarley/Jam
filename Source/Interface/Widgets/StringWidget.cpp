@@ -53,14 +53,15 @@ namespace Jam::Editor
 
     void StringWidget::finished()
     {
-        String       str;
+        String str;
+
         const String raw = _line->text().toStdString();
         for (const char ch : raw)
         {
-            if (ch >= ' ' && ch < 127)
+            if (ch >= 32 && ch < 127)
                 str.push_back(ch);
         }
-        // Log::writeLine("finished editing: ", str);
+
         setString(str);
     }
 

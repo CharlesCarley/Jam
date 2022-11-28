@@ -66,14 +66,12 @@ namespace Jam::Editor
     {
         switch ((AreaEvents)event->type())
         {
-        case ProjectClosed:
-            _func->clear();
-            break;
-        case ProjectChanged:
         case ProjectOpened:
             _func = new FunctionPropertiesPage(1);
             _area->setWidget(_func);
             break;
+        case ProjectClosed:
+        case ProjectChanged:
         case LayerSelect:
         case SplitEvent:
         case MergeLeftEvent:

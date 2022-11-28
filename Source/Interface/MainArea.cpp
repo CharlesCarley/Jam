@@ -39,11 +39,11 @@
 namespace Jam::Editor
 {
 
-    MainArea::MainArea(const QString& layout, QWidget* parent) :
+    MainArea::MainArea(const String& layout, QWidget* parent) :
         QWidget(parent),
         _creator(new MainAreaCreator())
     {
-        if (layout.isEmpty())
+        if (layout.empty())
             construct();
         else
             construct(layout);
@@ -73,7 +73,7 @@ namespace Jam::Editor
         setLayout(_layout);
     }
 
-    void MainArea::construct(const QString& layout)
+    void MainArea::construct(const String& layout)
     {
         try
         {
@@ -81,7 +81,7 @@ namespace Jam::Editor
                            State::AreaLayoutTagsMax);
 
             StringStream ss;
-            ss << layout.toStdString();
+            ss << layout;
             parser.read(ss);
             if (const auto root = parser.root(State::TreeTag))
                 construct(root);
@@ -148,7 +148,7 @@ namespace Jam::Editor
         ss << R"(  </branch>)";
         ss << R"( </branch>)";
         ss << R"(</tree>)";
-        construct(QString::fromStdString(ss.str()));
+        construct(ss.str());
     }
 
 

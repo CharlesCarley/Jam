@@ -58,8 +58,6 @@ namespace Jam::Editor
     {
         // redirects the supplied calls to the
         // output log window..
-
-
         template <typename... Args>
         void writeLine(Args&&... args)
         {

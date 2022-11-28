@@ -129,7 +129,7 @@ GTEST_TEST(Expression, Parse008)
 GTEST_TEST(Expression, Parse007)
 {
     StringStream ss;
-    ss <<"a=sin(x/2),b=4*atan(1)";
+    ss << "a=sin(x/2),b=4*atan(1)";
 
     Eq::StmtParser parse;
     parse.read(ss);
@@ -146,9 +146,8 @@ GTEST_TEST(Expression, Parse007)
 
 GTEST_TEST(Expression, Parse006)
 {
-    
     StringStream ss;
-    ss <<"x={0,1,2,3}, y=[4,5,6,7], z={8,9,10,11}";
+    ss << "x={0,1,2,3}, y=[4,5,6,7], z={8,9,10,11}";
 
     Eq::StmtParser parse;
     parse.read(ss);
@@ -174,12 +173,12 @@ GTEST_TEST(Expression, Parse006)
     EXPECT_EQ(eval.get("z"), Eq::InitialHash + 2);
 
     int j = 0;
-    for (int i = 0; i < 3; ++i)
+    for (auto& value : values)
     {
-        EXPECT_EQ(values[i][0], j);
-        EXPECT_EQ(values[i][1], j + 1);
-        EXPECT_EQ(values[i][2], j + 2);
-        EXPECT_EQ(values[i][3], j + 3);
+        EXPECT_EQ(value[0], j);
+        EXPECT_EQ(value[1], j + 1);
+        EXPECT_EQ(value[2], j + 2);
+        EXPECT_EQ(value[3], j + 3);
         j += 4;
     }
 }
@@ -235,7 +234,7 @@ GTEST_TEST(Expression, Parse005)
 {
     StringStream ss;
     ss << "# (2*6^2)/(7/(11*x-1)) with control coefficients\n"
-        << "a=b=s1*(s2*2*6^2)/(s3*7/(s4*11*s5*x-s6*1))";
+       << "a=b=s1*(s2*2*6^2)/(s3*7/(s4*11*s5*x-s6*1))";
 
     Eq::StmtParser parse;
     parse.read(ss);
@@ -319,7 +318,7 @@ GTEST_TEST(Expression, Parse002)
 GTEST_TEST(Expression, Parse001)
 {
     StringStream ss;
-    ss <<"y = [0,1,2,3]";
+    ss << "y = [0,1,2,3]";
 
     Eq::StmtParser parse;
     parse.read(ss);
@@ -447,7 +446,7 @@ void logSymbols(const Eq::SymbolArray& sym)
 
 void ExpectDataTest(const Eq::SymbolArray& actual,
                     const ExpectData*      expected,
-                    size_t                 size)
+                    const U32              size)
 {
     for (size_t i = 0; i < size; ++i)
     {

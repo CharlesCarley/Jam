@@ -78,5 +78,5 @@ namespace Jam
 
 void ExpectDataTest(const Jam::Eq::SymbolArray& actual,
                     const Jam::ExpectData*      expected,
-                    size_t                      size);
+                    Jam::U32                    size);
 void logSymbols(const Jam::Eq::SymbolArray& sym);

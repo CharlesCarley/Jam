@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/Widgets/OkCancelWidget.h"
 #include <QBoxLayout>
 #include <QPushButton>
@@ -48,6 +47,7 @@ namespace Jam::Editor
             View::copyColorRoles(this, parent);
         else
             View::emptyWidget(this);
+
         construct(align);
     }
 
@@ -82,4 +82,5 @@ namespace Jam::Editor
         View::applyColorRoles(this, QPalette::Window);
         setLayout(_layout);
     }
+
 }  // namespace Jam::Editor

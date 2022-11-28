@@ -46,7 +46,7 @@ namespace Jam::Editor
 
         void construct();
 
-        void construct(const QString& layout);
+        void construct(const String& layout);
 
         void construct(const XmlNode* node);
 
@@ -77,7 +77,7 @@ namespace Jam::Editor
         ScopePtr<XmlNode*> serialize();
 
     public:
-        explicit MainArea(const QString& layout = "",
+        explicit MainArea(const String& layout = "",
                           QWidget*       parent = nullptr);
         ~MainArea() override;
 

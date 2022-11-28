@@ -27,9 +27,9 @@
 namespace Jam::Editor
 {
     constexpr const char* AboutText =
-        "# Jam Engine\n"
+        "# Jam\n"
         "\n"
-        "https://github.com/CharlesCarley/JamEngine"
+        "https://github.com/CharlesCarley/Jam"
         "\n\n"
         "Copyright (c) Charles Carley.\n"
         "\n";
@@ -46,10 +46,10 @@ namespace Jam::Editor
     {
         QVBoxLayout* layout = new QVBoxLayout();
         setFixedSize(640, 480);
-
         QTextEdit* text = new QTextEdit();
         text->setMarkdown(AboutText);
         text->setReadOnly(true);
+
         layout->addWidget(text, 1);
         applyLayout(layout);
     }

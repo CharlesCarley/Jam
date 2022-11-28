@@ -82,4 +82,5 @@ namespace Jam::Editor
         QWidget::leaveEvent(event);
         emit mouseExited();
     }
+
 }  // namespace Jam::Editor

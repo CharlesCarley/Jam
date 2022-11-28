@@ -84,10 +84,7 @@ if (Jam_BUILD_TEST)
 
     set(TargetGroup "Application/Tests")
     add_subdirectory(Testing)
-
-    if (Jam_BUILD_EDITOR)
-        add_subdirectory(Source/Tests)
-    endif()
+    add_subdirectory(Source/Tests)
 
 endif ()
 

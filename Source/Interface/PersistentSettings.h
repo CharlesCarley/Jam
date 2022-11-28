@@ -34,10 +34,9 @@ namespace Jam::Editor
         SettingsDataState()                             = default;
         SettingsDataState(const SettingsDataState& rhs) = default;
 
-        bool minify{false};
-        int  spaces{4};
-        bool reload{false};
-
+        bool    minify{false};
+        int     spaces{4};
+        bool    reload{false};
         QString lastProject{};
         bool    clearOnRun{false};
     };
@@ -77,8 +76,7 @@ namespace Jam::Editor
         QString     lastOpenDirectory(const QString& def = {}) const;
         QString     lastProject(const QString& def = {}) const;
 
-        [[deprecated]]
-        const QString& lastOpenProjectFile() const;
+        //[[deprecated]] const QString& lastOpenProjectFile() const;
 
         void setGeometry(const QRect& geom) const;
         void setMaximize(bool v) const;
@@ -97,10 +95,10 @@ namespace Jam::Editor
         return _state.reload;
     }
 
-    inline const QString& PersistentSettings::lastOpenProjectFile() const
-    {
-        return _state.lastProject;
-    }
+    //inline const QString& PersistentSettings::lastOpenProjectFile() const
+    //{
+    //    return _state.lastProject;
+    //}
 
     inline bool PersistentSettings::clearOutputOnRun() const
     {

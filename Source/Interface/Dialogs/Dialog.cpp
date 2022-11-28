@@ -334,6 +334,7 @@ namespace Jam::Editor
             return Top;
         if (QRect{x1, y2, x2 - x1, edgeTest}.contains(x0, y0))
             return Bottom;
+
         return None;
     }
 

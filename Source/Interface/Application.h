@@ -73,9 +73,7 @@ namespace Jam::Editor
 
         void loadSettings();
 
-        [[deprecated]]
-        static bool isNotLoadable(PathUtil& dest, const QString& fileName);
-        
+        void clearProjectState();
         // application events
 
         void notifyProjectOpened() const;

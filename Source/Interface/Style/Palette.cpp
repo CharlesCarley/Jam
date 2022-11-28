@@ -41,7 +41,7 @@ namespace Jam::Editor::Const
      const QColor Button          = Mid;
      const QColor ButtonText      = Text;
      const QColor Window          = Shadow;
-     const QColor Link            = Red;
+     const QColor Link            = Blue;
      const QColor LinkVisited     = Green;
      const QColor ToolTipBase     = Yellow;
      const QColor ToolTipText     = Highlight;

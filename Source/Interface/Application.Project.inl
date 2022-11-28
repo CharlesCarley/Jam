@@ -27,15 +27,6 @@
 
 namespace Jam::Editor
 {
-    bool Application::isNotLoadable(PathUtil& dest, const QString& fileName)
-    {
-        if (fileName.isEmpty())
-            return true;
-
-        dest = PathUtil(fileName.toStdString());
-        return !dest.exists();
-    }
-
     void Application::updateRecent(const QString& fileName)
     {
         _recentFiles.store(fileName);
@@ -80,7 +71,7 @@ namespace Jam::Editor
         }
     }
 
-    void Application::newProject()
+    void Application::clearProjectState()
     {
         if (State::ProjectManager* state = State::projectState())
             state->unload();
@@ -90,8 +81,11 @@ namespace Jam::Editor
         PersistentSettings().ref().lastProject = {};
 
         _mainArea->clear();
-        State::projectState()->loadDefaultStack();
-        notifyProjectOpened();
+    }
+
+    void Application::newProject()
+    {
+        closeProject();
     }
 
     void Application::openProject()
@@ -121,17 +115,9 @@ namespace Jam::Editor
 
     void Application::closeProject()
     {
-        if (State::ProjectManager* state = State::projectState())
-            state->unload();
-
-        _cachedProjectPath = {};
-
-        PersistentSettings().ref().lastProject = {};
-
-        _mainArea->clear();
-
-        // send a ProjectClosed event
         notifyProjectClosed();
+        clearProjectState();
+        notifyProjectOpened();
     }
 
     void Application::saveProjectImpl(const QString& path)

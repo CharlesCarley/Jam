@@ -27,8 +27,6 @@
 #include <QWidget>
 #include "Interface/Style/PaletteCache.h"
 #include "Interface/Constants.h"
-#include "Math/Integer.h"
-#include "Math/Real.h"
 
 namespace Jam::Editor::Const
 {

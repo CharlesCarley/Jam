@@ -2,7 +2,6 @@ set(GTEST_DIR ${Jam_SOURCE_DIR}/Libraries/ThirdParty/googletest)
 include(GitUpdate)
 include(GroupSet)
 
-
 if (NOT GitUpdate_SUCCESS)
     return()
 endif ()
@@ -18,18 +17,14 @@ option(Jam_AUTO_RUN_TEST "Automatically run the test program." OFF)
 option(Jam_Window_GL_REGENERATE "Regenerate the OpenGL API from the Extras/OpenGL.py dictionary." OFF)
 option(Jam_JUST_MY_CODE "Enable the /JMC flag" ON)
 option(Jam_USE_STATIC_RUNTIME  "Build with the MultiThreaded(Debug) runtime library." ON)
-option(Jam_BUILD_EDITOR  "Build the Qt editor." ON)
-
 
 set(Jam_BIN_DIR ${CMAKE_SOURCE_DIR}/Bin CACHE PATH "")
 include(Bootstrap)
 
 
-if (${Jam_BUILD_EDITOR})
-    # This must be forced to off, qt requires that the runtime 
-    # be MT(_d)Dll. 
-    set(Jam_USE_STATIC_RUNTIME OFF CACHE BOOL "" FORCE)
-endif()
+# This must be forced to off, qt requires that the runtime 
+# be MT(_d)Dll. 
+set(Jam_USE_STATIC_RUNTIME OFF CACHE BOOL "" FORCE)
 
 
 if (${Jam_USE_STATIC_RUNTIME})

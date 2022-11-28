@@ -44,7 +44,7 @@ namespace Jam::Editor
 
     void RememberLastCache::validate(const QStringList& items)
     {
-        for (const QString& path : items)
+        for (QString path : items)
         {
             if (PathUtil ut(path.toStdString());
                 ut.exists())

@@ -22,9 +22,7 @@
 #include "Interface/Style/MainStyle.h"
 #include <QApplication>
 #include <QPainter>
-
 #include "Interface/Areas/OutputArea.h"
-#include "Utils/String.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/PaletteCache.h"
 #include "Interface/Style/Render.h"

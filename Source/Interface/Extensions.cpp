@@ -36,8 +36,6 @@ namespace Jam::Editor::View
 {
     void windowRect(QRect& winRect, const QWidget* widget)
     {
-
-
         if (const QWidget* win = widget ? widget->window() : nullptr)
             winRect = win->geometry();
         else
@@ -226,4 +224,4 @@ namespace Jam::Editor::View
             delete item;
         }
     }
-}  // namespace Jam::Editor
+}  // namespace Jam::Editor::View

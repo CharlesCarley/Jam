@@ -1,7 +1,5 @@
 #include "WidgetTests.h"
 #include "Interface/Area/Area.h"
-#include "Interface/Area/AreaContent.h"
-#include "Interface/Area/AreaLeaf.h"
 #include "Interface/Area/AreaNode.h"
 #include "Interface/MainArea.h"
 #include "Interface/RememberLastCache.h"

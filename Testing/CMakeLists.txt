@@ -1,5 +1,6 @@
-set(TargetName Engine.Tests)
+set(TargetName Intern.Tests)
 include (GroupSet)
+include (Bootstrap)
 
 
 file(GLOB TestTarget_SRC *.cpp)
@@ -43,7 +44,6 @@ if (Jam_AUTO_RUN_TEST)
         WORKING_DIRECTORY     ${Bootstrap_DIR}
         COMMAND               $<TARGET_FILE:${TargetName}>
     )
-        
 endif()
 
 

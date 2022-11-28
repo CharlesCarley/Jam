@@ -120,7 +120,6 @@ namespace Jam::Editor
 
         if (event->button() == Qt::LeftButton)
         {
-            const qreal w = width();
             if (const QPointF d = event->position();
                 isInInnerRect(d))
                 _cap = true;
@@ -167,7 +166,7 @@ namespace Jam::Editor
 
         if (_cap)
         {
-            QPointF p1 = (event->position());
+            QPointF p1 = event->position();
             if (p1.x() > width())
                 p1.setX(width());
             if (p1.x() < 0)
@@ -197,7 +196,7 @@ namespace Jam::Editor
         paint.setPen(_pal.color(QPalette::Shadow));
         paint.drawRect(1, 1, w - 1, h - 1);
 
-        const R32 ws = ((fabs(_mm.rx()) + R32(_val)) / _mm.dmm()) * R32(w);
+        const R32 ws = (fabs(_mm.rx()) + R32(_val)) / _mm.dmm() * R32(w);
         paint.fillRect(0, 0, I32(ws), h, _pal.dark());
 
         paint.setPen(_pal.color(QPalette::Text));

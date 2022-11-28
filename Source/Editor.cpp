@@ -23,7 +23,6 @@
 #include <qpluginloader.h>
 #include <QApplication>
 #include "Interface/Application.h"
-#include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/MainStyle.h"
 #include "Interface/Widgets/IconButton.h"
 #include "Math/Lg.h"
@@ -52,11 +51,6 @@ namespace Jam::Editor
         // State should only be valid during the
         // following scope
         State::App::initialize();
-
-        // connect(this,
-        //         &QApplication::aboutToQuit,
-        //         this,
-        //         &EditorApp::destruct);
     }
 
     void EditorApp::destruct()
@@ -91,8 +85,8 @@ int main(int argc, char* argv[])
         // Destroy only after the application
         // has gone out of scope. This is intentional to
         // allow any state accessors to throw an exception
-        // vs return null (App.cpp) 
-        Jam::Editor::EditorApp::destruct();
+        // vs return null (App.cpp)
+        EditorApp::destruct();
     }
     catch (Jam::Exception& ex)
     {
