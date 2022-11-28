@@ -174,11 +174,15 @@ class Builder:
         print("Building...".ljust(20), self.argv)
         self.goto(self.buildDir())
 
-        self.run("cmake .. -DJam_BUILD_TEST=ON -DJam_AUTO_RUN_TEST=ON")
-        self.run("cmake --build %s "%(self.buildDir()))
+        self.run("cmake .. -DJam_BUILD_TEST=ON -DJam_AUTO_RUN_TEST=ON ")
+        self.run("cmake  --build %s --config=%s "%(self.buildDir(), self.configString()))
         self.goto(self.home())
 
     def deploy(self ):
+        self.release = True
+        self.build()
+
+
         print("Deploy...".ljust(20), self.argv)
         self.goto(self.deployDir())
         self.run("windeployqt .")
