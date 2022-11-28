@@ -1,0 +1,6 @@
+[submodule "Libraries/ThirdParty/googletest"]
+	path = Libraries/ThirdParty/googletest
+	url = https://github.com/CharlesCarley/googletest
+[submodule "Config/Modules"]
+	path = Config/Modules
+	url = https://github.com/CharlesCarley/CMakeModules.git
