@@ -1,0 +1,151 @@
+#include "${genname}.h"
+#include <cstdio>
+
+#ifdef __GL_TRACE_ACCESS
+    #define __DEBUG_TRACE_MISSING(sym) printf("Attempt to invoke an invalid symbol '%s'\n", #sym)
+#else
+    #define__DEBUG_TRACE_MISSING(sym){}
+#endif
+
+#ifdef __GL_TRACE_MISSING
+    #define __DEBUG_TRACE_MISSING_SYMBOL(sym) printf("Missing Symbol: '%s'\n", sym)
+#else
+    #define __DEBUG_TRACE_MISSING_SYMBOL(sym)
+#endif
+
+
+#if defined(_WIN32)
+#include <Windows.h>
+
+
+GLintptr open_gl_handle = 0;
+
+void* WIN32_getProcAddress(GLintptr mod, const char* str)
+{
+    if (!open_gl_handle)
+        return nullptr;
+
+
+    void* sym = (void*)GetProcAddress((HMODULE)open_gl_handle, str);
+    if (!sym)
+        sym = (void*)wglGetProcAddress(str);
+#ifdef __GL_TRACE_MISSING
+    if (!sym)
+    {
+        __DEBUG_TRACE_MISSING_SYMBOL(str);
+    }
+#endif
+    return sym;
+}
+
+#elif defined(__GNUC__)
+#include <dlfcn.h>
+GLintptr open_gl_handle = 0;
+
+void* LINUX_getProcAddress(GLintptr mod, const char* str)
+{
+    if (!open_gl_handle)
+        return nullptr;
+    void *sym = dlsym((void*)mod, str);
+#ifdef __GL_TRACE_MISSING
+    if (!sym)
+    {
+        __DEBUG_TRACE_MISSING_SYMBOL(str);
+    }
+#endif
+    return sym;
+}
+
+#elif defined(__EMSCRIPTEN__)
+#include <emscripten/html5_webgl.h>
+
+void* EM_getProcAddress(const char* str)
+{
+    if(str == nullptr)
+        return nullptr;
+    void *sym = emscripten_webgl_get_proc_address(str);
+#ifdef __GL_TRACE_MISSING
+    if (!sym)
+    {
+        __DEBUG_TRACE_MISSING_SYMBOL(str);
+    }
+#endif
+    return sym;
+}
+#endif
+
+
+#if defined(__EMSCRIPTEN__)
+    #define __Symbol(X, Y) (((__##Y) = (X)EM_getProcAddress(#Y)) != 0)
+#elif defined(_WIN32)
+    #define __Symbol(X, Y) (((__##Y) = (X)WIN32_getProcAddress(open_gl_handle, #Y)) != 0)
+#else
+    #define __Symbol(X, Y) (((__##Y) = (X)LINUX_getProcAddress(open_gl_handle, #Y)) != 0)
+#endif
+
+${impl}
+
+namespace gl
+{
+    void enableTexture2D()
+    {
+#if !defined(__EMSCRIPTEN__)
+        glEnable(GL_TEXTURE_2D);
+#endif
+    }
+    
+    void disableTexture2D()
+    {
+#if !defined(__EMSCRIPTEN__)
+        glDisable(GL_TEXTURE_2D);
+#endif
+    }
+    
+    void enableLineSmooth()
+    {
+    }
+    
+    void disableLineSmooth()
+    {
+    }
+}
+
+
+namespace OpenGLLoader 
+{
+Capabilities* GetCapabilities()
+{
+    static OpenGLLoader::Capabilities capabilities = {};
+    return &capabilities;
+}
+
+bool LoadOpenGL()
+{
+#if defined(_WIN32)
+    open_gl_handle = (GLintptr)LoadLibrary("OpenGL32.dll");
+    if (!open_gl_handle)
+    {
+        printf("Failed to load the OpenGL library.\n");
+        return false;
+    }
+#elif defined(__GNUC__)
+    open_gl_handle = (GLintptr)dlopen("libGL.so", RTLD_LAZY);
+    if (!open_gl_handle)
+    {
+        printf("Failed to load the OpenGL library.\n");
+        return false;
+    }
+#endif
+    Capabilities& cap = *GetCapabilities();
+
+${load}
+
+
+#if !defined(__EMSCRIPTEN__)
+    open_gl_handle = 0;
+#endif
+    return true;
+}
+
+} // OpenGLLoader
+

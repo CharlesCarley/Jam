@@ -1,0 +1,72 @@
+#pragma once
+
+#if defined(__EMSCRIPTEN__) || defined(__GNUC__)
+  #define GL_LOCAL __attribute__((visibility("hidden")))
+#else
+  #define GL_LOCAL
+#endif
+
+namespace gl{
+    extern void enableTexture2D();
+    extern void disableTexture2D();
+    extern void enableLineSmooth();
+    extern void disableLineSmooth();
+}
+
+// Log attempts to access a missing symbol.
+#define __GL_TRACE_ACCESS 1
+// Log missing symbols during load.
+#define __GL_TRACE_MISSING 1
+
+#if (defined(_WIN32))
+    #define GL3_APIENTRY  __stdcall
+#else
+    #define GL3_APIENTRY
+#endif
+
+#define GL3_APIENTRYP GL3_APIENTRY *
+#define GL3_API extern "C"
+
+
+typedef unsigned int    GLenum;
+typedef unsigned char   GLboolean;
+typedef unsigned int    GLbitfield;
+typedef signed char     GLbyte;
+typedef short           GLshort;
+typedef int             GLint;
+typedef int             GLsizei;
+typedef unsigned char   GLubyte;
+typedef unsigned short  GLushort;
+typedef unsigned int    GLuint;
+typedef float           GLfloat;
+typedef float           GLclampf;
+typedef double          GLdouble;
+typedef double          GLclampd;
+typedef void            GLvoid;
+typedef char            GLchar;
+
+#if defined(__x86_64__) || defined(_M_X64)
+typedef long long         GLsizeiptr;
+typedef long long         GLintptr;
+#else
+typedef int               GLsizeiptr;
+typedef unsigned int      GLintptr;
+#endif
+
+${specification}
+
+
+namespace OpenGLLoader
+{
+
+  struct Capabilities
+  {
+${capabilities}
+  };
+
+  extern Capabilities* GetCapabilities();
+  extern bool LoadOpenGL();
+
+} // OpenGLLoader
+
+

@@ -1,0 +1,40 @@
+"Start Symbol" = <Eq>
+Id      = {Letter}{AlphaNumeric}*
+Num     = {Number}+
+<Eq>    ::= <Asl>
+          | <Op>
+          |
+<Asl>   ::= <Asl> ',' <Asn>
+          | <Asn>
+<Asn>   ::= Id '=' <Asn> <Op>
+          | Id '=' <SO> <OpL> <SC>
+          |
+<Op>    ::= '-' <Op1> 
+          | '!' <Op1> 
+          | <Op1> 
+<Op1>   ::= <Op1> '+' <Op2> 
+          | <Op1> '-' <Op2> 
+          | <Op2> 
+<Op2>   ::= <Op2> '*' <Op3> 
+          | <Op2> '/' <Op3> 
+          | <Op2> '%' <Op3> 
+          | <Op2> '^' <Op3> 
+          | <Op3> 
+<Op3>   ::= <Fnc>
+          | '(' <Op> ')'
+          | Id
+          | Num
+<OpL>   ::= <OpL> ',' <Op>
+          | <Op>
+<Fnc>   ::= <Fx> '(' <OpL> ')'
+          | Id   '(' <OpL> ')'
+<Fx>    ::= 'abs'
+          | 'mod'
+<SO>    ::= '('
+          | '{'
+          | '['
+          | '<'
+<SC>    ::= ')'
+          | '}'
+          | ']'
+          | '>'

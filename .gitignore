@@ -1,0 +1,8 @@
+/Build
+/build
+/Extras/__pycache__
+.idea
+/.vs
+/desktop.ini
+/Bin
+/Libraries/Intern/Equation/*.egt

@@ -1,0 +1,57 @@
+
+<RCC>
+  <qresource prefix="/icons">
+    <file>ic_add.svg</file>
+    <file>ic_arrow_back.svg</file>
+    <file>ic_arrow_downward.svg</file>
+    <file>ic_arrow_drop_down.svg</file>
+    <file>ic_arrow_drop_up.svg</file>
+    <file>ic_arrow_forward.svg</file>
+    <file>ic_arrow_upward.svg</file>
+    <file>ic_bug_report.svg</file>
+    <file>ic_check.svg</file>
+    <file>ic_check_box.svg</file>
+    <file>ic_check_off.svg</file>
+    <file>ic_check_on.svg</file>
+    <file>ic_clear.svg</file>
+    <file>ic_close.svg</file>
+    <file>ic_create.svg</file>
+    <file>ic_cube.svg</file>
+    <file>ic_delete.svg</file>
+    <file>ic_drop.svg</file>
+    <file>ic_edit_settings.svg</file>
+    <file>ic_file.svg</file>
+    <file>ic_folder.svg</file>
+    <file>ic_folder_open.svg</file>
+    <file>ic_fullscreen.svg</file>
+    <file>ic_fullscreen_exit.svg</file>
+    <file>ic_gamepad.svg</file>
+    <file>ic_graph.svg</file>
+    <file>ic_graph_area.svg</file>
+    <file>ic_graph_bar.svg</file>
+    <file>ic_graph_line.svg</file>
+    <file>ic_help.svg</file>
+    <file>ic_home.svg</file>
+    <file>ic_link.svg</file>
+    <file>ic_maximize.svg</file>
+    <file>ic_menu.svg</file>
+    <file>ic_minimize.svg</file>
+    <file>ic_more_horizontal.svg</file>
+    <file>ic_more_vertical.svg</file>
+    <file>ic_output.svg</file>
+    <file>ic_quit.svg</file>
+    <file>ic_refresh.svg</file>
+    <file>ic_save.svg</file>
+    <file>ic_select_all.svg</file>
+    <file>ic_settings.svg</file>
+    <file>ic_share.svg</file>
+    <file>ic_sync.svg</file>
+    <file>ic_trending_flat.svg</file>
+    <file>ic_undo.svg</file>
+    <file>ic_update.svg</file>
+    <file>ic_visibility.svg</file>
+    <file>ic_visibility_off.svg</file>
+    <file>ic_window.svg</file>
+    <file>ic_xicon.svg</file>
+  </qresource>
+</RCC>
