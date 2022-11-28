@@ -53,16 +53,7 @@ namespace Jam::Editor
 
     void StringWidget::finished()
     {
-        String str;
-
-        const String raw = _line->text().toStdString();
-        for (const char ch : raw)
-        {
-            if (ch >= 32 && ch < 127)
-                str.push_back(ch);
-        }
-
-        setString(str);
+        setText(_line->text().toStdString());
     }
 
     void StringWidget::connectEvents()
@@ -77,29 +68,24 @@ namespace Jam::Editor
                 &StringWidget::finished);
     }
 
-    void StringWidget::setString(const String& str)
+    void StringWidget::setText(const String& str)
     {
-        _str = str;
-        if (_line)
-            _line->setText(_str.c_str());
-        emit editingFinished(str);
+        if (_str != str)
+        {
+            Su::filterRange(_str, str, 32, 126);
+            _line->setText(QString::fromStdString(_str));
+            emit editingFinished(_str);
+        }
     }
 
     void StringWidget::setReadOnly(bool v) const
     {
-        if (_line)
-            _line->setReadOnly(v);
+        _line->setReadOnly(v);
     }
 
     bool StringWidget::isReadOnly() const
     {
-        if (_line)
-            return _line->isReadOnly();
-        return true;
+        return _line->isReadOnly();
     }
 
-    const String& StringWidget::text() const
-    {
-        return _str;
-    }
 }  // namespace Jam::Editor

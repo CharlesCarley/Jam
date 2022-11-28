@@ -22,7 +22,7 @@ namespace Jam::Editor
     void FunctionPropertiesPage::clear() const
     {
         if (_input0)
-            _input0->setString("");
+            _input0->setText("");
     }
 
     void FunctionPropertiesPage::construct(U32 idx)
@@ -38,7 +38,7 @@ namespace Jam::Editor
         {
             if (const auto fn = state->cast<Layers::FunctionLayer,
                                             FunctionType>(idx))
-            _input0->setString(fn->getText());
+            _input0->setText(fn->getText());
         }
 
         panel->addWidget(_input0);

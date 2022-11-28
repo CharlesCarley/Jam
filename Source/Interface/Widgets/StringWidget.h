@@ -32,8 +32,8 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void editingFinished(const String &text);
-        void returnPressed(const String &text);
+        void editingFinished(const String& text);
+        void returnPressed(const String& text);
 
     private:
         QLineEdit* _line{nullptr};
@@ -42,7 +42,7 @@ namespace Jam::Editor
     public:
         explicit StringWidget(QWidget* parent = nullptr);
 
-        void setString(const String& str);
+        void setText(const String& str);
 
         void setReadOnly(bool v) const;
 
@@ -55,5 +55,11 @@ namespace Jam::Editor
         void construct();
         void finished();
     };
+
+
+    inline const String& StringWidget::text() const
+    {
+        return _str;
+    }
 
 }  // namespace Jam::Editor

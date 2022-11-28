@@ -95,6 +95,11 @@ namespace Jam
             const String& input,
             char          character);
 
+        static bool filterRange(
+            String&       destination,
+            const String& input,
+            int8_t start, int8_t end);
+
         static void replaceAll(
             String&       dest,
             const String& input,

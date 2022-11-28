@@ -19,9 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/RememberLastCache.h"
-#include "Utils/Exception.h"
 #include "Utils/Path.h"
 
 namespace Jam::Editor
@@ -44,18 +42,11 @@ namespace Jam::Editor
 
     void RememberLastCache::validate(const QStringList& items)
     {
-        for (QString path : items)
+        for (const QString& path : items)
         {
             if (PathUtil ut(path.toStdString());
                 ut.exists())
-            {
                 _pathList.push_back(path);
-            }
-            else
-            {
-                Console::writeLine("skipping non existent item ",
-                                   path.toStdString());
-            }
         }
     }
 

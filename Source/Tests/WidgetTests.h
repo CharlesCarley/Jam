@@ -29,7 +29,7 @@ namespace Jam::Editor::Testing
         Q_OBJECT
 
     private:
-        QWidget* _testWidget{nullptr};
+        QWidget* _test{nullptr};
 
     public:
         WidgetTests();
@@ -39,6 +39,10 @@ namespace Jam::Editor::Testing
         void initTestCase() const;
 
         void testIcon();
+
+        void testI32();
+
+        void testString();
 
         static void pathList();
 

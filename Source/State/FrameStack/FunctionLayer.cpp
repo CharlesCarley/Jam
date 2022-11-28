@@ -133,22 +133,23 @@ namespace Jam::Layers
         if (_text != text)
         {
             _text = text;
-            StringStream ss(_text);
 
-            _parser.read(ss);
-
-            ss.str(String{});
-            ss.clear();
-
-            for (const auto sym : _parser.symbols())
+            if (!_text.empty())
             {
-                sym->print(ss);
-                ss << ' ';
+                StringStream ss(_text);
+                _parser.read(ss);
+
+                ss.str(String{});
+                ss.clear();
+                for (const auto sym : _parser.symbols())
+                {
+                    sym->print(ss);
+                    ss << ' ';
+                }
+                Editor::Log::writeLine(ss.str());
             }
-            Editor::Log::writeLine(ss.str());
             return true;
         }
         return false;
     }
-
 }  // namespace Jam::Layers

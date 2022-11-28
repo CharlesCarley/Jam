@@ -194,6 +194,24 @@ namespace Jam
         trimR(destination, destination, character);
     }
 
+    bool StringUtils::filterRange(
+        String&       destination,
+        const String& input,
+        const int8_t  start,
+        const int8_t  end)
+    {
+        bool modified = false;
+        destination.clear();
+        for (const char ch : input)
+        {
+            if (ch >= start && ch <= end)
+                destination.push_back(ch);
+            else
+                modified = true;
+        }
+        return modified;
+    }
+
     void StringUtils::trimWs(
         String& di, const String& in)
     {
