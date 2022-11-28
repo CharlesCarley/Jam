@@ -25,7 +25,6 @@
 
 class QHBoxLayout;
 class QLineEdit;
-class QSpinBox;
 
 namespace Jam::Editor
 {

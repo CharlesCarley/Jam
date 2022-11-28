@@ -20,8 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "GridArea.h"
-#include <qslider.h>
-#include <qtextformat.h>
+#include "AreaType.h"
 #include "GridPropertiesPage.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"

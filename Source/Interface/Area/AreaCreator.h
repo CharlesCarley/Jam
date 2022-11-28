@@ -21,8 +21,6 @@
 */
 #pragma once
 #include <QWidget>
-#include "Interface/Areas/AreaType.h"
-#include "Utils/String.h"
 
 class QLayoutItem;
 class QVBoxLayout;
@@ -37,14 +35,15 @@ namespace Jam::Editor
         AreaCreator()          = default;
         virtual ~AreaCreator() = default;
 
-        virtual Area*  fromType(int32_t type, QWidget* parent = nullptr) = 0;
-        virtual QString nameFromType(int32_t type)                        = 0;
-        virtual QIcon  iconFromType(int32_t type)                        = 0;
+        virtual Area* fromType(int32_t type, QWidget* parent = nullptr) = 0;
 
+        virtual QString nameFromType(int32_t type) = 0;
+
+        virtual QIcon iconFromType(int32_t type) = 0;
 
         virtual int32_t getNumberOfTypes() = 0;
 
-        virtual Area* clone(Area *inp) = 0;
+        virtual Area* clone(Area* inp) = 0;
     };
 
 }  // namespace Jam::Editor

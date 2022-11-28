@@ -24,6 +24,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QPlainTextEdit>
+#include "AreaType.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"

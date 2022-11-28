@@ -25,11 +25,8 @@
 #include "Interface/Constants.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
+
 class QVBoxLayout;
-class QTreeWidgetItem;
-class QHBoxLayout;
-class QTreeWidget;
-class QLineEdit;
 
 namespace Jam::Editor
 {

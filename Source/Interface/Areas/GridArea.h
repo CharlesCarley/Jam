@@ -20,9 +20,8 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "Interface/Area/Area.h"
-#include "State/FrameStack/BaseLayer.h"
 #include <QScrollArea>
+#include "Interface/Area/Area.h"
 
 namespace Jam::Editor
 {
@@ -33,7 +32,7 @@ namespace Jam::Editor
         QScrollArea* _area{nullptr};
 
     public:
-        explicit GridArea(AreaCreator *creator, QWidget* parent = nullptr);
+        explicit GridArea(AreaCreator* creator, QWidget* parent = nullptr);
         ~GridArea() override;
 
     private:

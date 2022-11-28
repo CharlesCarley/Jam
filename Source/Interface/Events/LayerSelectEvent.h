@@ -20,11 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-
-#include <qstring.h>
-#include "Interface/Areas/AreaType.h"
 #include "Interface/Events/EventTypes.h"
-#include "Math/Integer.h"
 #include "State/FrameStack/BaseLayer.h"
 
 namespace Jam::Editor

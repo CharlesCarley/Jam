@@ -23,7 +23,6 @@
 #include <QPainter>
 #include "Math/Axis.h"
 #include "Math/Color.h"
-#include "Math/Integer.h"
 #include "Math/Screen.h"
 #include "Math/Vec2.h"
 
@@ -44,17 +43,18 @@ namespace Jam
         LineBuffer _minor;
         LineBuffer _center;
         
-        void stepGrid(const R32    x1,
-                      const R32    y1,
-                      const R32    x2,
-                      const R32    y2,
+        void stepGrid(R32          x1,
+                      R32          y1,
+                      R32          x2,
+                      R32          y2,
                       const Vec2F& ax,
                       const Vec2F& offset,
                       LineBuffer&  buffer) const;
-        void stepLabels(const R32    x1,
-                        const R32    y1,
-                        const R32    x2,
-                        const R32    y2,
+
+        void stepLabels(R32          x1,
+                        R32          y1,
+                        R32          x2,
+                        R32          y2,
                         const Vec2F& ax,
                         const Vec2F& offset,
                         const Axis&  gx) const;

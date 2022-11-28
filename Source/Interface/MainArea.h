@@ -21,20 +21,16 @@
 */
 #pragma once
 #include <QWidget>
-#include "Areas/AreaType.h"
 #include "Utils/ScopePtr.h"
 #include "Utils/String.h"
 #include "Xml/Declarations.h"
 
 class QVBoxLayout;
-class QTabWidget;
 
 namespace Jam::Editor
 {
     class AreaNode;
     class AreaCreator;
-
-    // Holds the root of the node tree.
 
     class MainArea final : public QWidget
     {

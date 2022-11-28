@@ -21,11 +21,11 @@
 */
 #pragma once
 #include <QPushButton>
-#include "Interface/Areas/AreaType.h"
 
 namespace Jam::Editor
 {
     class AreaCreator;
+    constexpr int32_t NoAreaType = -1;
 
     class AreaContextSwitch final : public QPushButton
     {
@@ -38,7 +38,7 @@ namespace Jam::Editor
 
     private:
         AreaCreator* _creator{nullptr};
-        int32_t      _type{-1};
+        int32_t      _type{NoAreaType};
 
         void construct();
 
@@ -47,5 +47,4 @@ namespace Jam::Editor
                                    int32_t      type,
                                    QWidget*     parent = nullptr);
     };
-
 }  // namespace Jam::Editor

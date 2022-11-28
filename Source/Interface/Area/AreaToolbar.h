@@ -36,7 +36,7 @@ namespace Jam::Editor
         void construct();
 
         QHBoxLayout* _toolbar{nullptr};
-        int32_t      _type{-1};
+        int32_t      _type{NoAreaType};
         AreaCreator* _creator;
                              
 

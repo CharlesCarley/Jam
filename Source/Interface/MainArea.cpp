@@ -20,6 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/MainArea.h"
+#include <QVBoxLayout>
 #include "Area/AreaCreator.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaBranch.h"

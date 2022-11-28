@@ -31,6 +31,9 @@ namespace Jam::Editor
     class AreaEdge final : public QWidget
     {
         Q_OBJECT
+    signals:
+        void wantsContextMenu(Qt::Orientation ori, const QPoint& at);
+
     private:
         Qt::Orientation _orientation{Qt::Vertical};
 
@@ -46,9 +49,6 @@ namespace Jam::Editor
                           QWidget*        parent = nullptr);
 
         QSize sizeHint() const override;
-
-    signals:
-        void wantsContextMenu(Qt::Orientation ori, const QPoint& at);
     };
 
 }  // namespace Jam::Editor

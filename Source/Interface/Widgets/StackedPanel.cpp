@@ -19,9 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "StackedPanel.h"
-#include "Interface/Areas/OutputArea.h"
 #include "Interface/Extensions.h"
 
 namespace Jam::Editor

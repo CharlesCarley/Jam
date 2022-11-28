@@ -28,7 +28,6 @@
 #include "Interface/Dialogs/SettingsDialogRootPage.h"
 #include "Interface/Dialogs/SettingsDialogRunPage.h"
 #include "Interface/Extensions.h"
-#include "Interface/Widgets/OkCancelWidget.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor

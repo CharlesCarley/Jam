@@ -127,11 +127,15 @@ namespace Jam::Editor::View
         }
     }
 
-    void widgetDefaults(QWidget* widget, int margins, const QWidget* parent)
+    void widgetDefaults(QWidget*       widget,
+                        const int      margin,
+                        const QWidget* parent)
     {
         Q_ASSERT(widget);
-        widget->setContentsMargins(margins, margins, margins, margins);
+
+        widget->setContentsMargins(margin, margin, margin, margin);
         widget->setFocusPolicy(Qt::NoFocus);
+
         if (parent)
             copyColorRoles(widget, parent);
         applyBaseClassDefaults(widget);
@@ -146,11 +150,13 @@ namespace Jam::Editor::View
         applyBaseClassDefaults(widget);
     }
 
-    void layoutDefaults(QLayout* dst, int margins, int spacing)
+    void layoutDefaults(QLayout*  dst,
+                        const int margin,
+                        const int spacing)
     {
         Q_ASSERT(dst);
         dst->setSpacing(spacing);
-        dst->setContentsMargins(margins, margins, margins, margins);
+        dst->setContentsMargins(margin, margin, margin, margin);
         dst->setSizeConstraint(QLayout::SetMinAndMaxSize);
     }
 
@@ -186,11 +192,12 @@ namespace Jam::Editor::View
     {
         widgetDefaults(dst);
         applyColorRoles(dst, QRole::Button, QRole::Text);
-
         dst->setMinimumSize({18, 24});
     }
 
-    void addLayoutMargin(QBoxLayout* dst, QWidget* content, int margin)
+    void addLayoutMargin(QBoxLayout* dst,
+                         QWidget*    content,
+                         const int   margin)
     {
         const auto innerLayout = new QHBoxLayout();
         innerLayout->setSpacing(0);

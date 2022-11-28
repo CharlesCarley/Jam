@@ -25,7 +25,7 @@
 
 namespace Jam::Editor
 {
-    AreaContent::AreaContent(bool type) :
+    AreaContent::AreaContent(const bool type) :
         _type{type}
     {
         View::emptyWidget(this);

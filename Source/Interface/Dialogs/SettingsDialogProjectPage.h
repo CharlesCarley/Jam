@@ -20,15 +20,8 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-
-#include <QFileDialog>
-#include "Dialog.h"
+#include <QWidget>
 #include "Interface/PersistentSettings.h"
-
-class QTreeWidgetItem;
-class QHBoxLayout;
-class QTreeWidget;
-class QLineEdit;
 
 namespace Jam::Editor
 {
@@ -36,10 +29,9 @@ namespace Jam::Editor
     {
         Q_OBJECT
     private:
-        void construct();
-
         SettingsDataState* _state{nullptr};
 
+        void construct();
     public:
         explicit SettingsDialogProjectPage(SettingsDataState *state, QWidget* parent = nullptr);
         ~SettingsDialogProjectPage() override;

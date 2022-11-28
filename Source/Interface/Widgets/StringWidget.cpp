@@ -22,6 +22,7 @@
 #include "StringWidget.h"
 #include <QLineEdit>
 #include <QWidget>
+#include <QBoxLayout>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Extensions.h"
 

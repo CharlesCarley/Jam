@@ -21,6 +21,7 @@
 */
 #pragma once
 #include "Area/AreaCreator.h"
+#include "Areas/AreaType.h"
 #include "Areas/FrameStackArea.h"
 #include "Areas/FunctionArea.h"
 #include "Areas/GridArea.h"

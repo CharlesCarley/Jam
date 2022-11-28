@@ -46,21 +46,8 @@ namespace Jam::Editor
         const auto layout = new QVBoxLayout();
         View::layoutDefaults(layout);
 
-        QLabel* fill = nullptr;
-        switch (_todoType)
-        {
-        case AtProject:
-            fill = new QLabel("Started: Project");
-            break;
-        case AtOutput:
-            fill = new QLabel("Started: Output");
-            break;
-        case AtFrameStack:
-        case AtMax:
-        default:
-            fill = new QLabel("Todo: What next?");
-            break;
-        }
+        QLabel* fill = new QLabel(
+            Su::join("Todo(", _todoType, "): What next?").c_str());
 
         QFont font = fill->font();
         font.setPointSize(18);
@@ -71,7 +58,6 @@ namespace Jam::Editor
 
         View::widgetDefaults(fill);
         View::applyColorRoles(fill, QPalette::Base, QPalette::AlternateBase);
-
         setLayout(layout);
     }
 

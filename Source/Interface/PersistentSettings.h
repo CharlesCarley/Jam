@@ -25,8 +25,8 @@
 
 namespace Jam::Editor
 {
-    constexpr const char* Org = "Hack-er-!";
-    constexpr const char* App = "JamEngine";
+    constexpr const char* Org = "com.github.charlescarley";
+    constexpr const char* App = "jam";
 
     class SettingsDataState
     {
@@ -70,18 +70,24 @@ namespace Jam::Editor
 
         bool clearOutputOnRun() const;
 
-        QRect       geometry(const QRect& def = {}) const;
-        bool        maximize(bool def = false) const;
-        QStringList recentFiles(const QStringList& def = {}) const;
-        QString     lastOpenDirectory(const QString& def = {}) const;
-        QString     lastProject(const QString& def = {}) const;
+        QRect geometry(const QRect& def = {}) const;
 
-        //[[deprecated]] const QString& lastOpenProjectFile() const;
+        bool maximize(bool def = false) const;
+
+        QStringList recentFiles(const QStringList& def = {}) const;
+
+        QString lastOpenDirectory(const QString& def = {}) const;
+
+        QString lastProject(const QString& def = {}) const;
 
         void setGeometry(const QRect& geom) const;
+
         void setMaximize(bool v) const;
+
         void setRecentFiles(const QVariant& recentFiles) const;
+
         void setLastOpenDirectory(const QString& lastOpenDirectory) const;
+
         void setLastProject(const QString& lastProject) const;
     };
 
@@ -94,11 +100,6 @@ namespace Jam::Editor
     {
         return _state.reload;
     }
-
-    //inline const QString& PersistentSettings::lastOpenProjectFile() const
-    //{
-    //    return _state.lastProject;
-    //}
 
     inline bool PersistentSettings::clearOutputOnRun() const
     {

@@ -20,7 +20,6 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "Interface/Events/EventTypes.h"
 
 namespace Jam::Editor
 {
@@ -32,4 +31,5 @@ namespace Jam::Editor
         {
         }
     };
+
 }  // namespace Jam::Editor

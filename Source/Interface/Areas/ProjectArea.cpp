@@ -23,6 +23,8 @@
 #include <qboxlayout.h>
 #include <QApplication>
 #include <QTreeWidget>
+
+#include "AreaType.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Areas/OutputArea.h"
@@ -32,12 +34,9 @@
 #include "Interface/Events/LayerSelectEvent.h"
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/IconButton.h"
-#include "Utils/StreamMethods.h"
 #include "State/App.h"
 #include "State/ProjectTags.h"
-#include "State/ProjectManager.h"
 #include "State/FrameStackManager.h"
-#include "Xml/Node.h"
 
 class QFileSystemWatcher;
 class QTextEdit;

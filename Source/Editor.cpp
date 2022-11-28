@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
         // attempting to enable it.
         QCoreApplication::setAttribute(Qt::AA_PluginApplication);
         {
-            auto appInstance = Jam::ScopePtr(new Jam::Editor::EditorApp(argc, argv));
+            auto appInstance = Jam::ScopePtr(new EditorApp(argc, argv));
 
             // Construct the application.
             auto appView = Jam::ScopePtr(new Application());

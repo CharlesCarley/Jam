@@ -22,7 +22,6 @@
 #pragma once
 #include <QWidget>
 #include "Interface/Events/BranchEvent.h"
-#include "Interface/Areas/AreaType.h"
 
 class QLayoutItem;
 class QVBoxLayout;

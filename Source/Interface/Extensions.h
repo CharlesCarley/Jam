@@ -20,9 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLayout>
 #include <QPalette>
-
 #include "Utils/Array.h"
 
 class QWidget;
@@ -50,11 +48,11 @@ namespace Jam::Editor::View
 
     extern void clearTextRole(QWidget* widget, QRole foreground = QRole::Text);
 
-    extern void widgetDefaults(QWidget* widget, int margins = 0, const QWidget* parent = nullptr);
+    extern void widgetDefaults(QWidget* widget, int margin = 0, const QWidget* parent = nullptr);
 
     extern void widgetDefaults(QWidget* widget, const QWidget* parent);
 
-    extern void layoutDefaults(QLayout* dst, int margins = 0, int spacing = 0);
+    extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
 
     extern void emptyWidget(QWidget* dst);
 

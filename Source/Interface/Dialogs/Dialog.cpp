@@ -19,21 +19,14 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/Dialogs/Dialog.h"
-#include <qevent.h>
 #include <QFileDialog>
+#include <QMouseEvent>
 #include <QVBoxLayout>
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/ContentContainer.h"
 #include "Interface/Widgets/OkCancelWidget.h"
 #include "Interface/Widgets/WindowTitlebar.h"
-
-class QVBoxLayout;
-class QTreeWidgetItem;
-class QHBoxLayout;
-class QTreeWidget;
-class QLineEdit;
 
 namespace Jam::Editor
 {

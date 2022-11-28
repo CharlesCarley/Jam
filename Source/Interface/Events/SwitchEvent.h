@@ -20,8 +20,6 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-
-#include "Interface/Areas/AreaType.h"
 #include "Interface/Events/EventTypes.h"
 
 namespace Jam::Editor
@@ -33,7 +31,7 @@ namespace Jam::Editor
 
     public:
         explicit SwitchEvent(const int to) :
-            QEvent((Type)(int)(SwitchContentEvent)),
+            QEvent((Type)(int)SwitchContentEvent),
             _areaType(to)
         {
         }

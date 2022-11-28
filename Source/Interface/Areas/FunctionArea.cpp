@@ -22,6 +22,8 @@
 #include "Interface/Areas/FunctionArea.h"
 #include <qslider.h>
 #include <qtextformat.h>
+
+#include "AreaType.h"
 #include "FunctionPropertiesPage.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"

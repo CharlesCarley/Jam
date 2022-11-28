@@ -21,14 +21,12 @@
 */
 #pragma once
 #include "Interface/Area/AreaContextSwitch.h"
-#include "Interface/Areas/AreaType.h"
 
 class QHBoxLayout;
 
 namespace Jam::Editor
 {
     class AreaToolBar;
-    class OutputContext;
 
     class Area : public QWidget
     {
@@ -39,12 +37,12 @@ namespace Jam::Editor
 
     protected:
         AreaCreator* _creator;
-        int32_t      _type{-1};
+        int32_t      _type{NoAreaType};
         AreaToolBar* _toolbar{nullptr};
 
     public:
         ~Area() override;
-        
+
         const int32_t& type() const;
 
         AreaToolBar* toolbar() const;

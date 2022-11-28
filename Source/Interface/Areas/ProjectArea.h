@@ -21,21 +21,8 @@
 */
 #pragma once
 #include <qtreewidget.h>
-#include "State/ProjectManager.h"
 #include "Utils/String.h"
 #include "Interface/Area/Area.h"
-#include "Xml/Node.h"
-
-namespace Jam
-{
-    namespace Editor
-    {
-        namespace State
-        {
-            class FrameStackManager;
-        }
-    }
-}
 
 class QTreeWidget;
 class QFileSystemWatcher;
@@ -43,6 +30,11 @@ class QTextEdit;
 
 namespace Jam::Editor
 {
+    namespace State
+    {
+        class FrameStackManager;
+    }
+
     class ProjectArea final : public Area
     {
         Q_OBJECT

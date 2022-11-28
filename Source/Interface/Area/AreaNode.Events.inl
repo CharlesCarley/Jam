@@ -1,4 +1,24 @@
-// ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
+/*
+-------------------------------------------------------------------------------
+    Copyright (c) Charles Carley.
+
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+-------------------------------------------------------------------------------
+*/
 #pragma once
 #include <QWidget>
 #include "AreaNode.Accessors.inl"
@@ -23,7 +43,7 @@ namespace Jam::Editor
             // Relay the event to the subtree
             // this call assumes that the event
             // travels from this node to all
-            // subtrees starting with this
+            // subtrees starting with this node.
             result = _content->propagate(event) || result;
         }
         return result;
@@ -49,17 +69,19 @@ namespace Jam::Editor
             result = root->propagate(event);
         return result;
     }
+
+
     void AreaNode::handleSplitEvent(const BranchEvent* event)
     {
         // At the moment only leaf splits are available.
-        // IE; The event is only sent via in AreaEdgeRect{l|r|t|b}
+        // IE; The event is only sent via AreaEdgeRect{l|r|t|b}
         if (isBranch() || !event)
             return;
 
         morphIntoBranch(event->from());
 
         // Recursively compute the edge masks
-        // (An edge mask is defined by any l,t, r, or b edge
+        // (An edge mask is defined by any l, t, r, or b edge
         // that does not share a border with the split widget
         // in a branch node).
         recomputeMask();

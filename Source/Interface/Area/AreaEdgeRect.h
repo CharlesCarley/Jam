@@ -83,7 +83,7 @@ namespace Jam::Editor
                                const AreaNode* current,
                                int             mask,
                                const int       values[4]);
-        static int computeMask(const AreaNode*    branch,
+        static int computeMask(const AreaNode*    parent,
                                const AreaContent* current,
                                int                mask,
                                const int          values[4]);

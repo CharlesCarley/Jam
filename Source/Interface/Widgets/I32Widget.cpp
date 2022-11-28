@@ -22,6 +22,7 @@
 #include "I32Widget.h"
 #include <qtextlayout.h>
 #include <QLineEdit>
+#include <QBoxLayout>
 #include <QWidget>
 #include "I32WidgetPrivate.h"
 #include "Interface/Areas/OutputArea.h"

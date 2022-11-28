@@ -47,7 +47,9 @@ namespace Jam::Editor
         void construct(AreaNode* left, AreaNode* right);
 
     public:
-        AreaBinaryLayout(const Qt::Orientation& orientation, AreaNode* left, AreaNode* right);
+        AreaBinaryLayout(const Qt::Orientation& orientation,
+                         AreaNode*              left,
+                         AreaNode*              right);
         ~AreaBinaryLayout() override;
 
         const Qt::Orientation& orientation() const;

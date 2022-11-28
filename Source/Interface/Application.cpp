@@ -65,12 +65,9 @@ namespace Jam::Editor
 
         if (!_mainArea)
         {
-            // This pulls the layout from the application settings.
-            // The layout needs to be loaded from the project file instead.
             _mainArea = new MainArea();
-            // Hand it Qt
-            setCentralWidget(_mainArea);
 
+            setCentralWidget(_mainArea);
             newProject();
         }
     }

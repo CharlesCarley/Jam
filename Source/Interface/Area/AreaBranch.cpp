@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/Area/AreaBranch.h"
 #include <QCoreApplication>
 #include <QMenu>
@@ -112,8 +111,7 @@ namespace Jam::Editor
     {
         if (_splitter)
         {
-            if (_splitter->disconnect(this))
-                Log::writeLine("Disconnected signals");
+            (void)_splitter->disconnect(this);
 
             if (const QLayoutItem* lhs = _splitter->takeAt(0))
             {
@@ -131,14 +129,11 @@ namespace Jam::Editor
 
     void AreaBranch::contextMenu(const QPoint& at) const
     {
-        Log::writeLine("AreaPair => contextMenuEvent");
-        QMenu context;
-
+        QMenu         context;
         const QString title1 = _orientation == Qt::Vertical ? "Join Top" : "Join Left";
         const QString title2 = _orientation == Qt::Vertical ? "Join Bottom" : "Join Right";
 
         AreaNode* parent = parentNode();
-
         context.addAction(
             title1, [=]
             { QCoreApplication::postEvent(parent, new MergeEvent(MergeLeftEvent)); });
@@ -171,5 +166,4 @@ namespace Jam::Editor
             _splitter->drag(dPos);
         }
     }
-
 }  // namespace Jam::Editor

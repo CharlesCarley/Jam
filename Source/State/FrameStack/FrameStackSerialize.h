@@ -21,7 +21,6 @@
 */
 #pragma once
 #include "State/FrameStack/FunctionLayer.h"
-#include "State/ProjectManager.h"
 #include "Xml/Declarations.h"
 
 namespace Jam

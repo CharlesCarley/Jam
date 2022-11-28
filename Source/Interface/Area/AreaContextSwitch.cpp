@@ -27,9 +27,10 @@
 
 namespace Jam::Editor
 {
-    AreaContextSwitch::AreaContextSwitch(AreaCreator* creator,
-                                         int32_t      type,
-                                         QWidget*     parent) :
+    AreaContextSwitch::AreaContextSwitch(
+        AreaCreator*  creator,
+        const int32_t type,
+        QWidget*      parent) :
         QPushButton(parent),
         _creator(creator),
         _type(type)

@@ -5,14 +5,13 @@
 #include "ExprData.inl"
 #include "Math/Lg.h"
 #include "TestDirectory.h"
-#include "Utils/Char.h"
 #include "Utils/StreamMethods.h"
 #include "gtest/gtest.h"
 
 using namespace Jam;
 
 ///////////////////////////////////////////////////////////////////////////////
-constexpr R64 DbgPi = R64(3.1415926535897932);
+//constexpr R64 DbgPi = R64(3.1415926535897932);
 constexpr R64 Exit  = R64(3.018392941684311);
 
 GTEST_TEST(Expression, Parse00c)
@@ -70,12 +69,9 @@ GTEST_TEST(Expression, Parse00a)
 GTEST_TEST(Expression, Parse009)
 {
     StringStream ss;
-
     ss << "(3.1415926535897932*x-a)/(x+b)";
     Eq::StmtParser parse;
     parse.read(ss);
-
-    std::cout << DoublePrint(DbgPi, 0, 32);
 
     constexpr R64 a = 1;
     constexpr R64 b = 1;
@@ -88,7 +84,7 @@ GTEST_TEST(Expression, Parse009)
     eval.set("b", b);
 
     eval.execute(parse.symbols());
-    while (eval.peek(0) < Exit)
+    while (eval.peek(0) < Exit && i < 50)
     {
         const R64 x = R64(i);
         eval.set("x", x);
@@ -101,7 +97,6 @@ GTEST_TEST(Expression, Parse009)
 
         ++i;
     }
-
     EXPECT_EQ(i, 34);
 }
 
@@ -109,11 +104,14 @@ GTEST_TEST(Expression, Parse008)
 {
     StringStream ss;
     ss << "1.0 + 9.0 / 10.0 + 9.0 / 100.0 + 6.0 / 1000.0 + 5.0 / 10000.0";
+
     Eq::StmtParser parse;
     parse.read(ss);
     logSymbols(parse.symbols());
+
     Eq::Stmt eval;
-    R64      result = eval.execute(parse.symbols());
+
+    R64 result = eval.execute(parse.symbols());
     Dbg::println(SetD({1.9965, result}, 0, 4, true));
     EXPECT_DOUBLE_EQ(result, 1.9965);
 
@@ -214,11 +212,6 @@ void Parse4ValueCheck(
     eval.set("x", x);
 
     eval.execute(exec);
-
-    // EXPECT_EQ(
-    //     equals(
-    //         eval.execute(exec), expected, 0.00001),
-    //     true);
 
     EXPECT_EQ(
         equals(
@@ -448,7 +441,7 @@ void ExpectDataTest(const Eq::SymbolArray& actual,
                     const ExpectData*      expected,
                     const U32              size)
 {
-    for (size_t i = 0; i < size; ++i)
+    for (U32 i = 0; i < size; ++i)
     {
         EXPECT_EQ(actual.at(i)->type(), expected[i].type);
 

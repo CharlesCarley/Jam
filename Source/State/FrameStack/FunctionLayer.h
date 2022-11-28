@@ -20,7 +20,6 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <functional>
 #include "BaseLayer.h"
 #include "Equation/Stmt.h"
 #include "Equation/StmtParser.h"
@@ -28,9 +27,6 @@
 
 namespace Jam::Layers
 {
-    // y = f(x)
-    using Function2D = std::function<R32(const R32& x)>;
-
     class FunctionLayer final : public BaseLayer
     {
     private:
