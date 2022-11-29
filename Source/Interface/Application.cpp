@@ -66,7 +66,6 @@ namespace Jam::Editor
         if (!_mainArea)
         {
             _mainArea = new MainArea();
-
             setCentralWidget(_mainArea);
             newProject();
         }
@@ -89,7 +88,7 @@ namespace Jam::Editor
             delete _mainArea;
         }
 
-        _mainArea = new MainArea(string.c_str(), this);
+        _mainArea = new MainArea(string, this);
         setCentralWidget(_mainArea);
     }
 

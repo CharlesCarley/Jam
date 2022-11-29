@@ -105,12 +105,7 @@ namespace Jam::Editor
         {
             loadProjectFromPath(fileName);
         }
-        else
-        {
-            Console::writeLine(
-                "failed to extract a valid "
-                "file name via the file dialog.");
-        }
+        // else could have been canceled.
     }
 
     void Application::closeProject()
@@ -122,14 +117,12 @@ namespace Jam::Editor
 
     void Application::saveProjectImpl(const QString& path)
     {
-        if (State::ProjectManager* state = State::projectState())
+        if (const auto state = State::projectState())
         {
             String layout;
             _mainArea->serialize(layout);
 
-            if (!state->saveAs(
-                    path.toStdString(),
-                    layout))
+            if (!state->saveAs(path.toStdString(), layout))
             {
                 Console::writeLine(
                     "failed to save the the cached project file: '",
@@ -166,11 +159,6 @@ namespace Jam::Editor
         {
             saveProjectImpl(fileName);
         }
-        else
-        {
-            Console::writeLine(
-                "failed to extract a valid "
-                "file name via the file dialog.");
-        }
+        // else could have been canceled.
     }
 }  // namespace Jam::Editor

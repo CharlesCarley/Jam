@@ -133,8 +133,6 @@ namespace Jam::Editor
         case MergeRightEvent:
             handleMergeRightEvent();
             return true;
-        case ProjectChanged:
-            return propagate(event);
         case SwitchContentEvent:
             handleSwitchEvent((SwitchEvent*)event);
             return true;

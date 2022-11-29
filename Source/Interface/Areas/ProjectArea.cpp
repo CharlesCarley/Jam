@@ -23,7 +23,6 @@
 #include <qboxlayout.h>
 #include <QApplication>
 #include <QTreeWidget>
-
 #include "AreaType.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
@@ -35,15 +34,12 @@
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/IconButton.h"
 #include "State/App.h"
-#include "State/ProjectTags.h"
 #include "State/FrameStackManager.h"
-
-class QFileSystemWatcher;
-class QTextEdit;
+#include "State/ProjectTags.h"
 
 namespace Jam::Editor
 {
-    ProjectArea::ProjectArea(AreaCreator *creator, QWidget* parent) :
+    ProjectArea::ProjectArea(AreaCreator* creator, QWidget* parent) :
         Area(creator, AtProject, parent)
     {
         construct();
@@ -156,11 +152,10 @@ namespace Jam::Editor
             const auto item = new QTreeWidgetItem();
             setForType(item, layer->type, i++);
 
-
             _tree->addTopLevelItem(item);
         }
     }
-    
+
     void ProjectArea::showProjectSettings()
     {
         SettingsDialog settings(this);

@@ -76,14 +76,14 @@ namespace Jam::Editor
         connect(this,
                 &Dialog::okClicked,
                 this,
-                &SettingsDialog::okClicked);
+                &SettingsDialog::onOkClicked);
 
         connect(this,
                 &Dialog::cancelClicked,
                 this,
-                &SettingsDialog::cancelClicked);
-
+                &SettingsDialog::onCancelClicked);
         _settingTree->expandAll();
+
         show();
     }
 
@@ -145,13 +145,13 @@ namespace Jam::Editor
         }
     }
 
-    void SettingsDialog::okClicked()
+    void SettingsDialog::onOkClicked()
     {
         PersistentSettings().apply(_state);
         close();
     }
 
-    void SettingsDialog::cancelClicked()
+    void SettingsDialog::onCancelClicked()
     {
         close();
     }

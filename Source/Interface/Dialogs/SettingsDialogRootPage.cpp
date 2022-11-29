@@ -40,7 +40,6 @@ namespace Jam::Editor
     void SettingsDialogRootPage::construct()
     {
         const auto layout = new QHBoxLayout();
-
         const auto brush = IconButton::createTitleButton(Icons::Clear, this);
         layout->addWidget(brush, 0, Qt::AlignTop);
 
@@ -53,7 +52,7 @@ namespace Jam::Editor
                 }
         });
 
-        const auto label = new QLabel("Clear settings (needs restart)");
+        const auto label = new QLabel("Reset to default.");
         layout->addWidget(label, 1, Qt::AlignTop);
         setLayout(layout);
     }

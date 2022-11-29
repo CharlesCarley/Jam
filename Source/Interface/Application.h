@@ -74,13 +74,12 @@ namespace Jam::Editor
         void loadSettings();
 
         void clearProjectState();
+
         // application events
 
         void notifyProjectOpened() const;
 
         void notifyProjectClosed() const;
-
-        [[deprecated]] void notifyProjectStateChanged() const;
 
         void saveProjectImpl(const QString& path);
 

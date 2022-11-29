@@ -67,7 +67,6 @@ namespace Jam::Editor
         case ProjectOpened:
             _area->setWidget(new GridPropertiesPage(0));
             break;
-        case ProjectChanged:
         case ProjectClosed:
         case LayerSelect:
         case SplitEvent:

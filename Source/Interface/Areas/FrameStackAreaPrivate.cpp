@@ -109,13 +109,22 @@ namespace Jam::Editor
         return p;
     }
 
+    void FrameStackAreaPrivate::updateSize(const QSize& sz)
+    {
+        _screen.setViewport(0, 0, sz.width(), sz.height());
+        _screen.reset();
+
+        (void)State::layerStack()->injectVec2(SIZE, _screen.viewport().extent());
+        update();
+    }
+
     void FrameStackAreaPrivate::paintEvent(QPaintEvent* event)
     {
         QPainter paint(this);
         paint.setRenderHint(QPainter::Antialiasing);
 
         RenderContext canvas(&paint, _screen);
-        canvas.setSize(Vec2I{(width()), (height())});
+        //canvas.setSize(Vec2I{(width()), (height())});
         canvas.clear(0x10, 0x10, 0x10, 0x80);
 
         if (const auto stk = State::layerStack())
@@ -124,15 +133,7 @@ namespace Jam::Editor
 
     void FrameStackAreaPrivate::resizeEvent(QResizeEvent* event)
     {
-        if (const auto stk = State::layerStack())
-        {
-            const QSize sz = event->size();
-            _screen.setViewport(
-                0, 0, sz.width(), sz.height());
-            _screen.reset();
-
-            (void)stk->injectVec2(SIZE, _screen.viewport().extent());
-        }
+        updateSize(event->size());
     }
 
     void FrameStackAreaPrivate::wheelEvent(QWheelEvent* event)
@@ -178,7 +179,7 @@ namespace Jam::Editor
         if (_state & Left)
         {
             const Vec2F p = updatePoint(event);
-            _screen.pan(-p.x, -p.y);
+            _screen.translate(-p.x, -p.y);
 
             if (State::layerStack()->injectVec2(ORIGIN, _screen.offset()))
                 update();

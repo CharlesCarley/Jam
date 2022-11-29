@@ -30,14 +30,15 @@ namespace Jam::Editor
     {
         Q_OBJECT
     private:
-        FrameStackAreaPrivate* _private;
-
-        void construct();
+        FrameStackAreaPrivate* _private{nullptr};
 
     public:
         explicit FrameStackArea(AreaCreator* creator, QWidget* parent = nullptr);
-
         ~FrameStackArea() override;
+
+    private:
+        void construct();
+        bool event(QEvent* event) override;
     };
 
 }  // namespace Jam::Editor

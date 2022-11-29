@@ -177,7 +177,7 @@ namespace Jam
         const Axis& v) const
     {
         OutputStringStream oss;
-        oss << SetS({"xn", "xd", "xn", "yn"})
+        oss << SetS({"xn", "xd", "xn", "yd"})
             << Equ()
             << SetU({v.x.n(), v.x.d()})
             << SetU({v.y.n(), v.y.d()});

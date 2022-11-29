@@ -161,7 +161,6 @@ namespace Jam::Editor
         {
             switch ((int)event->type())
             {
-            case ProjectChanged:
             case ProjectOpened:
             case ProjectClosed:
             case LayerSelect:
@@ -172,7 +171,6 @@ namespace Jam::Editor
                 break;
             }
         }
-
         // nothing was handled so, send
         // it back up the widget tree..
         return QWidget::event(event);
@@ -242,8 +240,14 @@ namespace Jam::Editor
             if (const AreaBranch* branch = (AreaBranch*)source->content())
             {
                 XmlNode* branchTag = new XmlNode("branch", State::BranchTag);
+
                 branchTag->insert("ratio", branch->ratio());
-                branchTag->insert("orientation", branch->orientation());
+
+                // Save some text processing..
+                // The default state is Horizontal.
+                // Only write it if it is not.
+                if (branch->orientation() != Qt::Horizontal)
+                    branchTag->insert("orientation", branch->orientation());
 
                 // <branch ratio=[0..1] orientation="1|2">
                 //  <... recursive left/>

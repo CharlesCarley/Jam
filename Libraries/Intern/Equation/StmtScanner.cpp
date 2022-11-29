@@ -196,16 +196,16 @@ namespace Jam::Eq
                 return;
             case '%':
                 tok.setType(TOK_MOD);
-                break;
+                return;
             case '&':
                 tok.setType(TOK_AND);
-                break;
+                return;
             case '~':
                 tok.setType(TOK_TILDE);
-                break;
+                return;
             case '|':
                 tok.setType(TOK_OR);
-                break;
+                return;
             case '\r':
             case '\n':
                 _line++;

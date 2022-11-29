@@ -63,11 +63,8 @@ namespace Jam::Editor
         {
             OutputStringStream oss;
             ((oss << std::forward<Args>(args)), ...);
-
             if (const auto out = State::outputState())
                 out->writeLine(QString::fromStdString(oss.str()));
-            else
-                Con::println(oss.str().c_str());
         }
 
         template <typename... Args>

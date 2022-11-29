@@ -22,20 +22,19 @@
 #include "FrameStackArea.h"
 #include <QLabel>
 #include <QVBoxLayout>
-
 #include "AreaType.h"
 #include "FrameStackAreaPrivate.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"
+#include "Interface/Events/EventTypes.h"
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/IconButton.h"
 
 namespace Jam::Editor
 {
     FrameStackArea::FrameStackArea(AreaCreator* creator, QWidget* parent) :
-        Area(creator, AtFrameStack, parent),
-        _private(nullptr)
+        Area(creator, AtFrameStack, parent)
     {
         construct();
     }
@@ -66,6 +65,25 @@ namespace Jam::Editor
                 { _private->resetAxis(); });
 
         setLayout(layout);
+    }
+
+    bool FrameStackArea::event(QEvent* event)
+    {
+        switch ((AreaEvents)event->type())
+        {
+        case ProjectOpened:
+            _private->resetAxis();
+            break;
+        case ProjectClosed:
+        case LayerSelect:
+        case SplitEvent:
+        case MergeLeftEvent:
+        case MergeRightEvent:
+        case SwitchContentEvent:
+        default:
+            break;
+        }
+        return Area::event(event);
     }
 
 }  // namespace Jam::Editor

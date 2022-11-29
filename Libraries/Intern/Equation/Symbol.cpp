@@ -88,58 +88,64 @@ namespace Jam::Eq
             out << "acos";
             break;
         case MathAsin:
-            out << "Asin";
+            out << "asin";
             break;
         case MathAtan:
-            out << "Atan";
+            out << "atan";
             break;
         case MathAtan2:
-            out << "Atan2";
+            out << "atan2";
             break;
         case MathCeil:
-            out << "Ceil";
+            out << "ceil";
             break;
         case MathCos:
-            out << "Cos";
+            out << "cos";
             break;
         case MathCosh:
-            out << "Cosh";
+            out << "cosh";
             break;
         case MathExp:
-            out << "Exp";
+            out << "exp";
             break;
         case MathFabs:
-            out << "Fabs";
+            out << "fabs";
             break;
         case MathFloor:
-            out << "Floor";
+            out << "floor";
             break;
         case MathFmod:
-            out << "Fmod";
+            out << "fmod";
             break;
         case MathLog:
-            out << "Log";
+            out << "log";
             break;
         case MathLog10:
-            out << "Log10";
+            out << "log10";
             break;
         case MathPow:
-            out << "Pow";
+            out << "pow";
             break;
         case MathSin:
-            out << "Sin";
+            out << "sin";
             break;
         case MathSinh:
-            out << "Sinh";
+            out << "sinh";
             break;
         case MathSqrt:
-            out << "Sqrt";
+            out << "sqrt";
             break;
         case MathTan:
-            out << "Tan";
+            out << "tan";
             break;
         case MathTanh:
-            out << "Tanh";
+            out << "tanh";
+            break;
+        case MathPi:
+            out << SetD({Pi64}, 0);
+            break;
+        case MathE:
+            out << SetD({E64}, 0);
             break;
         case UserFunction:
         case None:

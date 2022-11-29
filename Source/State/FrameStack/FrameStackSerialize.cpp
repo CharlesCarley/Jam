@@ -107,7 +107,6 @@ namespace Jam
                          ax.y.n(),
                          ax.y.d(),
                      })));
-        grid->insert("selected", layer->isSelected() ? "true" : "false");
         root->addChild(grid);
     }
 
@@ -127,7 +126,6 @@ namespace Jam
         XmlNode* root = new XmlNode("stack", FrameStackTag);
 
         saveGridLayer(root, _stack->cast<Layers::GridLayer>(0));
-
         saveFunctionLayer(root, _stack->cast<Layers::FunctionLayer>(1));
 
         Xc::toStream(out, root, 4);

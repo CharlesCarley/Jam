@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-// ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
 #pragma once
 #include "Interface/Dialogs/AboutDialog.h"
 #include "Interface/Dialogs/SettingsDialog.h"
@@ -33,16 +32,14 @@ namespace Jam::Editor
 
     void Application::showAbout()
     {
-        Log::writeLine("Launching about");
-
+        // Log::writeLine("Launching about");
         AboutDialog dia(this);
         dia.exec();
     }
 
     void Application::editSettings()
     {
-        Log::writeLine("Launching settings");
-
+        // Log::writeLine("Launching settings");
         SettingsDialog settings(this);
         settings.selectOption(SettingsDialog::SettingRoot);
         settings.exec();

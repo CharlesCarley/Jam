@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/Area/AreaEdge.h"
 #include <QLabel>
 #include <QMenu>

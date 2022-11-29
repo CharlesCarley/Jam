@@ -64,9 +64,9 @@ namespace Jam::Editor
 
         void selectionChanged(const QTreeWidgetItem* item, int col);
 
-        void okClicked();
+        void onOkClicked();
 
-        void cancelClicked();
+        void onCancelClicked();
 
         static QTreeWidgetItem* constructTree();
 

@@ -24,53 +24,27 @@
 namespace Jam
 {
 
-    void Screen::zoom(const R32 s, const bool negate)
-    {
-        Box b;
-        corners(b);
-        _limit.step(I32(s));
-        _limit.print(12);
-        b = b + Vec2F{
-                    _limit.fraction(),
-                    _limit.fraction(),
-                };
-        setViewport(b.x1, b.y1, b.w(), b.h());
-    }
-
-    void Screen::zoomLarge(const R32 s, const bool negate)
-    {
-        sA += (s * z) * (negate ? R32(-1) : R32(1));
-
-        scale = vp.extent() + sA;
-
-        z = scale.x / vp.w;
-        if (isZero(z)) z = Epsilon;
-    }
-
     void Screen::reset()
     {
-        sA    = 1;
-        o     = _init;
-        scale = vp.extent();
-        c     = scale * Half;
+        _o = _i;
+        _c = _v.halfExtent();
+    }
 
-        if (vp.w > 0)
-            z = scale.x / vp.w;
-        else
-            z = 1;
+    void Screen::setViewport(const RectF& v)
+    {
+        setViewport(v.x, v.y, v.w, v.h);
+    }
+    void Screen::setViewport(const I32& x, const I32& y, const I32& w, const I32& h)
+    {
+        setViewport(R32(x), R32(y), R32(w), R32(h));
     }
 
     void Screen::setViewport(const R32& x, const R32& y, const R32& w, const R32& h)
     {
-        vp.x = Max(x, -ScreenMax);
-        vp.y = Max(y, -ScreenMax);
-        vp.w = Min(w, ScreenMax);
-        vp.h = Min(h, ScreenMax);
+        _v.x = Max(x, -ScreenMax);
+        _v.y = Max(y, -ScreenMax);
+        _v.w = Min(w, ScreenMax);
+        _v.h = Min(h, ScreenMax);
     }
 
-    void Screen::setViewport(const I32& x, const I32& y, const I32& w, const I32& h)
-    {
-        setViewport(
-            R32(x), R32(y), R32(w), R32(h));
-    }
 }  // namespace Jam

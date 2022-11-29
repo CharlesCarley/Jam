@@ -11,8 +11,21 @@
 using namespace Jam;
 
 ///////////////////////////////////////////////////////////////////////////////
-//constexpr R64 DbgPi = R64(3.1415926535897932);
-constexpr R64 Exit  = R64(3.018392941684311);
+
+GTEST_TEST(Expression, Parse00d)
+{
+    StringStream ss;
+    ss << "x%4";
+
+    Eq::StmtParser code;
+    code.read(ss);
+    logSymbols(code.symbols());
+
+    Eq::Stmt stmt;
+    stmt.set("x", 5);
+    stmt.execute(code.symbols());
+    EXPECT_DOUBLE_EQ(stmt.peek(0), 1.0);
+}
 
 GTEST_TEST(Expression, Parse00c)
 {
@@ -73,8 +86,9 @@ GTEST_TEST(Expression, Parse009)
     Eq::StmtParser parse;
     parse.read(ss);
 
-    constexpr R64 a = 1;
-    constexpr R64 b = 1;
+    constexpr R64 a    = 1;
+    constexpr R64 b    = 1;
+    constexpr R64 exit = R64(3.018392941684311);
 
     Eq::Stmt eval;
     int      i = 0;
@@ -84,7 +98,7 @@ GTEST_TEST(Expression, Parse009)
     eval.set("b", b);
 
     eval.execute(parse.symbols());
-    while (eval.peek(0) < Exit && i < 50)
+    while (eval.peek(0) < exit && i < 50)
     {
         const R64 x = R64(i);
         eval.set("x", x);

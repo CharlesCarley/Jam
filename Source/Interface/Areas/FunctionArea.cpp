@@ -20,9 +20,6 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Areas/FunctionArea.h"
-#include <qslider.h>
-#include <qtextformat.h>
-
 #include "AreaType.h"
 #include "FunctionPropertiesPage.h"
 #include "Interface/Area/Area.h"
@@ -73,7 +70,6 @@ namespace Jam::Editor
             _area->setWidget(_func);
             break;
         case ProjectClosed:
-        case ProjectChanged:
         case LayerSelect:
         case SplitEvent:
         case MergeLeftEvent:

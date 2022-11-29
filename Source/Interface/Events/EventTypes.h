@@ -30,7 +30,6 @@ namespace Jam::Editor
         MergeLeftEvent,
         MergeRightEvent,
         SwitchContentEvent,
-        ProjectChanged,
         ProjectOpened,
         ProjectClosed,
         LayerSelect

@@ -54,6 +54,8 @@ namespace Jam::Editor
         void  construct();
         Vec2F updatePoint(const QMouseEvent* event);
 
+        void updateSize(const QSize& sz);
+
         void paintEvent(QPaintEvent* event) override;
 
         void resizeEvent(QResizeEvent* event) override;

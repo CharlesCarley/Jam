@@ -32,7 +32,7 @@ namespace Jam
         // Defining the option as a simple type,
         // means that the array is storing an atomic or
         // pointer type. When resizing, reserving,
-        // or clearing the buffer the ~T destructor is
+        // or clearing, the buffer[n].~T() destructor is
         // not called. In some cases this allows bypassing
         // A loop of N elements. This will not work for
         // stack based objects that require copy constructors

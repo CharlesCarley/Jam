@@ -19,7 +19,6 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-// ReSharper disable CppNonInlineFunctionDefinitionInHeaderFile
 #pragma once
 #include <QApplication>
 #include "Interface/Application.h"
@@ -40,13 +39,11 @@ namespace Jam::Editor
             QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectClosed));
     }
 
-    void Application::notifyProjectStateChanged() const
-    {
-        if (_mainArea)
-            QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectChanged));
-    }
-
-    
+    //void Application::notifyProjectStateChanged() const
+    //{
+    //    if (_mainArea)
+    //        QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectChanged));
+    //}
 
     bool Application::event(QEvent* event)
     {

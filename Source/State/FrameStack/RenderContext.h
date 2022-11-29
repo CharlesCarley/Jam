@@ -42,7 +42,7 @@ namespace Jam
         LineBuffer _major;
         LineBuffer _minor;
         LineBuffer _center;
-        
+
         void stepGrid(R32          x1,
                       R32          y1,
                       R32          x2,
@@ -74,8 +74,6 @@ namespace Jam
 
         const Vec2I& size() const;
 
-        void setSize(const Vec2I& size);
-
         void selectColor(const U32& col, int w = 1);
 
         void selectColor(const Color& col, int w = 1);
@@ -91,7 +89,7 @@ namespace Jam
         void drawPoint(int x0, int y0, int scale) const;
 
         void drawVec2F(int x0, int y0, const Vec2F& v, U8 p = 3) const;
-        
+
         void drawAxisF(int x0, int y0, const Axis& v) const;
 
         void screenGrid(
@@ -114,11 +112,6 @@ namespace Jam
     inline const Vec2I& RenderContext::size() const
     {
         return _size;
-    }
-
-    inline void RenderContext::setSize(const Vec2I& size)
-    {
-        _size = size;
     }
 
     inline bool RenderContext::isNotValid() const
