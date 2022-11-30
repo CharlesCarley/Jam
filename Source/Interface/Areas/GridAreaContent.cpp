@@ -19,30 +19,29 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "Interface/Areas/GridPropertiesPage.h"
+#include "Interface/Areas/GridAreaContent.h"
 #include <QWidget>
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/I32Widget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "State/App.h"
-#include "State/FrameStack/GridLayer.h"
 #include "State/FrameStackManager.h"
 
 namespace Jam::Editor
 {
     using namespace State;
 
-    GridPropertiesPage::GridPropertiesPage(const U32 idx)
+    GridAreaContent::GridAreaContent()
     {
-        construct(idx);
+        construct();
     }
 
-    GridPropertiesPage::~GridPropertiesPage()
+    GridAreaContent::~GridAreaContent()
     {
         disconnectSignals();
     }
 
-    void GridPropertiesPage::construct(U32 idx)
+    void GridAreaContent::construct()
     {
         View::applyColorRoles(this);
 
@@ -66,33 +65,33 @@ namespace Jam::Editor
         connectSignals();
     }
 
-    void GridPropertiesPage::connectSignals()
+    void GridAreaContent::connectSignals()
     {
         connect(_y,
                 &I32Widget::valueChanged,
                 this,
-                &GridPropertiesPage::yAxisUpdate);
+                &GridAreaContent::yAxisUpdate);
 
         connect(_x,
                 &I32Widget::valueChanged,
                 this,
-                &GridPropertiesPage::xAxisUpdate);
+                &GridAreaContent::xAxisUpdate);
 
-        connect(State::layerStack(),
-                &State::FrameStackManager::vec2Injected,
+        connect(layerStack(),
+                &FrameStackManager::vec2Injected,
                 this,
-                &GridPropertiesPage::codeInjected);
+                &GridAreaContent::codeInjected);
     }
 
-    void GridPropertiesPage::disconnectSignals()
+    void GridAreaContent::disconnectSignals()
     {
-        disconnect(State::layerStack(),
-                   &State::FrameStackManager::vec2Injected,
+        disconnect(layerStack(),
+                   &FrameStackManager::vec2Injected,
                    this,
-                   &GridPropertiesPage::codeInjected);
+                   &GridAreaContent::codeInjected);
     }
 
-    void GridPropertiesPage::codeInjected(const FrameStackCode& code,
+    void GridAreaContent::codeInjected(const FrameStackCode& code,
                                           const Vec2F&          value) const
     {
         const I32 v = I32(value.x);
@@ -108,15 +107,15 @@ namespace Jam::Editor
         }
     }
 
-    void GridPropertiesPage::xAxisUpdate(const I32 v)
+    void GridAreaContent::xAxisUpdate(const I32 v)
     {
-        if (const auto stack = State::layerStack())
+        if (const auto stack = layerStack())
             (void)stack->injectVec2(X_STEP, {R32(v), 0});
     }
 
-    void GridPropertiesPage::yAxisUpdate(const I32 v)
+    void GridAreaContent::yAxisUpdate(const I32 v)
     {
-        if (const auto stack = State::layerStack())
+        if (const auto stack = layerStack())
             (void)stack->injectVec2(Y_STEP, {R32(v), 0});
     }
 

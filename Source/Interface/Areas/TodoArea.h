@@ -30,10 +30,13 @@ namespace Jam::Editor
     private:
         int32_t _todoType{0};
 
-        void construct();
-
     public:
-        explicit TodoArea(AreaCreator *creator, int32_t type, QWidget* parent = nullptr);
+        explicit TodoArea(AreaCreator* creator,
+                          int32_t      type,
+                          QWidget*     parent = nullptr);
         ~TodoArea() override;
+    private:
+        void construct();
     };
+
 }  // namespace Jam::Editor

@@ -26,7 +26,7 @@
 
 namespace Jam::Editor
 {
-    class FrameStackAreaPrivate final : public QWidget
+    class FrameStackAreaContent final : public QWidget
     {
         Q_OBJECT
     private:
@@ -44,8 +44,8 @@ namespace Jam::Editor
         R32    _scrollY{0};
 
     public:
-        explicit FrameStackAreaPrivate(QWidget* parent = nullptr);
-        ~FrameStackAreaPrivate() override;
+        explicit FrameStackAreaContent(QWidget* parent = nullptr);
+        ~FrameStackAreaContent() override;
 
         void resetAxis();
 

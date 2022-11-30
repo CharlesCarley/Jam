@@ -25,14 +25,14 @@
 namespace Jam::Editor
 {
     class VerticalScrollArea;
-    class FunctionPropertiesPage;
+    class FunctionAreaContent;
 
     class FunctionArea final : public Area
     {
         Q_OBJECT
     private:
         VerticalScrollArea*     _area{nullptr};
-        FunctionPropertiesPage* _func{nullptr};
+        FunctionAreaContent* _func{nullptr};
 
     public:
         explicit FunctionArea(AreaCreator* creator, QWidget* parent = nullptr);

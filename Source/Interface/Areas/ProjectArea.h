@@ -21,8 +21,8 @@
 */
 #pragma once
 #include <qtreewidget.h>
-#include "Utils/String.h"
 #include "Interface/Area/Area.h"
+#include "Utils/String.h"
 
 class QTreeWidget;
 class QFileSystemWatcher;
@@ -43,6 +43,11 @@ namespace Jam::Editor
         String       _directoryRoot;
         String       _fullFilePath;
 
+    public:
+        explicit ProjectArea(AreaCreator* creator, QWidget* parent = nullptr);
+        ~ProjectArea() override;
+
+    private:
         void construct();
 
         void constructToolbar();
@@ -55,11 +60,7 @@ namespace Jam::Editor
 
         bool event(QEvent* event) override;
 
-        void itemDoubleClicked(const QTreeWidgetItem * item, int column) const;
-
-    public:
-        explicit ProjectArea(AreaCreator *creator, QWidget* parent = nullptr);
-        ~ProjectArea() override;
+        void itemDoubleClicked(const QTreeWidgetItem* item, int column) const;
     };
 
 }  // namespace Jam::Editor

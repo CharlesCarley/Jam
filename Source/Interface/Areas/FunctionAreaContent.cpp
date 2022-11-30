@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "Interface/Areas/FunctionPropertiesPage.h"
+#include "Interface/Areas/FunctionAreaContent.h"
 #include <QApplication>
 #include <QResizeEvent>
 #include <QWidget>
@@ -35,14 +35,14 @@
 
 namespace Jam::Editor
 {
-    FunctionPropertiesPage::FunctionPropertiesPage()
+    FunctionAreaContent::FunctionAreaContent()
     {
         construct();
     }
 
-    FunctionPropertiesPage::~FunctionPropertiesPage() = default;
+    FunctionAreaContent::~FunctionAreaContent() = default;
 
-    void FunctionPropertiesPage::construct()
+    void FunctionAreaContent::construct()
     {
         View::applyColorRoles(this);
         _panel = new StackedPanel();
@@ -52,7 +52,7 @@ namespace Jam::Editor
         addPanel(_panel);
     }
 
-    void FunctionPropertiesPage::loadState() const
+    void FunctionAreaContent::loadState() const
     {
         const auto layer = State::functionLayer();
 
@@ -65,7 +65,7 @@ namespace Jam::Editor
         }
     }
 
-    void FunctionPropertiesPage::addSlider(State::VariableStateObject* obj) const
+    void FunctionAreaContent::addSlider(State::VariableStateObject* obj) const
     {
         if (obj == nullptr)
             obj = State::functionLayer()->createVariable();
@@ -84,7 +84,7 @@ namespace Jam::Editor
         notifyResize();
     }
 
-    void FunctionPropertiesPage::addExpression(State::ExpressionStateObject* obj) const
+    void FunctionAreaContent::addExpression(State::ExpressionStateObject* obj) const
     {
         if (obj == nullptr)
             obj = State::functionLayer()->createExpression();
@@ -103,14 +103,14 @@ namespace Jam::Editor
         notifyResize();
     }
 
-    void FunctionPropertiesPage::addPoint() const
+    void FunctionAreaContent::addPoint() const
     {
         const auto str = new StringWidget();
         _panel->addWidget(str);
         notifyResize();
     }
 
-    void FunctionPropertiesPage::notifyResize() const
+    void FunctionAreaContent::notifyResize() const
     {
         if (QWidget* parent = parentWidget())
         {
@@ -121,7 +121,7 @@ namespace Jam::Editor
         }
     }
 
-    void FunctionPropertiesPage::dropWidget(QWidget* widget) const
+    void FunctionAreaContent::dropWidget(QWidget* widget) const
     {
         if (widget)
         {

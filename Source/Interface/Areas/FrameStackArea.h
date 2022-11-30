@@ -24,13 +24,13 @@
 
 namespace Jam::Editor
 {
-    class FrameStackAreaPrivate;
+    class FrameStackAreaContent;
 
     class FrameStackArea final : public Area
     {
         Q_OBJECT
     private:
-        FrameStackAreaPrivate* _private{nullptr};
+        FrameStackAreaContent* _private{nullptr};
 
     public:
         explicit FrameStackArea(AreaCreator* creator, QWidget* parent = nullptr);

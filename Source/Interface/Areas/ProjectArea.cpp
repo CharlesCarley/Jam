@@ -66,6 +66,7 @@ namespace Jam::Editor
 
         margin->addWidget(_tree, 1);
 
+        constructToolbar();
         layout->addWidget(toolbar());
         layout->addLayout(margin, 1);
 

@@ -23,7 +23,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include "AreaType.h"
-#include "FrameStackAreaPrivate.h"
+#include "FrameStackAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"
@@ -56,7 +56,7 @@ namespace Jam::Editor
             0,
             Qt::AlignRight);
 
-        _private = new FrameStackAreaPrivate();
+        _private = new FrameStackAreaContent();
         layout->addWidget(tools);
         layout->addWidget(_private, 1);
 

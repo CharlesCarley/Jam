@@ -36,6 +36,14 @@ namespace Jam::Editor
     private:
         QPlainTextEdit* _edit{nullptr};
 
+    public:
+        explicit OutputArea(AreaCreator* creator,
+                            QWidget*     parent = nullptr);
+        ~OutputArea() override;
+
+    private:
+        bool event(QEvent* event) override;
+
         void construct();
 
         void constructToolbar();
@@ -45,13 +53,6 @@ namespace Jam::Editor
         void refreshOutput() const;
 
         static void clearOutput();
-
-    public:
-        explicit OutputArea(AreaCreator* creator, QWidget* parent = nullptr);
-        ~OutputArea() override;
-
-    protected:
-        bool event(QEvent* event) override;
     };
 
     namespace Log

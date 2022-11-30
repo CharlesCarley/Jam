@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "FrameStackAreaPrivate.h"
+#include "FrameStackAreaContent.h"
 #include <QMouseEvent>
 #include "OutputArea.h"
 #include "State/FrameStack/GridLayer.h"
@@ -30,28 +30,28 @@ namespace Jam::Editor
 {
     using namespace State;
 
-    FrameStackAreaPrivate::FrameStackAreaPrivate(QWidget* parent) :
+    FrameStackAreaContent::FrameStackAreaContent(QWidget* parent) :
         QWidget(parent)
     {
         construct();
     }
 
-    FrameStackAreaPrivate::~FrameStackAreaPrivate()
+    FrameStackAreaContent::~FrameStackAreaContent()
     {
         if (const auto stack = State::layerStack())
         {
             disconnect(stack,
                        &State::FrameStackManager::vec2Injected,
                        this,
-                       &FrameStackAreaPrivate::vec2Injected);
+                       &FrameStackAreaContent::vec2Injected);
             disconnect(stack,
                        &State::FrameStackManager::stateChanged,
                        this,
-                       &FrameStackAreaPrivate::stateChanged);
+                       &FrameStackAreaContent::stateChanged);
         }
     }
 
-    void FrameStackAreaPrivate::construct()
+    void FrameStackAreaContent::construct()
     {
         setMinimumSize(I32(ScreenMin), I32(ScreenMin));
         setMaximumSize(I32(ScreenMax), I32(ScreenMax));
@@ -61,16 +61,16 @@ namespace Jam::Editor
         connect(State::layerStack(),
                 &State::FrameStackManager::vec2Injected,
                 this,
-                &FrameStackAreaPrivate::vec2Injected);
+                &FrameStackAreaContent::vec2Injected);
         connect(State::layerStack(),
                 &State::FrameStackManager::stateChanged,
                 this,
-                &FrameStackAreaPrivate::stateChanged);
+                &FrameStackAreaContent::stateChanged);
 
         resetAxis();
     }
 
-    void FrameStackAreaPrivate::resetAxis()
+    void FrameStackAreaContent::resetAxis()
     {
         const auto stack = State::layerStack();
 
@@ -95,7 +95,7 @@ namespace Jam::Editor
         update();
     }
 
-    Vec2F FrameStackAreaPrivate::updatePoint(
+    Vec2F FrameStackAreaContent::updatePoint(
         const QMouseEvent* event)
     {
         const Vec2F p1 = {
@@ -110,7 +110,7 @@ namespace Jam::Editor
         return p;
     }
 
-    void FrameStackAreaPrivate::updateSize(const QSize& sz)
+    void FrameStackAreaContent::updateSize(const QSize& sz)
     {
         _screen.setViewport(0, 0, sz.width(), sz.height());
         _screen.reset();
@@ -119,7 +119,7 @@ namespace Jam::Editor
         update();
     }
 
-    void FrameStackAreaPrivate::paintEvent(QPaintEvent* event)
+    void FrameStackAreaContent::paintEvent(QPaintEvent* event)
     {
         QPainter paint(this);
         paint.setRenderHint(QPainter::Antialiasing);
@@ -132,12 +132,12 @@ namespace Jam::Editor
             stk->render(&canvas);
     }
 
-    void FrameStackAreaPrivate::resizeEvent(QResizeEvent* event)
+    void FrameStackAreaContent::resizeEvent(QResizeEvent* event)
     {
         updateSize(event->size());
     }
 
-    void FrameStackAreaPrivate::wheelEvent(QWheelEvent* event)
+    void FrameStackAreaContent::wheelEvent(QWheelEvent* event)
     {
         const auto stack = State::layerStack();
 
@@ -152,7 +152,7 @@ namespace Jam::Editor
         event->accept();
     }
 
-    void FrameStackAreaPrivate::mousePressEvent(QMouseEvent* event)
+    void FrameStackAreaContent::mousePressEvent(QMouseEvent* event)
     {
         event->button() == Qt::LeftButton
             ? _state |= Left
@@ -166,7 +166,7 @@ namespace Jam::Editor
         QWidget::mousePressEvent(event);
     }
 
-    void FrameStackAreaPrivate::mouseReleaseEvent(QMouseEvent* event)
+    void FrameStackAreaContent::mouseReleaseEvent(QMouseEvent* event)
     {
         event->button() == Qt::LeftButton
             ? _state |= Left
@@ -175,7 +175,7 @@ namespace Jam::Editor
         QWidget::mouseReleaseEvent(event);
     }
 
-    void FrameStackAreaPrivate::mouseMoveEvent(QMouseEvent* event)
+    void FrameStackAreaContent::mouseMoveEvent(QMouseEvent* event)
     {
         if (_state & Left)
         {
@@ -188,7 +188,7 @@ namespace Jam::Editor
         QWidget::mouseMoveEvent(event);
     }
 
-    void FrameStackAreaPrivate::keyPressEvent(QKeyEvent* event)
+    void FrameStackAreaContent::keyPressEvent(QKeyEvent* event)
     {
         if (event->key() == Qt::Key_R)
             resetAxis();
@@ -199,7 +199,7 @@ namespace Jam::Editor
             : _state &= ~Shift;
     }
 
-    void FrameStackAreaPrivate::keyReleaseEvent(QKeyEvent* event)
+    void FrameStackAreaContent::keyReleaseEvent(QKeyEvent* event)
     {
         event->modifiers() ==
                 Qt::ShiftModifier
@@ -207,7 +207,7 @@ namespace Jam::Editor
             : _state &= ~Shift;
     }
 
-    void FrameStackAreaPrivate::vec2Injected(
+    void FrameStackAreaContent::vec2Injected(
         const FrameStackCode& code,
         const Vec2F&          vec)
     {
@@ -218,7 +218,7 @@ namespace Jam::Editor
         update();
     }
 
-    void FrameStackAreaPrivate::stateChanged()
+    void FrameStackAreaContent::stateChanged()
     {
         update();
     }

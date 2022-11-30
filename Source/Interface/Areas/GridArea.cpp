@@ -21,7 +21,7 @@
 */
 #include "GridArea.h"
 #include "AreaType.h"
-#include "GridPropertiesPage.h"
+#include "GridAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"
@@ -50,7 +50,7 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _area = new VerticalScrollArea();
-        _area->setWidget(new GridPropertiesPage(0));
+        _area->setWidget(new GridAreaContent());
 
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
@@ -62,7 +62,7 @@ namespace Jam::Editor
         switch ((AreaEvents)event->type())
         {
         case ProjectOpened:
-            _area->setWidget(new GridPropertiesPage(0));
+            _area->setWidget(new GridAreaContent());
             break;
         case ProjectClosed:
         case LayerSelect:

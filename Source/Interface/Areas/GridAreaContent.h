@@ -25,39 +25,32 @@
 
 namespace Jam::Editor
 {
-    namespace State
-    {
-        class ExpressionStateObject;
-        class VariableStateObject;
-    }
+    class I32Widget;
 
-    class StringWidget;
-
-    class FunctionPropertiesPage final : public StackedPanelContent
+    class GridAreaContent final : public StackedPanelContent
     {
         Q_OBJECT
     private:
-        StackedPanel* _panel{nullptr};
+        I32Widget* _x{nullptr};
+        I32Widget* _y{nullptr};
 
     public:
-        explicit FunctionPropertiesPage();
-        ~FunctionPropertiesPage() override;
+        explicit GridAreaContent();
 
-        void addSlider(State::VariableStateObject * obj = nullptr) const;
-
-        void addExpression(State::ExpressionStateObject * obj = nullptr) const;
-
-        void addPoint() const;
+        ~GridAreaContent() override;
 
     private:
         void construct();
 
-        void loadState() const;
+        void connectSignals();
 
-        void notifyResize() const;
+        void disconnectSignals();
 
-        void dropWidget(QWidget * widget) const;
+        void codeInjected(const State::FrameStackCode& code, const Vec2F& value) const;
 
+        static void xAxisUpdate(I32 v);
+
+        static void yAxisUpdate(I32 v);
     };
 
 }  // namespace Jam::Editor

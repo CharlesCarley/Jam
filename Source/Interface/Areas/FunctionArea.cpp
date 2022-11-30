@@ -23,7 +23,7 @@
 #include <QMenu>
 #include <QResizeEvent>
 #include "AreaType.h"
-#include "FunctionPropertiesPage.h"
+#include "FunctionAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"
@@ -55,7 +55,7 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _area = new VerticalScrollArea();
-        _func = new FunctionPropertiesPage();
+        _func = new FunctionAreaContent();
         _area->setWidget(_func);
 
         const auto tools = toolbar();
@@ -115,7 +115,7 @@ namespace Jam::Editor
         switch ((AreaEvents)event->type())
         {
         case ProjectOpened:
-            _func = new FunctionPropertiesPage();
+            _func = new FunctionAreaContent();
             _area->setWidget(_func);
             break;
         case ProjectClosed:
