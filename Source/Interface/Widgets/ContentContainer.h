@@ -20,9 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-
-#include <QFileDialog>
-#include "Interface/Widgets/WindowTitlebar.h"
+#include <QWidget>
 
 class QVBoxLayout;
 
@@ -31,7 +29,6 @@ namespace Jam::Editor
     class ContentContainer final : public QWidget
     {
         Q_OBJECT
-
     signals:
         void mouseEntered();
         void mouseExited();
@@ -39,13 +36,6 @@ namespace Jam::Editor
     private:
         QVBoxLayout* _layout{nullptr};
 
-        void construct();
-
-        void clear() const;
-
-        void enterEvent(QEnterEvent* event) override;
-
-        void leaveEvent(QEvent* event) override;
     public:
         explicit ContentContainer(QWidget* parent = nullptr);
         ~ContentContainer() override;
@@ -53,6 +43,14 @@ namespace Jam::Editor
         void setBorder(int border) const;
 
         void setContentLayout(QLayout* layout) const;
-        
+
+    private:
+        void construct();
+
+        void clear() const;
+
+        void enterEvent(QEnterEvent* event) override;
+
+        void leaveEvent(QEvent* event) override;
     };
 }  // namespace Jam::Editor

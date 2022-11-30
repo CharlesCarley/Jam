@@ -55,6 +55,14 @@ namespace Jam::Editor
         QPointF      _lastPos{};
         QString      _title{};
 
+    public:
+        explicit WindowTitlebar(int opts = Default, QWidget* parent = nullptr);
+
+        explicit WindowTitlebar(QString title, int opts = Default, QWidget* parent = nullptr);
+
+        ~WindowTitlebar() override;
+
+    private:
         void construct();
 
         void appendButton(int icon, const std::function<void()>& function);
@@ -66,10 +74,5 @@ namespace Jam::Editor
         void mouseDoubleClickEvent(QMouseEvent* event) override;
 
         void mouseMoveEvent(QMouseEvent* event) override;
-
-    public:
-        explicit WindowTitlebar(int opts = Default, QWidget* parent = nullptr);
-        explicit WindowTitlebar(QString title, int opts = Default, QWidget* parent = nullptr);
-        ~WindowTitlebar() override;
     };
 }  // namespace Jam::Editor

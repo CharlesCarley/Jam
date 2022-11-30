@@ -28,8 +28,7 @@
 
 namespace Jam
 {
-    constexpr U16 MaxSplit = 0x100; 
-
+    constexpr U16 MaxSplit = 0x100;
 
     class StringConverter
     {
@@ -39,7 +38,9 @@ namespace Jam
         static void toRectF(const String& str, RectF& dest);
         static void toBox(const String& str, Box& dest);
 
-        static void toR32Array(const String& str, R32Array& dest, I8 sep=',');
-        static void toI32Array(const String& str, I32Array& dest, I8 sep=',');
+        static void toR32Array(const String& str, R32Array& dest, I8 sep = ',');
+        static void toI32Array(const String& str, I32Array& dest, I8 sep = ',');
     };
+
+    using Sc = StringConverter;
 }  // namespace Jam

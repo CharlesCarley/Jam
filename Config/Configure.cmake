@@ -103,6 +103,7 @@ set(ExtraFlags )
 if (MSVC)
     # globally disable scoped enum warnings
     set(ExtraFlags "${ExtraFlags} /wd26812")
+    set(ExtraFlags "${ExtraFlags} /W3")
 
 
     if (Jam_JUST_MY_CODE)

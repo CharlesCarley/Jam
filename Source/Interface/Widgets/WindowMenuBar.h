@@ -35,16 +35,16 @@ namespace Jam::Editor
         void minimize();
 
     private:
-        void construct();
-
         QHBoxLayout* _toolbar{nullptr};
 
     protected:
         void mouseDoubleClickEvent(QMouseEvent* event) override;
 
-
     public:
         explicit WindowMenuBar(QWidget* parent = nullptr);
         ~WindowMenuBar() override;
+
+    private:
+        void construct();
     };
 }  // namespace Jam::Editor

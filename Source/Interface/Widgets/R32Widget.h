@@ -66,17 +66,21 @@ namespace Jam::Editor
 
     private:
         void connectEvents();
+
         void construct();
 
         void editingFinished() const;
+
         void doubleClicked() const;
+
         void returnPressed() const;
 
-        void onStepParamChange(const VariableStepData& dt) const;
+        void onStepParamChange(const VariableStepData& data) const;
 
         void makeEditable(bool edit) const;
 
         void mouseDoubleClickEvent(QMouseEvent* event) override;
+
         void keyPressEvent(QKeyEvent* event) override;
     };
 

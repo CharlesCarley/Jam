@@ -46,8 +46,10 @@ namespace Jam::Editor::State
     protected:
         Vec2I _size{0, 0};
 
+        [[deprecated("remove me")]]
         virtual bool resizeEvent(const Vec2I& size);
 
+        [[deprecated("remove me")]]
         virtual bool injectVec2FImpl(const FrameStackCode& code,
                                      const Vec2F&          size);
 
@@ -62,16 +64,20 @@ namespace Jam::Editor::State
 
         virtual bool update();
 
+        [[deprecated("remove me")]]
         bool injectVec2(const FrameStackCode& code,
                         const Vec2F&          size);
 
+        [[deprecated("remove me")]]
         virtual bool injectText(const String& text);
 
+        [[deprecated("remove me")]]
         bool isSelected() const
         {
             return (_layerFlags & Selection) != 0;
         }
 
+        [[deprecated("remove me")]]
         void select(bool v)
         {
             if (v)
@@ -80,4 +86,5 @@ namespace Jam::Editor::State
                 _layerFlags &= ~Selection;
         }
     };
+
 }  // namespace Jam

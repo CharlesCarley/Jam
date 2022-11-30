@@ -35,19 +35,10 @@ namespace Jam::Editor
         setWidgetResizable(false);
     }
 
-
-    void VerticalScrollArea::invalidate(const QSize& size)
-    {
-        if (QWidget* attached = widget())
-        {
-            _initialHeight = attached->sizeHint().height();
-            attached->resize(size.width(), _initialHeight);
-        }
-    }
-
     void VerticalScrollArea::resizeEvent(QResizeEvent* event)
     {
-        invalidate(event->size());
+        if (QWidget* attached = widget())
+            attached->resize(event->size().width(), attached->sizeHint().height());
         QScrollArea::resizeEvent(event);
     }
 

@@ -100,11 +100,6 @@ namespace Jam::Editor
         return Char::toString(_val);
     }
 
-    String I32WidgetPrivate::label() const
-    {
-        return _label;
-    }
-
     void I32WidgetPrivate::handleSingleTick(const QPointF& d)
     {
         if (d.x() < Sr)

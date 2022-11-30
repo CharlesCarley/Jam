@@ -80,14 +80,14 @@ namespace Jam::Editor
         makeEditable(false);
     }
 
-    void R32Widget::onStepParamChange(const VariableStepData& dt) const
+    void R32Widget::onStepParamChange(const VariableStepData& data) const
     {
         makeEditable(false);
-        setLabel(dt.name);
-        setRange(dt.range.x, dt.range.y);
-        setRate(dt.rate);
+        setLabel(data.name);
+        setRange(data.range.x, data.range.y);
+        setRate(data.rate);
 
-        emit stepDataChanged(dt);
+        emit stepDataChanged(data);
     }
 
     void R32Widget::makeEditable(const bool edit) const

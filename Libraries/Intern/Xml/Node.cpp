@@ -147,14 +147,14 @@ namespace Jam::Xml
         return (int16_t)integer(name, (int64_t)def);
     }
 
-    float Node::float32(const String& name, float def) const
+    float Node::float32(const String& name, const float def) const
     {
         if (const String val = attribute(name); !val.empty())
             return Char::toFloat(val, def);
         return def;
     }
 
-    double Node::float64(const String& name, double def) const
+    double Node::float64(const String& name, const double def) const
     {
         if (const String val = attribute(name); !val.empty())
             return Char::toDouble(val, def);
@@ -164,7 +164,7 @@ namespace Jam::Xml
     bool Node::isTypeOf(const char* tagName) const
     {
         if (!tagName)
-            throw MessageException("invalid string supplied");
+            throw Exception("invalid string supplied");
 
         return Char::equals(_name.c_str(),
                             tagName,
@@ -199,7 +199,7 @@ namespace Jam::Xml
     void Node::siblingsOf(NodeArray& dest, const String& tag) const
     {
         if (tag.empty())
-            throw MessageException("the supplied tag can not be empty");
+            throw Exception("the supplied tag can not be empty");
 
         for (Node* child : _children)
         {
@@ -211,9 +211,7 @@ namespace Jam::Xml
     void Node::clearChildren()
     {
         if (_childrenDetached)
-        {
             _children.clear();
-        }
         else
         {
             for (const Node* child : _children)

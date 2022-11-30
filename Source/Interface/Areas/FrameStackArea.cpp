@@ -57,7 +57,6 @@ namespace Jam::Editor
             Qt::AlignRight);
 
         _private = new FrameStackAreaPrivate();
-
         layout->addWidget(tools);
         layout->addWidget(_private, 1);
 
@@ -80,7 +79,6 @@ namespace Jam::Editor
         case MergeLeftEvent:
         case MergeRightEvent:
         case SwitchContentEvent:
-        default:
             break;
         }
         return Area::event(event);

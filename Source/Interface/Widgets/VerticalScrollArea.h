@@ -26,17 +26,11 @@ namespace Jam::Editor
 {
     class VerticalScrollArea final : public QScrollArea
     {
-    private:
-        int _initialHeight{-1};
-
     public:
         explicit VerticalScrollArea(QWidget* parent = nullptr);
 
     private:
-        void invalidate(const QSize& size);
-
         void resizeEvent(QResizeEvent* event) override;
     };
-
 
 }  // namespace Jam::Editor

@@ -45,6 +45,7 @@ namespace Jam::Editor
         ~StackedPanel() override;
 
         void addWidget(QWidget* widget, int expand = 1);
+
         void remove(QWidget* widget);
 
         void addLayout(QLayout* widget, int expand = 1);

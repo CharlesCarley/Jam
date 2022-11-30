@@ -51,7 +51,7 @@ namespace Jam::Editor::State
         bool loadImpl(const String& projectPath, IStream& stream);
 
         bool saveImpl(const String& path, const String& layout);
-        
+
         void clearProjectState();
 
     public:
@@ -59,15 +59,18 @@ namespace Jam::Editor::State
 
         bool load(const String& projectPath);
 
-        void loadDefaultStack();
+        static void loadDefaultStack();
 
         void unload();
 
         String layout() const;
 
-        const String& path() const
-        {
-            return _path;
-        }
+        const String& path() const;
     };
+
+    inline const String& ProjectManager::path() const
+    {
+        return _path;
+    }
+
 }  // namespace Jam::Editor::State

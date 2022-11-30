@@ -132,10 +132,9 @@ namespace Jam
         const I8      sep)
     {
         StringArray sa;
-        StringUtils::splitRejectEmpty(sa, str, sep);
+        Su::splitRejectEmpty(sa, str, sep);
 
         dest.reserve(Clamp<U32>(U32(sa.size()), 0, MaxSplit));
-
         for (const auto& v : sa)
             dest.push_back(Char::toFloat(v));
     }
@@ -146,7 +145,7 @@ namespace Jam
         const I8      sep)
     {
         StringArray sa;
-        StringUtils::splitRejectEmpty(sa, str, sep);
+        Su::splitRejectEmpty(sa, str, sep);
 
         dest.reserve(Clamp<U32>(U32(sa.size()), 0, MaxSplit));
 

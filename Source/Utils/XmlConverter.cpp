@@ -19,15 +19,15 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "XmlConverter.h"
+#include "Utils/XmlConverter.h"
 #include "Interface/PersistentSettings.h"
 #include "Math/Box.h"
 #include "Math/Color.h"
 #include "Math/RectF.h"
 #include "Math/Vec2F.h"
-#include "StringConverter.h"
 #include "Utils/Char.h"
 #include "Utils/String.h"
+#include "Utils/StringConverter.h"
 #include "Xml/Node.h"
 #include "Xml/Writer.h"
 
@@ -37,7 +37,7 @@ namespace Jam
     {
         Color copy = def;
         if (tag != nullptr)
-            StringConverter::toColor(tag->text(), copy);
+            Sc::toColor(tag->text(), copy);
         return copy;
     }
 
@@ -45,7 +45,7 @@ namespace Jam
     {
         R32Array copy;
         if (tag != nullptr)
-            StringConverter::toR32Array(tag->text(), copy);
+            Sc::toR32Array(tag->text(), copy);
         return copy;
     }
 
@@ -53,7 +53,7 @@ namespace Jam
     {
         Vec2F copy = def;
         if (tag != nullptr)
-            StringConverter::toVec2F(tag->text(), copy);
+            Sc::toVec2F(tag->text(), copy);
         return copy;
     }
 
@@ -68,7 +68,7 @@ namespace Jam
             if (const String value = tag->attribute(attr);
                 !value.empty())
             {
-                StringConverter::toVec2F(value, copy);
+                Sc::toVec2F(value, copy);
                 copy.clamp(minMax);
             }
             // use default quietly...
@@ -94,7 +94,7 @@ namespace Jam
     {
         RectF copy = def;
         if (tag != nullptr)
-            StringConverter::toRectF(tag->text(), copy);
+            Sc::toRectF(tag->text(), copy);
         return copy;
     }
 
@@ -102,7 +102,7 @@ namespace Jam
     {
         Box copy = def;
         if (tag != nullptr)
-            StringConverter::toBox(tag->text(), copy);
+            Sc::toBox(tag->text(), copy);
         return copy;
     }
 
@@ -139,7 +139,7 @@ namespace Jam
     void XmlConverter::toIntArray(const XmlNode* tag, I32Array& dest)
     {
         if (tag != nullptr)
-            StringConverter::toI32Array(tag->text(), dest);
+            Sc::toI32Array(tag->text(), dest);
     }
 
     void XmlConverter::toIntArray(const String&  attr,
@@ -150,7 +150,7 @@ namespace Jam
         {
             if (const String val = tag->attribute(attr);
                 !val.empty())
-                StringConverter::toI32Array(val, dest);
+                Sc::toI32Array(val, dest);
         }
     }
 
@@ -159,7 +159,7 @@ namespace Jam
                               const Slice&   defX,
                               const Slice&   defY)
     {
-        Axis dest;
+        Axis     dest;
         I32Array v;
         toIntArray(attr, tag, v);
 

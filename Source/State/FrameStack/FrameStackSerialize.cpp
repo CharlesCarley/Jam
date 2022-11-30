@@ -29,7 +29,6 @@
 
 namespace Jam::Editor::State
 {
-    using namespace Editor::State;
     using Xc = XmlConverter;
     using Sc = StringUtils;
 
@@ -41,14 +40,12 @@ namespace Jam::Editor::State
     GridLayer* FrameStackSerialize::loadGrid(const XmlNode* root) const
     {
         const auto grid = new GridLayer();
-
         grid->setMajorGrid(0x2b2b2bFF);
         grid->setMinorGrid(0x212121FF);
         grid->setOrigin(0x4B4B4BFF);
 
         grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
         grid->setAxis(Xc::toAxis("axis", root));
-
         return grid;
     }
 
@@ -67,10 +64,11 @@ namespace Jam::Editor::State
             {
                 VariableStateObject* vso = fnc->createVariable();
 
+
+                vso->setName(node->attribute("name"));
                 vso->setRange(Xc::toVec2F("range", node, {-10.f, 10}));
                 vso->setRate(node->float32("rate", 1));
-                vso->setRate(node->float32("value", 1));
-                vso->setName(node->attribute("name"));
+                vso->setValue(node->float32("value", 1));
             }
             else
             {

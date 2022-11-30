@@ -124,7 +124,6 @@ namespace Jam::Editor
         case MergeLeftEvent:
         case MergeRightEvent:
         case SwitchContentEvent:
-        default:
             break;
         }
         return Area::event(event);

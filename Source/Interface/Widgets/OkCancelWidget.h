@@ -34,13 +34,17 @@ namespace Jam::Editor
         void cancelClicked();
 
     private:
-        void construct(const Qt::Alignment& align);
-
         QHBoxLayout* _layout{nullptr};
 
     public:
         explicit OkCancelWidget(QWidget* parent = nullptr);
-        explicit OkCancelWidget(const Qt::Alignment& align=Qt::AlignHCenter, QWidget* parent = nullptr);
+
+        explicit OkCancelWidget(const Qt::Alignment& align  = Qt::AlignHCenter,
+                                QWidget*             parent = nullptr);
+
         ~OkCancelWidget() override;
+
+    private:
+        void construct(const Qt::Alignment& align);
     };
 }  // namespace Jam::Editor

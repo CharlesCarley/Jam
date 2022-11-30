@@ -33,16 +33,6 @@ namespace Jam::Editor
         construct();
     }
 
-    void StackedPanelContent::addPanel(StackedPanel* widget) const
-    {
-        _manger->addWidget(widget);
-    }
-
-    QSize StackedPanelContent::sizeHint() const
-    {
-        return _manger->totalHeight();
-    }
-
     void StackedPanelContent::construct()
     {
         View::applyColorRoles(this);
@@ -51,6 +41,16 @@ namespace Jam::Editor
         // Use addPanel to add items
         // to the manger..
         setLayout(_manger);
+    }
+
+    void StackedPanelContent::addPanel(StackedPanel* widget) const
+    {
+        _manger->addWidget(widget);
+    }
+
+    QSize StackedPanelContent::sizeHint() const
+    {
+        return _manger->totalHeight();
     }
 
 }  // namespace Jam::Editor

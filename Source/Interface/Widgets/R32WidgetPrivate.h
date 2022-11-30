@@ -21,7 +21,6 @@
 */
 #pragma once
 #include <QWidget>
-#include "Math/Integer.h"
 #include "Math/Vec2F.h"
 #include "Math/Vec2I.h"
 
@@ -63,24 +62,34 @@ namespace Jam::Editor
 
         String text() const;
 
-        String label() const;
+        const String& label() const;
 
     protected:
         void construct();
 
         void handleSingleTick(const QPointF& d);
+
         bool isInInnerRect(const QPointF& d) const;
 
         void mousePressEvent(QMouseEvent* event) override;
+
         void mouseReleaseEvent(QMouseEvent* event) override;
+
         void mouseMoveEvent(QMouseEvent* event) override;
+
         void paintEvent(QPaintEvent* event) override;
+
         void mouseDoubleClickEvent(QMouseEvent* event) override;
     };
 
     inline R32 R32WidgetPrivate::value() const
     {
         return _val;
+    }
+    
+    inline const String& R32WidgetPrivate::label() const
+    {
+        return _label;
     }
 
 }  // namespace Jam::Editor

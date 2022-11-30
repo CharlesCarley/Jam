@@ -1,3 +1,24 @@
+/*
+-------------------------------------------------------------------------------
+    Copyright (c) Charles Carley.
+
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+     claim that you wrote the original software. If you use this software
+     in a product, an acknowledgment in the product documentation would be
+     appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+     misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+-------------------------------------------------------------------------------
+*/
 #include "State/ProjectManager.h"
 #include <iostream>
 #include "FrameStack/FrameStackSerialize.h"
@@ -85,13 +106,12 @@ namespace Jam::Editor::State
         }
         return false;
     }
-    
+
     void ProjectManager::clearProjectState()
     {
         _path   = {};
         _layout = {};
 
-        
         if (const auto stack = layerStack())
         {
             stack->clear();
@@ -142,12 +162,10 @@ namespace Jam::Editor::State
     void ProjectManager::loadDefaultStack()
     {
         StringStream ss;
-
         ss << R"(<stack>)";
         ss << R"(<grid origin="0,0" axis="25,1,25,1"/>)";
-        ss << R"(<function text="y=x"/>)";
+        ss << R"(<function/>)";
         ss << R"(</stack>)";
-
         if (const auto stack = layerStack())
             stack->load(ss);
     }

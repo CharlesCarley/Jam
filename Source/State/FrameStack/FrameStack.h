@@ -52,9 +52,11 @@ namespace Jam::Editor::State
 
         void render(RenderContext* canvas);
 
+        [[deprecated("remove")]]
         bool injectVec2(const FrameStackCode& code,
                         const Vec2F&          value);
 
+        [[deprecated("remove")]]
         bool injectText(const String&         text);
 
         // NOTE: passes ownership

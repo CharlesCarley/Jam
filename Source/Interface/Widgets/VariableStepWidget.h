@@ -21,9 +21,7 @@
 */
 #pragma once
 #include <QWidget>
-#include "Math/Integer.h"
 #include "Math/Vec2F.h"
-#include "R32Widget.h"
 
 class QLabel;
 class QLineEdit;
@@ -55,16 +53,20 @@ namespace Jam::Editor
         explicit VariableStepWidget(QWidget* parent = nullptr);
 
         void setName(const String& value);
+
         void setRange(const Vec2F& value);
+
         void setRate(const R32& value);
 
     private:
         void construct();
+
         void connectSignals();
 
         void onTextChanged();
 
         void focusOutEvent(QFocusEvent* event) override;
+
         void focusInEvent(QFocusEvent* event) override;
     };
 

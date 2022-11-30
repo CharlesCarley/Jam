@@ -45,7 +45,7 @@ namespace Jam
         static Vec2F toVec2F(const String&  attr,
                              const XmlNode* tag,
                              const Vec2F&   def    = {R32(0), 0},
-                             const Vec2F&   minMax = {UnitMin, UnitMax});
+                             const Vec2F&   minMax = {-UnitMax, UnitMax});
 
         static R32 toReal(const XmlNode* tag, const R32& def = 0);
 

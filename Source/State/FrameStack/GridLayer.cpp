@@ -92,9 +92,4 @@ namespace Jam::Editor::State
         _axis.set(ax);
     }
 
-    void GridLayer::setFlags(const U8& flags)
-    {
-        _flags = flags;
-    }
-
 }  // namespace Jam::Layers

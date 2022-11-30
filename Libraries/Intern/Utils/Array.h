@@ -42,7 +42,7 @@ namespace Jam
         Array(const Array& o) = default;
         Array(std::initializer_list<T> o)
         {
-            this->reserve(o.size());
+            this->reserve((SizeType)o.size());
             for (const auto& element : o)
                 push_back(element);
         }

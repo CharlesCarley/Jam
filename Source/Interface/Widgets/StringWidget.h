@@ -50,11 +50,14 @@ namespace Jam::Editor
 
         const String& text() const;
 
+        [[deprecated("Use constant for this...")]]
         void setHeight(int hgt);
 
     private:
         void connectEvents();
+
         void construct();
+
         void finished();
     };
 
