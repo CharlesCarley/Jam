@@ -26,7 +26,7 @@ namespace Jam::Editor
 {
     class StackedPanel;
 
-    class StackedPanelManager : public QLayout
+    class StackedPanelManager final : public QLayout
     {
     private:
         QList<QLayoutItem*> _items;
@@ -35,14 +35,20 @@ namespace Jam::Editor
         StackedPanelManager();
         ~StackedPanelManager() override;
 
-        void addPanel(StackedPanel *panel);
+        void addPanel(StackedPanel* panel);
 
-    private:
-        QSize        sizeHint() const override;
-        void         addItem(QLayoutItem*) override;
+        QSize sizeHint() const override;
+
+        void addItem(QLayoutItem*) override;
+
         QLayoutItem* itemAt(int index) const override;
+
         QLayoutItem* takeAt(int index) override;
-        int          count() const override;
-        void         setGeometry(const QRect&) override;
+
+        int count() const override;
+
+        void setGeometry(const QRect&) override;
+
+        QSize totalHeight() const;
     };
 }  // namespace Jam::Editor

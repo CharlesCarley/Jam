@@ -28,7 +28,7 @@
 namespace Jam::Editor::State
 {
     App* App::_instance = nullptr;
-    App::App()      = default;
+    App::App()          = default;
 
     App::~App()
     {
@@ -117,6 +117,16 @@ namespace Jam::Editor::State
         if (App::isValid())
             return App::instance().layerStack();
         throw Exception("Invalid application state data.");
+    }
+
+    GridLayer* gridLayer()
+    {
+        return layerStack()->cast<GridLayer, GridType>(0);
+    }
+
+    FunctionLayer* functionLayer()
+    {
+        return layerStack()->cast<FunctionLayer, FunctionType>(1);
     }
 
 }  // namespace Jam::Editor::State

@@ -23,6 +23,7 @@
 #include <QPalette>
 #include "Utils/Array.h"
 
+class QLineEdit;
 class QWidget;
 class QBoxLayout;
 class QLayout;
@@ -54,6 +55,8 @@ namespace Jam::Editor::View
 
     extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
 
+    extern void localDefaults(QWidget* widget, int margin = 0, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
+
     extern void emptyWidget(QWidget* dst);
 
     extern void menuRole(QWidget* dst);
@@ -61,6 +64,8 @@ namespace Jam::Editor::View
     extern void treeWidgetDefaults(QTreeWidget* dst);
 
     extern void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent);
+
+    extern void lineEditDefaults(QLineEdit* dst, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
 
     extern void pushButtonDefaults(QPushButton* dst);
 
@@ -71,4 +76,4 @@ namespace Jam::Editor::View
     extern bool isLeaf(const QWidget* widget);
 
     extern void clearLayout(QLayout* layout, SimpleArray<QWidget*>& dangled);
-}  // namespace Jam::Editor
+}  // namespace Jam::Editor::View

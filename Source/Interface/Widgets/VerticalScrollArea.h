@@ -20,41 +20,23 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QWidget>
-#include "Math/Integer.h"
+#include <QScrollArea>
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
-
-    class StackedPanel final : public QWidget
+    class VerticalScrollArea final : public QScrollArea
     {
-        Q_OBJECT
     private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
+        int _initialHeight{-1};
 
     public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
-
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
-
-        void addLayout(QLayout* widget, int expand = 1);
-
-        void setLabel(const QString& label);
-
-        QSize sizeHint() const override;
+        explicit VerticalScrollArea(QWidget* parent = nullptr);
 
     private:
-        void construct();
+        void invalidate(const QSize& size);
+
+        void resizeEvent(QResizeEvent* event) override;
     };
+
 
 }  // namespace Jam::Editor

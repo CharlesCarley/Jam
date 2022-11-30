@@ -68,7 +68,7 @@ namespace Jam::Editor::State
             out << "<jam>" << std::endl;
             out << layout;
 
-            const FrameStackSerialize serialize(layerStack()->stack());
+            FrameStackSerialize serialize(layerStack()->stack());
             serialize.save(out);
 
             // XmlProject::saveFrameStack(stream);

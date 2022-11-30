@@ -1,4 +1,4 @@
-#include "Stmt.h"
+#include "Statement.h"
 #include "Utils/StreamMethods.h"
 
 namespace Jam::Eq
@@ -33,28 +33,28 @@ namespace Jam::Eq
         }
     }
 
-    void Stmt::push(const R64& v, const size_t& idx, const U8 flag)
+    void Statement::push(const R64& v, const size_t& idx, const U8 flag)
     {
         _stack.push({v, idx, flag});
     }
 
-    void Stmt::push(const Symbol* sy)
+    void Statement::push(const Symbol* sy)
     {
         push(sy->value());
     }
 
-    void Stmt::store(const Symbol* sym)
+    void Statement::store(const Symbol* sym)
     {
-        size_t idx = _table.find(sym->name());
+        size_t idx = _variables.find(sym->name());
         if (idx == JtNpos)
         {
-            _table.insert(sym->name(), {sym->value()});
-            idx = _table.find(sym->name());
+            _variables.insert(sym->name(), {sym->value()});
+            idx = _variables.find(sym->name());
         }
-        push(_table.at(idx).v, idx, StackValue::Id);
+        push(_variables.at(idx).v, idx, StackValue::Id);
     }
 
-    void Stmt::add()
+    void Statement::add()
     {
         if (_stack.size() > 1)
         {
@@ -66,7 +66,7 @@ namespace Jam::Eq
             argError("add");
     }
 
-    void Stmt::sub()
+    void Statement::sub()
     {
         if (_stack.size() > 1)
         {
@@ -78,7 +78,7 @@ namespace Jam::Eq
             argError("sub");
     }
 
-    void Stmt::neg()
+    void Statement::neg()
     {
         if (_stack.isNotEmpty())
         {
@@ -89,7 +89,7 @@ namespace Jam::Eq
             argError("neg");
     }
 
-    void Stmt::mul()
+    void Statement::mul()
     {
         if (_stack.size() > 1)
         {
@@ -101,7 +101,7 @@ namespace Jam::Eq
             argError("mul");
     }
 
-    void Stmt::div()
+    void Statement::div()
     {
         if (_stack.size() > 1)
         {
@@ -118,7 +118,7 @@ namespace Jam::Eq
             argError("div");
     }
 
-    void Stmt::mod()
+    void Statement::mod()
     {
         if (_stack.size() > 1)
         {
@@ -130,7 +130,7 @@ namespace Jam::Eq
             argError("mod");
     }
 
-    void Stmt::pow()
+    void Statement::pow()
     {
         if (_stack.size() > 1)
         {
@@ -142,7 +142,7 @@ namespace Jam::Eq
             argError("pow");
     }
 
-    void Stmt::group()
+    void Statement::group()
     {
         if (_stack.size() > 1)
         {
@@ -169,7 +169,7 @@ namespace Jam::Eq
             argError("group");
     }
 
-    void Stmt::assign()
+    void Statement::assign()
     {
         if (_stack.size() > 1)
         {
@@ -180,9 +180,9 @@ namespace Jam::Eq
             // a = b
             if (b.isId())
             {
-                if (b.c < _table.size())
+                if (b.c < _variables.size())
                 {
-                    c.v = _table[b.c].v;
+                    c.v = _variables[b.c].v;
                     c.c = b.c;
                     c.f = StackValue::Id;
                 }
@@ -202,8 +202,8 @@ namespace Jam::Eq
 
             if (a.isId())
             {
-                if (a.c < _table.size())
-                    _table[a.c] = c;
+                if (a.c < _variables.size())
+                    _variables[a.c] = c;
             }
 
             _stack.push(c);
@@ -212,7 +212,7 @@ namespace Jam::Eq
             argError("assign");
     }
 
-    void Stmt::mathFncA1(WrapFuncA1 f)
+    void Statement::mathFncA1(WrapFuncA1 f)
     {
         if (_stack.size() > 1)
         {
@@ -231,7 +231,7 @@ namespace Jam::Eq
                 "at least two elements on the stack.");
     }
 
-    void Stmt::mathFncA2(WrapFuncA2 f)
+    void Statement::mathFncA2(WrapFuncA2 f)
     {
         if (_stack.size() > 2)
         {
@@ -257,7 +257,7 @@ namespace Jam::Eq
         return r < 0 ? b + r : r;
     }
 
-    void Stmt::eval(const Symbol* sy)
+    void Statement::eval(const Symbol* sy)
     {
         // clang-format off
     switch (sy->type()) {
@@ -304,7 +304,7 @@ namespace Jam::Eq
         // clang-format on
     }
 
-    R64 Stmt::executeImpl(const SymbolArray& val)
+    R64 Statement::executeImpl(const SymbolArray& val)
     {
         _stack.resizeFast(0);
         for (const auto& sy : val)
@@ -313,7 +313,7 @@ namespace Jam::Eq
         return _stack.empty() ? 0 : _stack.top().v;
     }
 
-    void Stmt::argError(const char* op)
+    void Statement::argError(const char* op)
     {
         error(
             "not enough arguments "
@@ -322,7 +322,7 @@ namespace Jam::Eq
             "' operation ");
     }
 
-    R64 Stmt::execute(const SymbolArray& val)
+    R64 Statement::execute(const SymbolArray& val)
     {
         try
         {
@@ -335,35 +335,42 @@ namespace Jam::Eq
         }
     }
 
-    void Stmt::set(const String& name, const R64 value)
+    void Statement::set(const String& name, const R64 value)
     {
-        if (const size_t idx = _table.find(name);
+        if (const size_t idx = _variables.find(name);
             idx == JtNpos)
-            _table.insert(name, {value, JtNpos, StackValue::Value});
+            _variables.insert(name, {value, JtNpos, StackValue::Value});
         else
-            _table[idx] = {value, JtNpos, StackValue::Value};
+            _variables[idx] = {value, JtNpos, StackValue::Value};
     }
 
-    void Stmt::set(const VInt index, const R64 value)
+    void Statement::set(const VInt index, const R64 value)
     {
-        if (index < _table.size())
-            _table[index] = {value, JtNpos, StackValue::Value};
+        if (index < _variables.size())
+            _variables[index] = {value, JtNpos, StackValue::Value};
     }
 
-    VInt Stmt::indexOf(const String& name) const
+    VInt Statement::indexOf(const String& name) const
     {
-        return _table.find(name);
+        return _variables.find(name);
     }
 
-    R64 Stmt::get(const String& name, const R64 def)
+    R64 Statement::get(const String& name, const R64 def)
     {
-        if (const size_t idx = _table.find(name);
+        if (const size_t idx = _variables.find(name);
             idx != JtNpos)
-            return _table[idx].v;
+            return _variables[idx].v;
         return def;
     }
 
-    R64 Stmt::peek(I32 idx)
+    R64 Statement::get(const VInt name, const R64 def)
+    {
+        if (name < _variables.size())
+            return _variables[name].v;
+        return def;
+    }
+
+    R64 Statement::peek(I32 idx)
     {
         idx = (_stack.topI() - idx);
         if (idx >= 0 && idx < _stack.sizeI())
@@ -371,7 +378,7 @@ namespace Jam::Eq
         return 0;
     }
 
-    void Stmt::get(const String& name, ValueList& dest)
+    void Statement::get(const String& name, ValueList& dest)
     {
         dest.resizeFast(0);
         const U32 hashKey = (U32)get(name, -1);
@@ -388,7 +395,7 @@ namespace Jam::Eq
         }
     }
 
-    Stmt::~Stmt()
+    Statement::~Statement()
     {
         for (const auto& ele : _groups)
             delete ele.second;

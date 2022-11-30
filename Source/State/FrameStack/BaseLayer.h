@@ -23,7 +23,7 @@
 #include "FrameStack.h"
 #include "Math/Vec2.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     class RenderContext;
     enum LayerType

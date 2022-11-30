@@ -20,68 +20,120 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Areas/FunctionPropertiesPage.h"
+#include <QApplication>
+#include <QResizeEvent>
 #include <QWidget>
 #include "Interface/Extensions.h"
+#include "Interface/Widgets/ExpressionWidget.h"
+#include "Interface/Widgets/R32Widget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "Interface/Widgets/StringWidget.h"
+#include "Interface/Widgets/VariableWidget.h"
 #include "State/App.h"
 #include "State/FrameStack/FunctionLayer.h"
 #include "State/FrameStackManager.h"
 
 namespace Jam::Editor
 {
-    FunctionPropertiesPage::FunctionPropertiesPage(const U32 idx)
+    FunctionPropertiesPage::FunctionPropertiesPage()
     {
-        construct(idx);
+        construct();
     }
 
     FunctionPropertiesPage::~FunctionPropertiesPage() = default;
 
-    void FunctionPropertiesPage::clear() const
-    {
-        if (_input0)
-            _input0->setText("");
-    }
-
-    void FunctionPropertiesPage::construct(U32 idx)
+    void FunctionPropertiesPage::construct()
     {
         View::applyColorRoles(this);
-
-        const auto panel = new StackedPanel();
-        panel->setLabel("Functions");
-
-        _input0 = new StringWidget();
-
-        if (const auto state = State::layerStack())
-        {
-            if (const auto fn = state->cast<Layers::FunctionLayer,
-                                            FunctionType>(idx))
-                _input0->setText(fn->getText());
-        }
-
-        panel->addWidget(_input0);
-
-        connectSignals();
-
-        addPanel(panel);
+        _panel = new StackedPanel();
+        _panel->setLabel("Functions");
+        loadState();
+        addPanel(_panel);
     }
 
-    void FunctionPropertiesPage::connectSignals()
+    void FunctionPropertiesPage::loadState() const
     {
-        connect(_input0,
-                &StringWidget::editingFinished,
+        const auto layer = State::functionLayer();
+
+        for (const auto object : layer->objects())
+        {
+            if (object->type == State::FstExpression)
+                addExpression((State::ExpressionStateObject*)object);
+            if (object->type == State::FstVariable)
+                addSlider((State::VariableStateObject*)object);
+        }
+    }
+
+    void FunctionPropertiesPage::addSlider(State::VariableStateObject* obj) const
+    {
+        if (obj == nullptr)
+            obj = State::functionLayer()->createVariable();
+
+        if (obj == nullptr)  // unlikely
+            throw Exception("invalid state object");
+
+        const auto var = new VariableWidget(obj);
+        connect(var,
+                &VariableWidget::wantsToDelete,
                 this,
-                &FunctionPropertiesPage::onTextChanged);
-        connect(_input0,
-                &StringWidget::returnPressed,
+                [=]
+                { dropWidget((QWidget*)sender()); });
+
+        _panel->addWidget(var);
+        notifyResize();
+    }
+
+    void FunctionPropertiesPage::addExpression(State::ExpressionStateObject* obj) const
+    {
+        if (obj == nullptr)
+            obj = State::functionLayer()->createExpression();
+
+        if (obj == nullptr)  // unlikely
+            throw Exception("invalid state object");
+
+        const auto exp = new ExpressionWidget(obj);
+        connect(exp,
+                &ExpressionWidget::wantsToDelete,
                 this,
-                &FunctionPropertiesPage::onTextChanged);
+                [=]
+                { dropWidget((QWidget*)sender()); });
+
+        _panel->addWidget(exp);
+        notifyResize();
+    }
+
+    void FunctionPropertiesPage::addPoint() const
+    {
+        const auto str = new StringWidget();
+        _panel->addWidget(str);
+        notifyResize();
+    }
+
+    void FunctionPropertiesPage::notifyResize() const
+    {
+        if (QWidget* parent = parentWidget())
+        {
+            const QSize sz = parent->size();
+            QApplication::postEvent(
+                parent,
+                new QResizeEvent(sz, _panel->size()));
+        }
+    }
+
+    void FunctionPropertiesPage::dropWidget(QWidget* widget) const
+    {
+        if (widget)
+        {
+            _panel->remove(widget);
+            delete widget;
+            notifyResize();
+        }
     }
 
     void FunctionPropertiesPage::onTextChanged(const String& newText)
     {
-        if (const auto stack = State::layerStack())
-            (void)stack->injectText(newText);
+        if (State::layerStack()->injectText(newText))
+            update();
     }
 
 }  // namespace Jam::Editor

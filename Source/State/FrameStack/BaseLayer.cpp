@@ -22,7 +22,7 @@
 #include "State/FrameStack/BaseLayer.h"
 #include "State/FrameStack/FrameStack.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     BaseLayer::BaseLayer(const LayerType type) :
         type(type)

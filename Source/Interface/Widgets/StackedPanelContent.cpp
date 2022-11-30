@@ -35,15 +35,21 @@ namespace Jam::Editor
 
     void StackedPanelContent::addPanel(StackedPanel* widget) const
     {
-        _manger->addPanel(widget);
+        _manger->addWidget(widget);
+    }
+
+    QSize StackedPanelContent::sizeHint() const
+    {
+        return _manger->totalHeight();
     }
 
     void StackedPanelContent::construct()
     {
         View::applyColorRoles(this);
         _manger = new StackedPanelManager();
+
         // Use addPanel to add items
-        // to the manger..  
+        // to the manger..
         setLayout(_manger);
     }
 

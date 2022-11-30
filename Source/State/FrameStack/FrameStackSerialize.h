@@ -23,21 +23,26 @@
 #include "State/FrameStack/FunctionLayer.h"
 #include "Xml/Declarations.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     class FrameStackSerialize
     {
     private:
         FrameStack* _stack{nullptr};
+        XmlNode*    _root{nullptr};  // only valid on save
 
     private:
-        void loadGrid(const XmlNode* root) const;
-        void loadFunction(const XmlNode* root) const;
+        GridLayer*            loadGrid(const XmlNode* root) const;
+        static FunctionLayer* loadFunction(const XmlNode* root);
+
+        void saveGrid() const;
+        void saveFunction() const;
 
     public:
-        FrameStackSerialize(FrameStack* stack);
+        explicit FrameStackSerialize(FrameStack* stack);
 
         void load(IStream& stream) const;
-        void save(OStream& out) const;
+        void save(OStream& out);
     };
-}  // namespace Jam
+
+}  // namespace Jam::Editor::State

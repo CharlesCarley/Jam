@@ -20,41 +20,64 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QWidget>
 #include "Math/Integer.h"
+#include "Math/Vec2F.h"
+#include "Math/Vec2I.h"
+
+class QHBoxLayout;
+class QLineEdit;
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
-
-    class StackedPanel final : public QWidget
+    class R32WidgetPrivate final : public QWidget
     {
         Q_OBJECT
+    signals:
+        void onDoubleClick();
+        void valueChanged(R32 val);
+
     private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
+        R32      _val{0};
+        QPalette _pal;
+        U8       _cap{0};
+        Vec2F    _d{0.f, 0};
+        Vec2F    _mm{-R32(0x10000), R32(0x10000)};
+        String   _label;
 
     public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
+        explicit R32WidgetPrivate(QWidget* parent = nullptr);
 
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
+        void setValue(const R32& val);
 
-        void addLayout(QLayout* widget, int expand = 1);
+        void setValue(const QString& val);
 
-        void setLabel(const QString& label);
+        void setRange(const Vec2F& val);
 
-        QSize sizeHint() const override;
+        void setLabel(const String& value);
 
-    private:
+        R32 value() const;
+
+        String text() const;
+
+        String label() const;
+
+    protected:
         void construct();
+
+        void handleSingleTick(const QPointF& d);
+        bool isInInnerRect(const QPointF& d) const;
+
+        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
+        void mouseMoveEvent(QMouseEvent* event) override;
+        void paintEvent(QPaintEvent* event) override;
+        void mouseDoubleClickEvent(QMouseEvent* event) override;
     };
+
+    inline R32 R32WidgetPrivate::value() const
+    {
+        return _val;
+    }
 
 }  // namespace Jam::Editor

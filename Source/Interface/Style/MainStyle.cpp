@@ -146,6 +146,9 @@ namespace Jam::Editor
         case PE_PanelLineEdit:
             renderer.fillLineEdit();
             break;
+        case PE_PanelScrollAreaCorner:
+            renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
+            break;
         case PE_PanelItemViewItem:
         case PE_Widget:
         case PE_FrameDefaultButton:
@@ -182,7 +185,6 @@ namespace Jam::Editor
         case PE_IndicatorToolBarSeparator:
         case PE_PanelTipLabel:
         case PE_IndicatorTabTear:
-        case PE_PanelScrollAreaCorner:
         case PE_IndicatorColumnViewArrow:
         case PE_IndicatorItemViewItemDrop:
         case PE_PanelStatusBar:

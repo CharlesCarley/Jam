@@ -57,6 +57,7 @@ namespace Jam::Editor
             FolderOpen,
             Fullscreen,
             FullscreenExit,
+            Function,
             Gamepad,
             Graph,
             GraphArea,
@@ -71,12 +72,14 @@ namespace Jam::Editor
             MoreHorizontal,
             MoreVertical,
             Output,
+            Point,
             Quit,
             Refresh,
             Save,
             SelectAll,
             Settings,
             Share,
+            Slider,
             Sync,
             TrendingFlat,
             Undo,
@@ -91,7 +94,6 @@ namespace Jam::Editor
 
     class IconButton final : public QPushButton
     {
-
         Q_OBJECT
         Q_PROPERTY(int iconType MEMBER _type)
     private:
@@ -99,12 +101,9 @@ namespace Jam::Editor
 
         explicit IconButton(QWidget* parent = nullptr);
 
-
-
         static IconButton* createButton(
             const Icons::Icon& icon,
             QWidget*           parent);
-
 
     public:
         static IconButton* createToolButton(
@@ -112,6 +111,9 @@ namespace Jam::Editor
             QWidget*           parent = nullptr);
 
         static IconButton* createTitleButton(
+            const Icons::Icon& icon,
+            QWidget*           parent = nullptr);
+        static IconButton* create(
             const Icons::Icon& icon,
             QWidget*           parent = nullptr);
     };

@@ -25,14 +25,14 @@
 
 namespace Jam::Eq
 {
-    typedef  double (*WrapFuncA1)(double a1);
-    typedef  double (*WrapFuncA2)(double a1, double a2);
+    typedef double (*WrapFuncA1)(double a1);
+    typedef double (*WrapFuncA2)(double a1, double a2);
 
-    class Stmt
+    class Statement
     {
     private:
         EvalStack     _stack;
-        EvalHash      _table;
+        EvalHash      _variables;
         EvalGroupHash _groups;
         U32           _hashCount{InitialHash};
 
@@ -53,10 +53,9 @@ namespace Jam::Eq
         void pow();
         void group();
         void assign();
-
         void mathFncA1(WrapFuncA1 f);
         void mathFncA2(WrapFuncA2 f);
-        
+
         void eval(const Symbol* sy);
 
         R64 executeImpl(const SymbolArray& val);
@@ -67,15 +66,18 @@ namespace Jam::Eq
         [[noreturn]] void argError(const char*);
 
     public:
-        Stmt() = default;
-        ~Stmt();
+        Statement() = default;
+        ~Statement();
 
         void set(const String& name, R64 value);
+
         void set(VInt index, R64 value);
 
         VInt indexOf(const String& name) const;
 
         R64 get(const String& name, R64 def = 0);
+
+        R64 get(VInt name, R64 def = 0);
 
         R64 peek(I32 idx);
 
@@ -85,7 +87,7 @@ namespace Jam::Eq
     };
 
     template <typename... Args>
-    void Stmt::error(Args&&... args)
+    void Statement::error(Args&&... args)
     {
         OutputStringStream stream;
         ((stream << std::forward<Args>(args)), ...);

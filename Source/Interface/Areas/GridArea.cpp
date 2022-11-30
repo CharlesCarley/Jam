@@ -28,6 +28,7 @@
 #include "Interface/Events/LayerSelectEvent.h"
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/StackedPanel.h"
+#include "Interface/Widgets/VerticalScrollArea.h"
 
 namespace Jam::Editor
 {
@@ -48,15 +49,11 @@ namespace Jam::Editor
         const auto layout = new QVBoxLayout();
         View::layoutDefaults(layout);
 
-        _area = new QScrollArea();
-        _area->setAlignment(Qt::AlignRight);
-        _area->setWidgetResizable(true);
+        _area = new VerticalScrollArea();
+        _area->setWidget(new GridPropertiesPage(0));
 
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
-
-        _area->setWidget(new GridPropertiesPage(0));
-
         setLayout(layout);
     }
 

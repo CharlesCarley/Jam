@@ -28,18 +28,18 @@ namespace Jam::Editor
     class LayerSelectEvent final : public QEvent
     {
     private:
-        LayerType _type{NoType};
-        U32       _index{JtNpos32};
+        State::LayerType _type{State::NoType};
+        U32              _index{JtNpos32};
 
     public:
-        explicit LayerSelectEvent(LayerType type, U32 idx) :
+        explicit LayerSelectEvent(State::LayerType type, U32 idx) :
             QEvent((Type)(int)LayerSelect),
             _type(type),
             _index(idx)
         {
         }
 
-        const LayerType& layerType() const
+        const State::LayerType& layerType() const
         {
             return _type;
         }

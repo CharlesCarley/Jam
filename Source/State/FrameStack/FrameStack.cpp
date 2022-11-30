@@ -24,7 +24,7 @@
 #include "State/FrameStack/FrameStackSerialize.h"
 #include "State/FrameStack/BaseLayer.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     FrameStack::FrameStack() = default;
 

@@ -19,42 +19,36 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#pragma once
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QWidget>
-#include "Math/Integer.h"
+#include "VerticalScrollArea.h"
+#include <QResizeEvent>
+#include "Interface/Extensions.h"
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
-
-    class StackedPanel final : public QWidget
+    VerticalScrollArea::VerticalScrollArea(QWidget* parent) :
+        QScrollArea(parent)
     {
-        Q_OBJECT
-    private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
+        View::applyColorRoles(this);
+        setAlignment(Qt::AlignLeft);
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        setWidgetResizable(false);
+    }
 
-    public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
 
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
+    void VerticalScrollArea::invalidate(const QSize& size)
+    {
+        if (QWidget* attached = widget())
+        {
+            _initialHeight = attached->sizeHint().height();
+            attached->resize(size.width(), _initialHeight);
+        }
+    }
 
-        void addLayout(QLayout* widget, int expand = 1);
-
-        void setLabel(const QString& label);
-
-        QSize sizeHint() const override;
-
-    private:
-        void construct();
-    };
+    void VerticalScrollArea::resizeEvent(QResizeEvent* event)
+    {
+        invalidate(event->size());
+        QScrollArea::resizeEvent(event);
+    }
 
 }  // namespace Jam::Editor

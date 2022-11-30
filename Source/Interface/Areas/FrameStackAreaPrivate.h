@@ -72,7 +72,7 @@ namespace Jam::Editor
 
         void keyReleaseEvent(QKeyEvent* event) override;
 
-        void vec2Injected(const FrameStackCode& code, const Vec2F& vec);
+        void vec2Injected(const State::FrameStackCode& code, const Vec2F& vec);
 
         void stateChanged();
     };

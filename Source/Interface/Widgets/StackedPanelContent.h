@@ -33,12 +33,15 @@ namespace Jam::Editor
     {
         Q_OBJECT
     private:
-        StackedPanelManager *_manger{nullptr};
-    public:
+        StackedPanelManager* _manger{nullptr};
 
+    public:
         explicit StackedPanelContent(QWidget* parent = nullptr);
+        ~StackedPanelContent() override = default;
 
         void addPanel(StackedPanel* widget) const;
+
+        QSize sizeHint() const override;
 
     private:
         void construct();

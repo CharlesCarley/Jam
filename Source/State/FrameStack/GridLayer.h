@@ -25,7 +25,7 @@
 #include "Math/Real.h"
 #include "Math/Vec2F.h"
 
-namespace Jam::Layers
+namespace Jam::Editor::State
 {
     class GridLayer final : public BaseLayer
     {

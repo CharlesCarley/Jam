@@ -20,21 +20,25 @@
 -------------------------------------------------------------------------------
 */
 #include "State/FrameStack/FunctionLayer.h"
-#include "Equation/Stmt.h"
+#include "Equation/Statement.h"
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Palette.h"
 #include "State/FrameStack/RenderContext.h"
 
-namespace Jam::Layers
+namespace Jam::Editor::State
 {
-    using namespace Editor::Const;
+    using namespace Const;
 
     FunctionLayer::FunctionLayer() :
         BaseLayer(FunctionType)
     {
     }
 
-    FunctionLayer::~FunctionLayer() = default;
+    FunctionLayer::~FunctionLayer()
+    {
+        for (const auto obj : _array)
+            delete obj;
+    }
 
     void FunctionLayer::render(RenderContext& canvas)
     {
@@ -76,10 +80,12 @@ namespace Jam::Layers
         {
             const Eq::SymbolArray& code = _parser.symbols();
 
-            _stmt.set("x", R64(_axis.x.pointByI(p0.x)));
+            if (_xLoc != JtNpos)
+                _stmt.set(_xLoc, R64(_axis.x.pointByI(p0.x)));
 
             const R64 val = _stmt.execute(code);
-            p0.y          = _axis.y.pointBy(R32(val));
+
+            p0.y = _axis.y.pointBy(R32(val));
         }
 
         p0.x += _origin.x;
@@ -139,6 +145,9 @@ namespace Jam::Layers
                 StringStream ss(_text);
                 _parser.read(ss);
 
+                _stmt.execute(_parser.symbols());
+                _xLoc = _stmt.indexOf("x");
+
                 ss.str(String{});
                 ss.clear();
                 for (const auto sym : _parser.symbols())
@@ -146,10 +155,40 @@ namespace Jam::Layers
                     sym->print(ss);
                     ss << ' ';
                 }
-                Editor::Log::writeLine(ss.str());
+                Log::writeLine(ss.str());
             }
             return true;
         }
         return false;
     }
-}  // namespace Jam::Layers
+
+    VariableStateObject* FunctionLayer::createVariable()
+    {
+        VariableStateObject* vso = new VariableStateObject();
+        _array.push_back(vso);
+        return vso;
+    }
+
+    ExpressionStateObject* FunctionLayer::createExpression()
+    {
+        ExpressionStateObject* eso = new ExpressionStateObject();
+        _array.push_back(eso);
+        return eso;
+    }
+
+    void FunctionLayer::removeVariable(VariableStateObject* vso)
+    {
+        // TODO: preserve creation order, so that execution order is predictable.
+        if (const U32 idx = _array.find(vso); idx != JtNpos32)
+            _array.remove(idx);
+        delete vso;
+    }
+
+    void FunctionLayer::removeExpression(ExpressionStateObject* eso)
+    {
+        // TODO: preserve creation order, so that execution order is predictable.
+        if (const U32 idx = _array.find(eso); idx != JtNpos32)
+            _array.remove(idx);
+        delete eso;
+    }
+}  // namespace Jam::Editor::State

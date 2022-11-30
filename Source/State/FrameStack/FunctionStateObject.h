@@ -20,41 +20,50 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QWidget>
-#include "Math/Integer.h"
+#include "Equation/StmtParser.h"
+#include "State/FrameStack/GridLayer.h"
 
-namespace Jam::Editor
+namespace Jam::Editor::State
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
-
-    class StackedPanel final : public QWidget
+    enum FunctionStateObjectType
     {
-        Q_OBJECT
-    private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
-
-    public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
-
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
-
-        void addLayout(QLayout* widget, int expand = 1);
-
-        void setLabel(const QString& label);
-
-        QSize sizeHint() const override;
-
-    private:
-        void construct();
+        FstNone,
+        FstVariable,
+        FstExpression
     };
 
-}  // namespace Jam::Editor
+    class FunctionStateObject
+    {
+    public:
+        explicit FunctionStateObject(const I32 type) :
+            type(type) {}
+        ~FunctionStateObject() = default;
+
+        const I32 type{FstNone};
+    };
+
+    using FunctionObjectArray = SimpleArray<FunctionStateObject*>;
+
+    class VariableStateObject : public FunctionStateObject
+    {
+    public:
+        explicit VariableStateObject() :
+            FunctionStateObject(FstVariable) {}
+        ~VariableStateObject() = default;
+
+        String name{};
+        Vec2F  range{1.f, 100};
+        R32    rate{1.f};
+    };
+
+    class ExpressionStateObject : public FunctionStateObject
+    {
+    public:
+        explicit ExpressionStateObject() :
+            FunctionStateObject(FstExpression) {}
+        ~ExpressionStateObject() = default;
+
+        String text{};
+    };
+
+}  // namespace Jam::Layers

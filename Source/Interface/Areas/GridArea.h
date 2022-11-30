@@ -20,16 +20,17 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QScrollArea>
 #include "Interface/Area/Area.h"
 
 namespace Jam::Editor
 {
+    class VerticalScrollArea;
+
     class GridArea final : public Area
     {
         Q_OBJECT
     private:
-        QScrollArea* _area{nullptr};
+        VerticalScrollArea* _area{nullptr};
 
     public:
         explicit GridArea(AreaCreator* creator, QWidget* parent = nullptr);

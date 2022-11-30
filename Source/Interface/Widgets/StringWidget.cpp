@@ -20,9 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #include "StringWidget.h"
+#include <QBoxLayout>
 #include <QLineEdit>
 #include <QWidget>
-#include <QBoxLayout>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Extensions.h"
 
@@ -37,12 +37,12 @@ namespace Jam::Editor
 
     void StringWidget::construct()
     {
-        View::applyColorRoles(this, QPalette::Dark);
+        View::applyColorRoles(this, QPalette::Midlight);
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
         _line = new QLineEdit();
-        View::applyColorRoles(_line, QPalette::NoRole);
+        // View::applyColorRoles(_line, QPalette::NoRole);
         _line->setClearButtonEnabled(false);
         _line->setReadOnly(false);
 
@@ -55,6 +55,13 @@ namespace Jam::Editor
     void StringWidget::finished()
     {
         setText(_line->text().toStdString());
+        emit editingFinished(_str);
+    }
+
+    void StringWidget::setHeight(int hgt)
+    {
+        _line->setMinimumHeight(hgt);
+        setMinimumHeight(hgt);
     }
 
     void StringWidget::connectEvents()

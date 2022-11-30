@@ -20,6 +20,8 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#include "FrameStack/FunctionLayer.h"
+#include "FrameStack/GridLayer.h"
 
 namespace Jam
 {
@@ -73,5 +75,9 @@ namespace Jam::Editor::State
     extern OutputLogMonitor* outputState();
 
     extern FrameStackManager* layerStack();
+
+    extern GridLayer* gridLayer();
+
+    extern FunctionLayer* functionLayer();
 
 }  // namespace Jam::Editor::State

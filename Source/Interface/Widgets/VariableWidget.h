@@ -20,41 +20,51 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QWidget>
-#include "Math/Integer.h"
+#include "IconButton.h"
+#include "Math/Vec2F.h"
+#include "Utils/String.h"
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
+    struct VariableStepData;
 
-    class StackedPanel final : public QWidget
+    namespace State
+    {
+        class VariableStateObject;
+    }
+
+    class VariableStepWidget;
+    class R32Widget;
+
+    class VariableWidget final : public QWidget
     {
         Q_OBJECT
+    signals:
+        void textEntered(const String& text);
+        void wantsToDelete();
+
     private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
+        R32Widget*          _line{nullptr};
+        IconButton*         _del{nullptr};
+        VariableStepWidget* _edit{nullptr};
+
+        State::VariableStateObject* _state{nullptr};
 
     public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
+        explicit VariableWidget(State::VariableStateObject* obj, QWidget* parent = nullptr);
 
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
-
-        void addLayout(QLayout* widget, int expand = 1);
-
-        void setLabel(const QString& label);
-
-        QSize sizeHint() const override;
+        void setName(const String& name) const;
+        void setRange(const Vec2F& range) const;
 
     private:
         void construct();
+        void connectSignals();
+
+
+        void stepDataChanged(const VariableStepData& data) const;
+
+        void onDelete();
     };
 
 }  // namespace Jam::Editor

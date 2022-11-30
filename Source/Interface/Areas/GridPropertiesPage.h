@@ -43,7 +43,7 @@ namespace Jam::Editor
         void connectSignals();
         void disconnectSignals();
 
-        void codeInjected(const FrameStackCode& code, const Vec2F& value) const;
+        void codeInjected(const State::FrameStackCode& code, const Vec2F& value) const;
 
         static void xAxisUpdate(I32 v);
 

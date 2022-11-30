@@ -22,7 +22,7 @@
 #include "State/FrameStack/GridLayer.h"
 #include "State/FrameStack/RenderContext.h"
 
-namespace Jam::Layers
+namespace Jam::Editor::State
 {
 
     GridLayer::GridLayer() :

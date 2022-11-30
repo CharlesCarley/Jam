@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCoreApplication>
+#include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTreeWidget>
@@ -36,6 +37,8 @@ namespace Jam::Editor::View
 {
     void windowRect(QRect& winRect, const QWidget* widget)
     {
+        Q_ASSERT(widget);
+
         if (const QWidget* win = widget ? widget->window() : nullptr)
             winRect = win->geometry();
         else
@@ -44,6 +47,8 @@ namespace Jam::Editor::View
 
     void dialogDefaults(QWidget* widget)
     {
+        Q_ASSERT(widget);
+
         if (const QScreen* sc =
                 widget
                     ? QApplication::screenAt(widget->pos())
@@ -160,19 +165,31 @@ namespace Jam::Editor::View
         dst->setSizeConstraint(QLayout::SetMinAndMaxSize);
     }
 
+    void localDefaults(QWidget* widget, int margin, QRole background, QRole foreground)
+    {
+        Q_ASSERT(widget);
+        applyColorRoles(widget, background, foreground);
+        widget->setContentsMargins(margin, margin, margin, margin);
+    }
+
     void emptyWidget(QWidget* dst)
     {
+        Q_ASSERT(dst);
         widgetDefaults(dst);
         applyColorRoles(dst, QRole::NoRole, QRole::NoRole);
     }
 
     void menuRole(QWidget* dst)
     {
+        Q_ASSERT(dst);
+
         applyColorRoles(dst, Const::MenuRole, QRole::Text);
     }
 
     void treeWidgetDefaults(QTreeWidget* dst)
     {
+        Q_ASSERT(dst);
+
         dst->setColumnCount(1);
         dst->setHeaderHidden(true);
 
@@ -182,23 +199,37 @@ namespace Jam::Editor::View
 
     void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent)
     {
+        Q_ASSERT(dst);
+
         dst->setColumnCount(1);
         dst->setHeaderHidden(true);
 
         widgetDefaults(dst, parent);
     }
 
+    void lineEditDefaults(QLineEdit* dst, QRole background, QRole foreground)
+    {
+        Q_ASSERT(dst);
+        applyColorRoles(dst, background, foreground);
+        dst->setContentsMargins(0, 0, 0, 0);
+        dst->setMinimumHeight(Const::ButtonHeight);
+        dst->setClearButtonEnabled(false);
+        dst->setReadOnly(false);
+    }
+
     void pushButtonDefaults(QPushButton* dst)
     {
+        Q_ASSERT(dst);
         widgetDefaults(dst);
         applyColorRoles(dst, QRole::Button, QRole::Text);
-        dst->setMinimumSize({18, 24});
+        dst->setMinimumSize({18, Const::ButtonHeight});
     }
 
     void addLayoutMargin(QBoxLayout* dst,
                          QWidget*    content,
                          const int   margin)
     {
+        Q_ASSERT(dst);
         const auto innerLayout = new QHBoxLayout();
         innerLayout->setSpacing(0);
         innerLayout->setContentsMargins(margin, margin, margin, margin);
@@ -219,8 +250,9 @@ namespace Jam::Editor::View
 
     void clearLayout(QLayout* layout, SimpleArray<QWidget*>& dangled)
     {
-        dangled.clear();
+        Q_ASSERT(layout);
 
+        dangled.clear();
         while (const QLayoutItem* item = layout->takeAt(0))
         {
             if (QWidget* widget = item->widget())
@@ -231,4 +263,5 @@ namespace Jam::Editor::View
             delete item;
         }
     }
+
 }  // namespace Jam::Editor::View

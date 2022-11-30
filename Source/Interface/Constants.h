@@ -33,6 +33,7 @@ namespace Jam::Editor::Const
     constexpr int ToolbarSpacing = 10;
     constexpr int IconPadding    = 3;
     constexpr int IconSize       = 12;
+    constexpr int ButtonHeight   = 24;
     constexpr int NormalFactor   = 125;
     constexpr int SubtleFactor   = 105;
     constexpr int AreaPadding    = 2;
@@ -40,10 +41,10 @@ namespace Jam::Editor::Const
     constexpr QRole SplitterRole  = QRole::Shadow;
     constexpr QRole ToolRole      = QRole::Midlight;
     constexpr QRole AreaRole      = QRole::Dark;
+    constexpr QRole WindowRole    = QRole::Window;
     constexpr QRole AreaLightRole = QRole::Mid;
     constexpr QRole MenuBarRole   = QRole::Dark;
     constexpr QRole BorderRole    = QRole::Mid;
     constexpr QRole MenuRole      = QRole::Shadow;
 
 }  // namespace Jam::Editor::Const
-

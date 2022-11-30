@@ -67,6 +67,8 @@ namespace Jam::Editor::State
         FrameStackTag,
         GridTag,
         FunctionTag,
+        VariableTag,
+        ExpressionTag,
         FrameStackMax
     };
 
@@ -77,9 +79,11 @@ namespace Jam::Editor::State
                                           (ProjectFileMax - ProjectFileStart) - 1;
 
     constexpr TypeFilter FrameStackTags[FrameStackTagsMax] = {
-        {   "stack", FrameStackTag}, // FrameStackTags
-        {    "grid",       GridTag},
-        {"function",   FunctionTag},
+        {     "stack", FrameStackTag}, // FrameStackTags
+        {      "grid",       GridTag},
+        {  "function",   FunctionTag},
+        {  "variable",   VariableTag},
+        {"expression", ExpressionTag},
     };
 
     constexpr TypeFilter AreaLayoutTags[AreaLayoutTagsMax] = {
@@ -89,14 +93,15 @@ namespace Jam::Editor::State
     };
 
     constexpr TypeFilter ProjectFileTags[ProjectFileTagsMax] = {
-        {     "jam", JamProjectTag}, // ProjectFileTags
-        {    "tree",       TreeTag}, // AreaLayoutTags
-        {    "leaf",       LeafTag},
-        {  "branch",     BranchTag},
-        {   "stack", FrameStackTag}, // FrameStackTags
-        {    "grid",       GridTag},
-        {"function",   FunctionTag},
+        {       "jam", JamProjectTag}, // ProjectFileTags
+        {      "tree",       TreeTag}, // AreaLayoutTags
+        {      "leaf",       LeafTag},
+        {    "branch",     BranchTag},
+        {     "stack", FrameStackTag}, // FrameStackTags
+        {      "grid",       GridTag},
+        {  "function",   FunctionTag},
+        {  "variable",   VariableTag},
+        {"expression", ExpressionTag},
     };
-
 
 }  // namespace Jam::Editor::State

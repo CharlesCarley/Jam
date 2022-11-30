@@ -21,11 +21,12 @@
 */
 #pragma once
 #include "BaseLayer.h"
-#include "Equation/Stmt.h"
+#include "Equation/Statement.h"
 #include "Equation/StmtParser.h"
+#include "FunctionStateObject.h"
 #include "State/FrameStack/GridLayer.h"
 
-namespace Jam::Layers
+namespace Jam::Editor::State
 {
     class FunctionLayer final : public BaseLayer
     {
@@ -33,8 +34,11 @@ namespace Jam::Layers
         Vec2F          _origin{0.f, 0.f};
         Axis           _axis;
         Eq::StmtParser _parser;
-        Eq::Stmt       _stmt;
+        Eq::Statement  _stmt;
+        VInt           _xLoc{JtNpos};
         String         _text;
+
+        FunctionObjectArray _array;
 
         Vec2F eval(R32 i0);
 
@@ -56,6 +60,14 @@ namespace Jam::Layers
         bool injectText(const String& text) override;
 
         const String& getText() const { return _text; }
+
+        VariableStateObject* createVariable();
+        ExpressionStateObject* createExpression();
+
+         void removeVariable(VariableStateObject* vso);
+         void removeExpression(ExpressionStateObject* eso);
+
+        const FunctionObjectArray& objects() const;
     };
 
     inline void FunctionLayer::setAxis(const Axis& units)
@@ -68,4 +80,9 @@ namespace Jam::Layers
         _origin = origin;
     }
 
-}  // namespace Jam::Layers
+    inline const FunctionObjectArray& FunctionLayer::objects() const
+    {
+        return _array;
+    }
+
+}  // namespace Jam::Editor::State

@@ -30,6 +30,8 @@
 
 namespace Jam::Editor
 {
+    using namespace State;
+
     GridPropertiesPage::GridPropertiesPage(const U32 idx)
     {
         construct(idx);

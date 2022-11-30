@@ -39,7 +39,7 @@ namespace Jam::Editor
         View::emptyWidget(button);
 
         // force the size of the icon
-        button->setMaximumSize({24, 24});
+        button->setMaximumSize({24, Const::ButtonHeight});
 
         button->setFlat(true);
         button->setIcon(get(icon));
@@ -57,6 +57,13 @@ namespace Jam::Editor
     {
         IconButton* button = createButton(icon, parent);
         button->setProperty("iconType", 2);
+        return button;
+    }
+
+    IconButton* IconButton::create(const Icons::Icon& icon, QWidget* parent)
+    {
+        IconButton* button = createButton(icon, parent);
+        button->setProperty("iconType", 3);
         return button;
     }
 
@@ -112,6 +119,8 @@ namespace Jam::Editor
             return QIcon(":/icons/ic_fullscreen.svg");
         case FullscreenExit:
             return QIcon(":/icons/ic_fullscreen_exit.svg");
+        case Function:
+            return QIcon(":/icons/ic_function.svg");
         case Gamepad:
             return QIcon(":/icons/ic_gamepad.svg");
         case Graph:
@@ -140,6 +149,8 @@ namespace Jam::Editor
             return QIcon(":/icons/ic_more_vertical.svg");
         case Output:
             return QIcon(":/icons/ic_output.svg");
+        case Point:
+            return QIcon(":/icons/ic_point.svg");
         case Quit:
             return QIcon(":/icons/ic_quit.svg");
         case Refresh:
@@ -152,6 +163,8 @@ namespace Jam::Editor
             return QIcon(":/icons/ic_settings.svg");
         case Share:
             return QIcon(":/icons/ic_share.svg");
+        case Slider:
+            return QIcon(":/icons/ic_slider.svg");
         case Sync:
             return QIcon(":/icons/ic_sync.svg");
         case TrendingFlat:

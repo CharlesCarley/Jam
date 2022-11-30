@@ -27,7 +27,7 @@
 #include "Xml/Declarations.h"
 #include "Xml/File.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     using namespace Editor::State;
     using Xc = XmlConverter;
@@ -38,9 +38,9 @@ namespace Jam
     {
     }
 
-    void FrameStackSerialize::loadGrid(const XmlNode* root) const
+    GridLayer* FrameStackSerialize::loadGrid(const XmlNode* root) const
     {
-        const auto grid = new Layers::GridLayer();
+        const auto grid = new GridLayer();
 
         grid->setMajorGrid(0x2b2b2bFF);
         grid->setMinorGrid(0x212121FF);
@@ -49,15 +49,33 @@ namespace Jam
         grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
         grid->setAxis(Xc::toAxis("axis", root));
 
-        _stack->addLayer(grid);
+        return grid;
     }
 
-    void FrameStackSerialize::loadFunction(const XmlNode* root) const
+    FunctionLayer* FrameStackSerialize::loadFunction(const XmlNode* root)
     {
-        const auto fnc = new Layers::FunctionLayer();
+        const auto fnc = new FunctionLayer();
 
-        fnc->injectText(root->attribute("text", "y=x"));
-        _stack->addLayer(fnc);
+        for (const auto& node : root->children())
+        {
+            if (node->isTypeOf(ExpressionTag))
+            {
+                ExpressionStateObject* eso = fnc->createExpression();
+                eso->text                  = node->attribute("text");
+            }
+            else if (node->isTypeOf(VariableTag))
+            {
+                VariableStateObject* vso = fnc->createVariable();
+
+                vso->name = node->attribute("name");
+            }
+            else
+            {
+                // quiet error
+            }
+        }
+
+        return fnc;
     }
 
     void FrameStackSerialize::load(IStream& stream) const
@@ -68,20 +86,39 @@ namespace Jam
                        FrameStackTagsMax);
             fp.read(stream);
 
-            _stack->clear();
+            GridLayer*     grid = nullptr;
+            FunctionLayer* func = nullptr;
 
             if (const auto root = fp.root(FrameStackTag))
             {
                 for (const auto node : root->children())
                 {
                     if (node->isTypeOf(GridTag))
-                        loadGrid(node);
+                    {
+                        if (grid)
+                            throw Exception("multiple grid layers");
+
+                        grid = loadGrid(node);
+                    }
                     else if (node->isTypeOf(FunctionTag))
-                        loadFunction(node);
+                    {
+                        if (func)
+                            throw Exception("multiple function layers");
+
+                        func = loadFunction(node);
+                    }
                 }
             }
 
-            JAM_ASSERT(_stack->layers().size() > 1)
+            // order here is important
+            // Grid = idx0
+            // Func = idx1
+            if (!grid || !func)
+                throw Exception("missing grid or function layers");
+
+            _stack->clear();
+            _stack->addLayer(grid);
+            _stack->addLayer(func);
         }
         catch (Exception& ex)
         {
@@ -89,14 +126,15 @@ namespace Jam
         }
     }
 
-    void saveGridLayer(
-        XmlNode*                 root,
-        const Layers::GridLayer* layer)
+    void FrameStackSerialize::saveGrid() const
     {
+        const auto layer = _stack->cast<GridLayer>(0);
+
         const Vec2F& o  = layer->origin();
         const Axis&  ax = layer->axis();
 
         XmlNode* grid = new XmlNode("grid", GridTag);
+
         grid->insert("origin",
                      Sc::join(ValueSetF({o.x, o.y}, 0, 6)));
 
@@ -107,28 +145,48 @@ namespace Jam
                          ax.y.n(),
                          ax.y.d(),
                      })));
-        root->addChild(grid);
+
+        _root->addChild(grid);
     }
 
-    void saveFunctionLayer(
-        XmlNode*                     root,
-        const Layers::FunctionLayer* layer)
+    void FrameStackSerialize::saveFunction() const
     {
+        const auto layer = _stack->cast<FunctionLayer>(1);
+
         XmlNode* func = new XmlNode("function", FunctionTag);
 
-        func->insert("text", layer->getText());
+        for (const auto id : layer->objects())
+        {
+            if (id->type == FstExpression)
+            {
+                const ExpressionStateObject* eso = (ExpressionStateObject*)id;
 
-        root->addChild(func);
+                XmlNode* expr = new XmlNode("expression", ExpressionTag);
+                expr->insert("text", eso->text);
+                func->addChild(expr);
+            }
+            else if (id->type == FstVariable)
+            {
+                const VariableStateObject* vso = (VariableStateObject*)id;
+
+                XmlNode* expr = new XmlNode("variable", VariableTag);
+
+                expr->insert("name", vso->name);
+                expr->insert("range",
+                             Sc::join(ValueSetF({vso->range.x, vso->range.y}, 0, 6)));
+                func->addChild(expr);
+            }
+        }
+        _root->addChild(func);
     }
 
-    void FrameStackSerialize::save(OStream& out) const
+    void FrameStackSerialize::save(OStream& out)
     {
-        XmlNode* root = new XmlNode("stack", FrameStackTag);
-
-        saveGridLayer(root, _stack->cast<Layers::GridLayer>(0));
-        saveFunctionLayer(root, _stack->cast<Layers::FunctionLayer>(1));
-
-        Xc::toStream(out, root, 4);
-        delete root;
+        _root = new XmlNode("stack", FrameStackTag);
+        saveGrid();
+        saveFunction();
+        Xc::toStream(out, _root, 4);
+        delete _root;
+        _root = nullptr;
     }
-}  // namespace Jam
+}  // namespace Jam::Editor::State

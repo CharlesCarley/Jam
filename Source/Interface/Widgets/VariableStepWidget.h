@@ -20,41 +20,53 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QLabel>
-#include <QVBoxLayout>
 #include <QWidget>
 #include "Math/Integer.h"
+#include "Math/Vec2F.h"
+#include "R32Widget.h"
+
+class QLabel;
+class QLineEdit;
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
-    constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
+    struct VariableStepData
+    {
+        String name{};
+        Vec2F  range{0.f,0};
+        R32    rate{0};
+    };
 
-    class StackedPanel final : public QWidget
+    class VariableStepWidget final : public QWidget
     {
         Q_OBJECT
+    signals:
+        void finished(const VariableStepData& data);
+
     private:
-        QLabel*      _title{nullptr};
-        QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
+        QLineEdit* _name{nullptr};
+        QLineEdit* _min{nullptr};
+        QLineEdit* _max{nullptr};
+        QLineEdit* _rate{nullptr};
+
+        VariableStepData _data;
 
     public:
-        explicit StackedPanel(QWidget* parent = nullptr);
-        ~StackedPanel() override;
+        explicit VariableStepWidget(QWidget* parent = nullptr);
 
-        void addWidget(QWidget* widget, int expand = 1);
-        void remove(QWidget* widget);
 
-        void addLayout(QLayout* widget, int expand = 1);
+        void setName(const String& value);
+        void setRange(const Vec2F& value);
 
-        void setLabel(const QString& label);
-
-        QSize sizeHint() const override;
 
     private:
         void construct();
+        void connectSignals();
+
+        void onTextChanged();
+
+        void focusOutEvent(QFocusEvent* event) override;
+        void focusInEvent(QFocusEvent* event) override;
     };
 
 }  // namespace Jam::Editor

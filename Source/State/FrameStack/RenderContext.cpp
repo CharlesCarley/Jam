@@ -27,7 +27,7 @@
 #include "Math/Lg.h"
 #include "Utils/StreamMethods.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     // temp
     using namespace Editor::Log;

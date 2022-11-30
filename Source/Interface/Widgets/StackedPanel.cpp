@@ -38,24 +38,33 @@ namespace Jam::Editor
 
     void StackedPanel::addWidget(
         QWidget*  widget,
-        const int expand) const
+        const int expand)
     {
         _contentLayout->addWidget(widget, expand);
+        update();
     }
 
-    void StackedPanel::addLayout(QLayout* widget, int expand) const
+    void StackedPanel::remove(QWidget* widget)
+    {
+        _contentLayout->removeWidget(widget);
+        update();
+    }
+
+    void StackedPanel::addLayout(QLayout* widget, int expand)
     {
         _contentLayout->addLayout(widget, expand);
+        update();
     }
 
-    void StackedPanel::setLabel(const QString& label) const
+    void StackedPanel::setLabel(const QString& label)
     {
         _title->setText(label);
+        update();
     }
 
     QSize StackedPanel::sizeHint() const
     {
-        return _layout->geometry().size();
+        return _layout->sizeHint();
     }
 
     void StackedPanel::construct()
@@ -82,13 +91,13 @@ namespace Jam::Editor
         QWidget*     header       = new QWidget();
         QHBoxLayout* headerLayout = new QHBoxLayout();
         View::layoutDefaults(headerLayout, 0, 1);
-        View::applyColorRoles(header);
+        View::applyColorRoles(header, QPalette::Window, QPalette::Link);
 
         // use setLabel, so blank initially...
         _title = new QLabel("");
 
         QFont font = _title->font();
-        font.setPointSize(12);
+        font.setPointSize(11);
 
         _title->setFont(font);
         View::applyColorRoles(_title, QPalette::NoRole, QPalette::Text);

@@ -23,7 +23,7 @@
 #include "Math/Vec2.h"
 #include "Utils/Array.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     class RenderContext;
     class BaseLayer;

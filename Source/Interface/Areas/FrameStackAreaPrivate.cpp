@@ -28,6 +28,7 @@
 
 namespace Jam::Editor
 {
+    using namespace State;
 
     FrameStackAreaPrivate::FrameStackAreaPrivate(QWidget* parent) :
         QWidget(parent)

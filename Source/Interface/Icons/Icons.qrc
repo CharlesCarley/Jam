@@ -25,6 +25,7 @@
     <file>ic_folder_open.svg</file>
     <file>ic_fullscreen.svg</file>
     <file>ic_fullscreen_exit.svg</file>
+    <file>ic_function.svg</file>
     <file>ic_gamepad.svg</file>
     <file>ic_graph.svg</file>
     <file>ic_graph_area.svg</file>
@@ -39,12 +40,14 @@
     <file>ic_more_horizontal.svg</file>
     <file>ic_more_vertical.svg</file>
     <file>ic_output.svg</file>
+    <file>ic_point.svg</file>
     <file>ic_quit.svg</file>
     <file>ic_refresh.svg</file>
     <file>ic_save.svg</file>
     <file>ic_select_all.svg</file>
     <file>ic_settings.svg</file>
     <file>ic_share.svg</file>
+    <file>ic_slider.svg</file>
     <file>ic_sync.svg</file>
     <file>ic_trending_flat.svg</file>
     <file>ic_undo.svg</file>

@@ -26,7 +26,7 @@
 #include "Math/Screen.h"
 #include "Math/Vec2.h"
 
-namespace Jam
+namespace Jam::Editor::State
 {
     using LineBuffer = SimpleArray<QLineF>;
 

@@ -20,18 +20,18 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QScrollArea>
 #include "Interface/Area/Area.h"
 
 namespace Jam::Editor
 {
+    class VerticalScrollArea;
     class FunctionPropertiesPage;
 
     class FunctionArea final : public Area
     {
         Q_OBJECT
     private:
-        QScrollArea*            _area{nullptr};
+        VerticalScrollArea*     _area{nullptr};
         FunctionPropertiesPage* _func{nullptr};
 
     public:
@@ -40,6 +40,12 @@ namespace Jam::Editor
 
     private:
         void construct();
+        void constructTools(const AreaToolBar* tools);
+        void displayOptions(QWidget* widget);
+
+        void addSlider() const;
+        void addExpression() const;
+        void addPoint() const;
 
         bool event(QEvent* event) override;
     };

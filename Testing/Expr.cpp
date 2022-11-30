@@ -1,5 +1,5 @@
 #include <cstdio>
-#include "Equation/Stmt.h"
+#include "Equation/Statement.h"
 #include "Equation/StmtParser.h"
 #include "Equation/StmtScanner.h"
 #include "ExprData.inl"
@@ -21,7 +21,7 @@ GTEST_TEST(Expression, Parse00d)
     code.read(ss);
     logSymbols(code.symbols());
 
-    Eq::Stmt stmt;
+    Eq::Statement stmt;
     stmt.set("x", 5);
     stmt.execute(code.symbols());
     EXPECT_DOUBLE_EQ(stmt.peek(0), 1.0);
@@ -36,7 +36,7 @@ GTEST_TEST(Expression, Parse00c)
     code.read(ss);
     logSymbols(code.symbols());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     eval.set("x", 2);
     eval.execute(code.symbols());
     EXPECT_DOUBLE_EQ((int)eval.peek(0), 2000.0);
@@ -51,7 +51,7 @@ GTEST_TEST(Expression, Parse00b)
     code.read(ss);
     logSymbols(code.symbols());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     eval.set("x", R64(Pi));
     eval.execute(code.symbols());
     EXPECT_DOUBLE_EQ((int)eval.peek(0), 2.0);
@@ -66,7 +66,7 @@ GTEST_TEST(Expression, Parse00a)
     code.read(ss);
     logSymbols(code.symbols());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     eval.set("b", 5);
 
     int i = 0;
@@ -90,7 +90,7 @@ GTEST_TEST(Expression, Parse009)
     constexpr R64 b    = 1;
     constexpr R64 exit = R64(3.018392941684311);
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     int      i = 0;
 
     eval.set("x", i);
@@ -123,7 +123,7 @@ GTEST_TEST(Expression, Parse008)
     parse.read(ss);
     logSymbols(parse.symbols());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
 
     R64 result = eval.execute(parse.symbols());
     Dbg::println(SetD({1.9965, result}, 0, 4, true));
@@ -147,7 +147,7 @@ GTEST_TEST(Expression, Parse007)
     parse.read(ss);
     logSymbols(parse.symbols());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     eval.set("x", 3.1415926535897932384626433832795);
     eval.execute(parse.symbols());
 
@@ -169,7 +169,7 @@ GTEST_TEST(Expression, Parse006)
 
     ExpectDataTest(exec, Parse6Values, exec.size());
 
-    Eq::Stmt  eval;
+    Eq::Statement  eval;
     const R64 v = eval.execute(exec);
     EXPECT_EQ(v, Eq::InitialHash + 2);
 
@@ -207,7 +207,7 @@ void TestDouble(R64 a, R64 b)
 
 void Parse4ValueCheck(
     const Eq::SymbolArray& exec,
-    Eq::Stmt&              eval,
+    Eq::Statement&              eval,
     R64                    a,
     R64                    b,
     R64                    c,
@@ -248,7 +248,7 @@ GTEST_TEST(Expression, Parse005)
     const Eq::SymbolArray& exec = parse.symbols();
     logSymbols(exec);
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     Parse4ValueCheck(exec, eval, 1, 1, 1, 1, 1, 1, 1, 102.85714285714285714285714285714);
     Parse4ValueCheck(exec, eval, 1, 1, 1, 1, 1, 1, 11, 1234.2857142857142857142857142858);
     Parse4ValueCheck(exec, eval, 1, 1, 1, 1, 1, -11, 1, 226.28571428571428571428571428571);
@@ -273,7 +273,7 @@ GTEST_TEST(Expression, Parse004)
     EXPECT_EQ(exec.size(), 7);
     logSymbols(exec);
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     EXPECT_EQ(eval.execute(exec), 11);
     EXPECT_EQ(eval.get("y"), 11);
 }
@@ -310,7 +310,7 @@ GTEST_TEST(Expression, Parse002)
     EXPECT_EQ(exec.size(), 13);
     ExpectDataTest(exec, Parse2Values, exec.size());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     EXPECT_EQ(eval.execute(exec), 1);
     EXPECT_EQ(eval.get("a", -1), 1);
     EXPECT_EQ(eval.get("b", -1), 1);
@@ -335,7 +335,7 @@ GTEST_TEST(Expression, Parse001)
     EXPECT_EQ(exec.size(), 8);
     ExpectDataTest(exec, Parse1Values, exec.size());
 
-    Eq::Stmt eval;
+    Eq::Statement eval;
     EXPECT_EQ(eval.execute(exec), Eq::InitialHash);
 
     Eq::ValueList v;

@@ -39,6 +39,8 @@
 
 namespace Jam::Editor
 {
+    using namespace State;
+
     ProjectArea::ProjectArea(AreaCreator* creator, QWidget* parent) :
         Area(creator, AtProject, parent)
     {

@@ -25,8 +25,8 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QWidget>
-#include "Interface/Style/PaletteCache.h"
 #include "Interface/Constants.h"
+#include "Interface/Style/PaletteCache.h"
 
 namespace Jam::Editor::Const
 {
@@ -287,6 +287,7 @@ namespace Jam::Editor::Const
             case 1:
                 toolbarIconButtonImpl();
                 break;
+            case 3:  // TODO: case 3: needs to be transparent, or the window role
             case 2:
                 titlebarIconButtonImpl();
                 break;
@@ -463,9 +464,9 @@ namespace Jam::Editor::Const
         if (_option->state & QStyle::State_ReadOnly)
             _painter->fillRect(_option->rect, background().lighter());
         else
-            _painter->fillRect(_option->rect, background().lighter(130));
+            _painter->fillRect(_option->rect, background().lighter(200));
 
-        _painter->drawRect(_option->rect.adjusted(1, 1, -1, -1));
+        _painter->drawRect(_option->rect /*.adjusted(1, 1, -1, -1)*/);
     }
 
     void Renderer::spinBox() const

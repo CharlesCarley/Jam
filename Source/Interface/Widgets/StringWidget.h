@@ -50,6 +50,8 @@ namespace Jam::Editor
 
         const String& text() const;
 
+        void setHeight(int hgt);
+
     private:
         void connectEvents();
         void construct();
