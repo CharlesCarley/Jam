@@ -146,7 +146,7 @@ namespace Jam::Editor::State
         oss << SetS({"x", "y"})
             << Equ()
             << SetF({v.x, v.y}, (p * 2) + 2, p, true);
-        _painter->drawText(x0, y0, QString(oss.str().c_str()));
+        _painter->drawText(x0, y0, QString::fromStdString(oss.str()));
     }
 
     void RenderContext::axisValue(

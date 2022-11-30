@@ -68,6 +68,7 @@ namespace Jam::Editor::State
         case ORIGIN:
             return injectVec2FImpl(code, size);
         }
+        return false;
     }
 
 }  // namespace Jam::Editor::State

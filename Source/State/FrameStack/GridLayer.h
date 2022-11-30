@@ -75,6 +75,8 @@ namespace Jam::Editor::State
 
         const Axis& axis() const;
 
+        Axis& refAxis();
+
         const Vec2F& origin() const;
     };
 
@@ -116,6 +118,11 @@ namespace Jam::Editor::State
     inline const Vec2F& GridLayer::origin() const
     {
         return _origin;
+    }
+    
+    inline Axis& GridLayer::refAxis()
+    {
+        return _axis;
     }
 
 }  // namespace Jam::Editor::State

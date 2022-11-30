@@ -90,6 +90,11 @@ namespace Jam
             set(I32(_n), d);
         }
 
+        I32 i() const
+        {
+            return _c;
+        }
+
         I8 sign() const { return _s; }
 
         const U32& n() const { return _n; }
