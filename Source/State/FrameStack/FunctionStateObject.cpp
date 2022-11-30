@@ -21,20 +21,30 @@
 */
 #include "FunctionStateObject.h"
 #include "Equation/StmtParser.h"
+#include "Interface/Areas/OutputArea.h"
 
 namespace Jam::Editor::State
 {
     void ExpressionStateObject::setText(const String& text)
     {
         _text = text;
-
         try
         {
-            StringStream ss(text);
+            StringStream ss(_text);
             _parser.read(ss);
+
+            ss.str(String{});
+            ss.clear();
+            for (const auto sym : _parser.symbols())
+            {
+                sym->print(ss);
+                ss << ' ';
+            }
+            Log::writeLine(ss.str());
         }
-        catch (...)
+        catch (Exception &ex)
         {
+            Log::writeLine(ex.what());
         }
     }
 

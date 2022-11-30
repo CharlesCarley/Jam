@@ -44,16 +44,20 @@ namespace Jam::Editor
         ~FunctionPropertiesPage() override;
 
         void addSlider(State::VariableStateObject * obj = nullptr) const;
+
         void addExpression(State::ExpressionStateObject * obj = nullptr) const;
 
         void addPoint() const;
 
     private:
         void construct();
+
         void loadState() const;
+
         void notifyResize() const;
+
         void dropWidget(QWidget * widget) const;
-        void onTextChanged(const String& newText);
+
     };
 
 }  // namespace Jam::Editor

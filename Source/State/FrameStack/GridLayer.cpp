@@ -56,11 +56,10 @@ namespace Jam::Editor::State
         case ORIGIN:
             _origin = size;
             return true;
-        case FUNC_TEXT:
         case SIZE:
-        default:
-            return false;
+            break;
         }
+        return false;
     }
 
     void GridLayer::render(RenderContext& canvas)
@@ -92,4 +91,4 @@ namespace Jam::Editor::State
         _axis.set(ax);
     }
 
-}  // namespace Jam::Layers
+}  // namespace Jam::Editor::State

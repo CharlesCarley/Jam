@@ -62,10 +62,10 @@ namespace Jam::Editor
 
         String label() const;
 
-        void setHeight(int hgt) const;
+        //void setHeight(int hgt) const;
 
     private:
-        void connectEvents();
+        void connectSignals();
 
         void construct();
 

@@ -88,8 +88,7 @@ namespace Jam::Editor
 
     void VariableStepWidget::onTextChanged()
     {
-        Log::writeLine("text-out");
-
+        //Log::writeLine("text-out");
         if (sender() == _name)
         {
             const String s = _name->text().toStdString();
@@ -134,15 +133,15 @@ namespace Jam::Editor
                 !_rate->hasFocus())
             {
                 emit finished(_data);
-                Log::writeLine("finished");
+                //Log::writeLine("finished");
             }
-            Log::writeLine("focus-out");
+            //Log::writeLine("focus-out");
         }
     }
 
     void VariableStepWidget::focusInEvent(QFocusEvent* event)
     {
-        Log::writeLine("focus-in");
+        //Log::writeLine("focus-in");
         QWidget::focusInEvent(event);
     }
 
@@ -164,4 +163,5 @@ namespace Jam::Editor
         _rate->setText(QString::fromStdString(Char::toString(value)));
         _data.rate = value;
     }
+
 }  // namespace Jam::Editor

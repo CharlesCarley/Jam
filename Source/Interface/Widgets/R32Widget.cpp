@@ -27,6 +27,7 @@
 #include "Interface/Extensions.h"
 #include "R32WidgetPrivate.h"
 #include "VariableStepWidget.h"
+#include "Interface/Constants.h"
 
 namespace Jam::Editor
 {
@@ -52,17 +53,20 @@ namespace Jam::Editor
         View::layoutDefaults(_layout);
 
         _value = new R32WidgetPrivate();
-        View::applyColorRoles(_value);
+        _value->setMinimumHeight(Const::ButtonHeight);
+        View::copyColorRoles(_value, this);
 
         _step = new VariableStepWidget();
-        View::applyColorRoles(_step);
+        _step->setMinimumHeight(Const::ButtonHeight);
         _step->setVisible(false);
+        View::copyColorRoles(_step, this);
 
         _layout->addWidget(_value);
         _layout->addWidget(_step);
 
-        connectEvents();
+
         setLayout(_layout);
+        connectSignals();
     }
 
     void R32Widget::editingFinished() const
@@ -110,7 +114,7 @@ namespace Jam::Editor
         }
     }
 
-    void R32Widget::connectEvents()
+    void R32Widget::connectSignals()
     {
         if (_step)
         {
@@ -203,11 +207,5 @@ namespace Jam::Editor
         if (_value)
             return _value->label();
         return {};
-    }
-
-    void R32Widget::setHeight(int hgt) const
-    {
-        _value->setMinimumHeight(hgt);
-        _step->setMinimumHeight(hgt);
     }
 }  // namespace Jam::Editor

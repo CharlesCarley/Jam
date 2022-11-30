@@ -43,12 +43,6 @@ namespace Jam::Editor::State
         return false;
     }
 
-    bool BaseLayer::injectText(const String& text)
-    {
-        // nadda
-        return false;
-    }
-
     bool BaseLayer::injectVec2FImpl(const FrameStackCode& code,
                                     const Vec2F&          size)
     {
@@ -72,11 +66,8 @@ namespace Jam::Editor::State
         case X_STEP:
         case Y_STEP:
         case ORIGIN:
-        default:
             return injectVec2FImpl(code, size);
-        case FUNC_TEXT:
-            return false;
         }
     }
 
-}  // namespace Jam
+}  // namespace Jam::Editor::State

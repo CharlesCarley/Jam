@@ -212,7 +212,7 @@ namespace Jam::Editor::View
         Q_ASSERT(dst);
         applyColorRoles(dst, background, foreground);
         dst->setContentsMargins(0, 0, 0, 0);
-        dst->setMinimumHeight(Const::ButtonHeight);
+        dst->setMaximumHeight(Const::ButtonHeight);
         dst->setClearButtonEnabled(false);
         dst->setReadOnly(false);
     }

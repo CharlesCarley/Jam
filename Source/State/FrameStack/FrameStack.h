@@ -38,7 +38,6 @@ namespace Jam::Editor::State
         X_STEP,
         Y_STEP,
         ORIGIN,
-        FUNC_TEXT,
     };
 
     class FrameStack
@@ -52,12 +51,10 @@ namespace Jam::Editor::State
 
         void render(RenderContext* canvas);
 
-        [[deprecated("remove")]]
+        void update();
+
         bool injectVec2(const FrameStackCode& code,
                         const Vec2F&          value);
-
-        [[deprecated("remove")]]
-        bool injectText(const String&         text);
 
         // NOTE: passes ownership
         U32 addLayer(BaseLayer* layer);
@@ -71,7 +68,7 @@ namespace Jam::Editor::State
         template <typename T>
         T* cast(const U32 idx);
 
-        void serialize(IStream &data);
+        void serialize(IStream& data);
 
         void clear();
     };
@@ -92,4 +89,4 @@ namespace Jam::Editor::State
         return !_layers.empty();
     }
 
-}  // namespace Jam
+}  // namespace Jam::Editor::State

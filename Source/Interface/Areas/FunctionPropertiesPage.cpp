@@ -48,6 +48,7 @@ namespace Jam::Editor
         _panel = new StackedPanel();
         _panel->setLabel("Functions");
         loadState();
+
         addPanel(_panel);
     }
 
@@ -127,13 +128,8 @@ namespace Jam::Editor
             _panel->remove(widget);
             delete widget;
             notifyResize();
+            State::layerStack()->notifyStateChange();
         }
-    }
-
-    void FunctionPropertiesPage::onTextChanged(const String& newText)
-    {
-        if (State::layerStack()->injectText(newText))
-            update();
     }
 
 }  // namespace Jam::Editor

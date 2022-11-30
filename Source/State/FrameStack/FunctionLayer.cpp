@@ -133,34 +133,6 @@ namespace Jam::Editor::State
         return false;
     }
 
-    bool FunctionLayer::injectText(const String& text)
-    {
-        if (_text != text)
-        {
-            _text = text;
-
-            if (!_text.empty())
-            {
-                StringStream ss(_text);
-                _parser.read(ss);
-
-                _stmt.execute(_parser.symbols());
-                _xLoc = _stmt.indexOf("x");
-
-                ss.str(String{});
-                ss.clear();
-                for (const auto sym : _parser.symbols())
-                {
-                    sym->print(ss);
-                    ss << ' ';
-                }
-                Log::writeLine(ss.str());
-            }
-            return true;
-        }
-        return false;
-    }
-
     bool FunctionLayer::update()
     {
         for (const auto obj : _array)
@@ -191,7 +163,6 @@ namespace Jam::Editor::State
 
     void FunctionLayer::removeVariable(VariableStateObject* vso)
     {
-        // TODO: preserve creation order, so that execution order is predictable.
         if (const U32 idx = _array.find(vso); idx != JtNpos32)
             _array.remove(idx);
         delete vso;
@@ -199,7 +170,6 @@ namespace Jam::Editor::State
 
     void FunctionLayer::removeExpression(ExpressionStateObject* eso)
     {
-        // TODO: preserve creation order, so that execution order is predictable.
         if (const U32 idx = _expr.find(eso); idx != JtNpos32)
             _expr.remove(idx);
         if (const U32 idx = _array.find(eso); idx != JtNpos32)

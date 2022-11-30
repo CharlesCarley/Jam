@@ -32,6 +32,7 @@ namespace Jam::Editor::State
     public:
         enum Flags
         {
+            None,
             YUp = 0x01
         };
 
@@ -49,8 +50,8 @@ namespace Jam::Editor::State
 
         Vec2F scale() const;
 
-        [[deprecated("remove me")]] bool injectVec2FImpl(const FrameStackCode& code,
-                                                         const Vec2F&          size) override;
+        bool injectVec2FImpl(const FrameStackCode& code,
+                             const Vec2F&          size) override;
 
     public:
         GridLayer();

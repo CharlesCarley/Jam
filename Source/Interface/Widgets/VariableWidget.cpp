@@ -26,7 +26,6 @@
 #include "R32Widget.h"
 #include "State/App.h"
 #include "State/FrameStackManager.h"
-#include "StringWidget.h"
 #include "VariableStepWidget.h"
 
 namespace Jam::Editor
@@ -42,8 +41,8 @@ namespace Jam::Editor
     void VariableWidget::construct()
     {
         Q_ASSERT(_state);
-
         View::widgetDefaults(this);
+
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
 
@@ -52,12 +51,14 @@ namespace Jam::Editor
         _line->setRate(_state->rate());
         _line->setValue(_state->value());
         _line->setLabel(_state->name());
+
         _del = IconButton::create(Icons::Delete);
         View::copyColorRoles(_del, this);
 
         layout->addWidget(_line, 1);
         layout->addWidget(_del);
         setLayout(layout);
+
         connectSignals();
     }
 
@@ -92,6 +93,7 @@ namespace Jam::Editor
     void VariableWidget::onValueChange(const R32& data) const
     {
         _state->setValue(data);
+
         State::layerStack()->notifyStateChange();
         State::functionLayer()->update();
     }
@@ -99,9 +101,9 @@ namespace Jam::Editor
     void VariableWidget::onDelete()
     {
         State::functionLayer()->removeVariable(_state);
+        _state = nullptr;
         State::layerStack()->notifyStateChange();
 
-        _state = nullptr;
         emit wantsToDelete();
     }
 

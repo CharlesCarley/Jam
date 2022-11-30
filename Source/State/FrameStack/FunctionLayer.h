@@ -43,13 +43,10 @@ namespace Jam::Editor::State
 
         Vec2F eval(R32 i0, const Eq::SymbolArray& sym);
 
-        [[deprecated("remove")]]
         bool resizeEvent(const Vec2I& oldSize) override;
 
-        [[deprecated("remove")]]
         bool injectVec2FImpl(const FrameStackCode& code,
                              const Vec2F&          size) override;
-
 
         void render(RenderContext& canvas) override;
         void renderExpression(RenderContext& canvas, I32 i0);
@@ -62,19 +59,15 @@ namespace Jam::Editor::State
 
         void setOrigin(const Vec2F& origin);
 
-        [[deprecated("remove")]]
-        bool injectText(const String& text) override;
-
-        const String& getText() const { return _text; }
-
+        const String& getText() const;
 
         bool update() override;
 
-        VariableStateObject* createVariable();
+        VariableStateObject*   createVariable();
         ExpressionStateObject* createExpression();
 
-         void removeVariable(VariableStateObject* vso);
-         void removeExpression(ExpressionStateObject* eso);
+        void removeVariable(VariableStateObject* vso);
+        void removeExpression(ExpressionStateObject* eso);
 
         const FunctionObjectArray& objects() const;
     };
@@ -92,6 +85,11 @@ namespace Jam::Editor::State
     inline const FunctionObjectArray& FunctionLayer::objects() const
     {
         return _array;
+    }
+
+    inline const String& FunctionLayer::getText() const
+    {
+        return _text;
     }
 
 }  // namespace Jam::Editor::State

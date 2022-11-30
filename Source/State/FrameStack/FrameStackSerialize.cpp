@@ -120,6 +120,8 @@ namespace Jam::Editor::State
             _stack->clear();
             _stack->addLayer(grid);
             _stack->addLayer(func);
+
+            _stack->update();
         }
         catch (Exception& ex)
         {

@@ -36,55 +36,27 @@ namespace Jam::Editor::State
     class BaseLayer
     {
     public:
-        enum Flags  //[] < sizeof(U8)
-        {
-            None      = 0x00,
-            Selection = 0x01,
-        };
         const LayerType type;
 
     protected:
         Vec2I _size{0, 0};
 
-        [[deprecated("remove me")]]
         virtual bool resizeEvent(const Vec2I& size);
 
-        [[deprecated("remove me")]]
         virtual bool injectVec2FImpl(const FrameStackCode& code,
                                      const Vec2F&          size);
 
-    private:
-        U8 _layerFlags{None};
-
     public:
-        explicit BaseLayer(const LayerType type);
+        explicit BaseLayer(LayerType type);
+
         virtual ~BaseLayer() = default;
 
         virtual void render(RenderContext& canvas);
 
         virtual bool update();
 
-        [[deprecated("remove me")]]
         bool injectVec2(const FrameStackCode& code,
                         const Vec2F&          size);
-
-        [[deprecated("remove me")]]
-        virtual bool injectText(const String& text);
-
-        [[deprecated("remove me")]]
-        bool isSelected() const
-        {
-            return (_layerFlags & Selection) != 0;
-        }
-
-        [[deprecated("remove me")]]
-        void select(bool v)
-        {
-            if (v)
-                _layerFlags |= Selection;
-            else
-                _layerFlags &= ~Selection;
-        }
     };
 
-}  // namespace Jam
+}  // namespace Jam::Editor::State

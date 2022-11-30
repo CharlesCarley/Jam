@@ -64,28 +64,6 @@ namespace Jam::Editor::State
         return result;
     }
 
-    bool FrameStackManager::injectText(const String& text) const
-    {
-        bool result = false;
-        try
-        {
-            if (_stack)
-                result = _stack->injectText(text);
-
-            if (result)
-                emit stateChanged();
-            _error = false;
-            return result;
-        }
-        catch (Exception& ex)
-        {
-            if (!_error)
-                Con::println(ex.what());
-            _error = true;
-            return result;
-        }
-    }
-
     void FrameStackManager::addLayer(BaseLayer* layer) const
     {
         if (_stack)

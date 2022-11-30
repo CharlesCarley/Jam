@@ -32,11 +32,11 @@ namespace Jam::Editor::State
         Q_OBJECT
 
     signals:
-        [[deprecated("remove me")]] void vec2Injected(const FrameStackCode& code, const Vec2F& size) const;
+        void vec2Injected(const FrameStackCode& code, const Vec2F& size) const;
 
         void stateChanged() const;
 
-        [[deprecated("remove me")]] void layerAdded(const I32& type, const U32& index) const;
+        void layerAdded(const I32& type, const U32& index) const;
 
     private:
         // This is a friend so that only ApplicationState may
@@ -58,10 +58,8 @@ namespace Jam::Editor::State
 
         void load(IStream& data) const;
 
-        [[deprecated("remove me")]] bool injectVec2(const FrameStackCode& code,
-                                                    const Vec2F&          value) const;
-
-        [[deprecated("remove me")]] bool injectText(const String& text) const;
+        bool injectVec2(const FrameStackCode& code,
+                        const Vec2F&          value) const;
 
         void addLayer(BaseLayer* layer) const;
 

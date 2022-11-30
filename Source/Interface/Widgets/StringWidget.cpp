@@ -24,6 +24,7 @@
 #include <QLineEdit>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
+#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 
 namespace Jam::Editor
@@ -37,19 +38,19 @@ namespace Jam::Editor
 
     void StringWidget::construct()
     {
-        View::applyColorRoles(this, QPalette::Midlight);
+        View::applyColorRoles(this, QPalette::Base);
+        setMinimumHeight(Const::ButtonHeight);
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
-        _line = new QLineEdit();
-        // View::applyColorRoles(_line, QPalette::NoRole);
-        _line->setClearButtonEnabled(false);
-        _line->setReadOnly(false);
 
-        connectEvents();
+        _line = new QLineEdit();
+        View::lineEditDefaults(_line);
 
         layout->addWidget(_line);
         setLayout(layout);
+
+        connectSignals();
     }
 
     void StringWidget::finished()
@@ -58,13 +59,7 @@ namespace Jam::Editor
         emit editingFinished(_str);
     }
 
-    void StringWidget::setHeight(int hgt)
-    {
-        _line->setMinimumHeight(hgt);
-        setMinimumHeight(hgt);
-    }
-
-    void StringWidget::connectEvents()
+    void StringWidget::connectSignals()
     {
         connect(_line,
                 &QLineEdit::editingFinished,
@@ -80,8 +75,10 @@ namespace Jam::Editor
     {
         if (_str != str)
         {
-            Su::filterRange(_str, str, 32, 126);
+            Su::filterAscii(_str, str);
+
             _line->setText(QString::fromStdString(_str));
+
             emit editingFinished(_str);
         }
     }

@@ -21,8 +21,8 @@
 */
 #include "State/FrameStack/FrameStack.h"
 #include "FunctionLayer.h"
-#include "State/FrameStack/FrameStackSerialize.h"
 #include "State/FrameStack/BaseLayer.h"
+#include "State/FrameStack/FrameStackSerialize.h"
 
 namespace Jam::Editor::State
 {
@@ -39,6 +39,12 @@ namespace Jam::Editor::State
             element->render(*canvas);
     }
 
+    void FrameStack::update()
+    {
+        for (BaseLayer* element : _layers)
+            element->update();
+    }
+
     bool FrameStack::injectVec2(
         const FrameStackCode& code,
         const Vec2F&          value)
@@ -46,15 +52,6 @@ namespace Jam::Editor::State
         bool mod = false;
         for (BaseLayer* element : _layers)
             mod = element->injectVec2(code, value) || mod;
-        return mod;
-    }
-
-    bool FrameStack::injectText(
-        const String& text)
-    {
-        bool mod = false;
-        for (BaseLayer* element : _layers)
-            mod = element->injectText(text) || mod;
         return mod;
     }
 
@@ -76,7 +73,7 @@ namespace Jam::Editor::State
         return nullptr;
     }
 
-    void FrameStack::serialize(IStream &data)
+    void FrameStack::serialize(IStream& data)
     {
         const FrameStackSerialize serialize(this);
         serialize.load(data);
@@ -88,4 +85,5 @@ namespace Jam::Editor::State
             delete element;
         _layers.clear();
     }
-}  // namespace Jam
+
+}  // namespace Jam::Editor::State

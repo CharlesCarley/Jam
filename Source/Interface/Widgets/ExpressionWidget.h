@@ -52,6 +52,7 @@ namespace Jam::Editor
 
     private:
         void construct();
+
         void connectSignals();
 
         void textEntered(const String& text) const;

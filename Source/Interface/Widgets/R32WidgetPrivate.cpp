@@ -23,8 +23,8 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include "Interface/Constants.h"
-#include "Interface/Style/Palette.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 #include "Utils/Char.h"
 
 namespace Jam::Editor
@@ -46,10 +46,12 @@ namespace Jam::Editor
 
     void R32WidgetPrivate::construct()
     {
-        View::applyColorRoles(this, QPalette::LinkVisited);
+        View::emptyWidget(this);
+
         setContentsMargins(0, 0, 0, 0);
         setAutoFillBackground(true);
-        setMinimumHeight(20);
+        setMinimumHeight(Const::ButtonHeight);
+
         Const::applyPalette(_pal);
     }
 
@@ -61,9 +63,10 @@ namespace Jam::Editor
 
     void R32WidgetPrivate::setValue(const R32& val)
     {
-        if (val != _val)
+        if (!equals(val, _val))
         {
             _val = Clamp(val, _mm.x, _mm.y);
+
             emit valueChanged(_val);
             update();
         }
@@ -73,13 +76,13 @@ namespace Jam::Editor
     {
         String       str;
         const String raw = val.toStdString();
-        Su::filterReal(str, raw);
-        setValue(Char::toFloat(str));
+        if (Su::filterReal(str, raw))
+            setValue(Char::toFloat(str));
     }
 
     void R32WidgetPrivate::setRate(const R32& val)
     {
-        if (val != _rate)
+        if (!equals(val, _rate))
         {
             _rate = Clamp(val, _mm.x, _mm.y);
             update();
@@ -194,9 +197,8 @@ namespace Jam::Editor
         paint.setPen(_pal.color(QPalette::Shadow));
         paint.drawRect(1, 1, w - 1, h - 1);
 
-       const R32 ws = (fabs(_mm.x) + R32(_val)) / _mm.dmm() * R32(w);
-       paint.fillRect(0, 0, I32(ws), h, _pal.dark());
-
+        const R32 ws = (fabs(_mm.x) + R32(_val)) / _mm.dmm() * R32(w);
+        paint.fillRect(0, 0, I32(ws), h, _pal.dark());
         paint.setPen(_pal.color(QPalette::Text));
 
         paint.drawText(

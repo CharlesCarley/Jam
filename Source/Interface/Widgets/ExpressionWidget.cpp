@@ -22,10 +22,11 @@
 #include "ExpressionWidget.h"
 #include <qboxlayout.h>
 #include "IconButton.h"
+#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "State/App.h"
 #include "StringWidget.h"
-#include "Interface/Constants.h"
+#include "State/FrameStackManager.h"
 
 namespace Jam::Editor
 {
@@ -40,6 +41,7 @@ namespace Jam::Editor
     void ExpressionWidget::construct()
     {
         View::widgetDefaults(this);
+
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
 
@@ -47,12 +49,12 @@ namespace Jam::Editor
         if (_state)
             _line->setText(_state->text());
 
-        _line->setHeight(Const::ButtonHeight);
         _del = IconButton::create(Icons::Delete);
         View::copyColorRoles(_del, this);
 
         layout->addWidget(_line, 1);
         layout->addWidget(_del);
+
         setLayout(layout);
         connectSignals();
     }
@@ -80,12 +82,16 @@ namespace Jam::Editor
     void ExpressionWidget::textEntered(const String& text) const
     {
         if (_state)
+        {
             _state->setText(text);
+            State::layerStack()->notifyStateChange();
+        }
     }
 
     void ExpressionWidget::setText(const String& text) const
     {
         _line->setText(text);
+        textEntered(text);
     }
 
 }  // namespace Jam::Editor
