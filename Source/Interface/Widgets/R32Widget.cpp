@@ -85,6 +85,7 @@ namespace Jam::Editor
         makeEditable(false);
         setLabel(dt.name);
         setRange(dt.range.x, dt.range.y);
+        setRate(dt.rate);
 
         emit stepDataChanged(dt);
     }
@@ -168,6 +169,14 @@ namespace Jam::Editor
             _value->setRange({min, max});
         if (_step)
             _step->setRange({min, max});
+    }
+
+    void R32Widget::setRate(const R32& value) const
+    {
+        if (_value)
+            _value->setRate(value);
+        if (_step)
+            _step->setRate(value);
     }
 
     void R32Widget::setLabel(const String& value) const

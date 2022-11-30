@@ -100,7 +100,7 @@ namespace Jam::Editor
         {
             const String s = _min->text().toStdString();
             String       v;
-            Su::filterRange(v, s, '0', '9');
+            Su::filterReal(v, s);
             _data.range.x = Char::toFloat(v);
             setFocus();
         }
@@ -108,7 +108,7 @@ namespace Jam::Editor
         {
             const String s = _max->text().toStdString();
             String       v;
-            Su::filterRange(v, s, '0', '9');
+            Su::filterReal(v, s);
             _data.range.y = Char::toFloat(v);
             setFocus();
         }
@@ -116,7 +116,7 @@ namespace Jam::Editor
         {
             const String s = _rate->text().toStdString();
             String       v;
-            Su::filterRange(v, s, '0', '9');
+            Su::filterReal(v, s);
             _data.rate = Char::toFloat(v);
             setFocus();
         }
@@ -159,4 +159,9 @@ namespace Jam::Editor
         _data.range = value;
     }
 
+    void VariableStepWidget::setRate(const R32& value)
+    {
+        _rate->setText(QString::fromStdString(Char::toString(value)));
+        _data.rate = value;
+    }
 }  // namespace Jam::Editor

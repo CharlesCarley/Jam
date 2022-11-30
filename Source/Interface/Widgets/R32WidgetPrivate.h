@@ -39,6 +39,7 @@ namespace Jam::Editor
 
     private:
         R32      _val{0};
+        R32      _rate{0};
         QPalette _pal;
         U8       _cap{0};
         Vec2F    _d{0.f, 0};
@@ -51,6 +52,8 @@ namespace Jam::Editor
         void setValue(const R32& val);
 
         void setValue(const QString& val);
+
+        void setRate(const R32& val);
 
         void setRange(const Vec2F& val);
 

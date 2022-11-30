@@ -63,6 +63,7 @@ namespace Jam::Editor
 
 
         void stepDataChanged(const VariableStepData& data) const;
+        void onValueChange(const R32& data) const;
 
         void onDelete();
     };

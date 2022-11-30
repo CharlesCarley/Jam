@@ -96,6 +96,11 @@ namespace Jam::Editor::State
         }
     }
 
+    void FrameStackManager::notifyStateChange() const
+    {
+        emit stateChanged();
+    }
+
     const LayerArray& FrameStackManager::layers() const
     {
         if (!_stack)

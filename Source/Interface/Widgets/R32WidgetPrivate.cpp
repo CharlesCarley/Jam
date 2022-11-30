@@ -73,14 +73,17 @@ namespace Jam::Editor
     {
         String       str;
         const String raw = val.toStdString();
+        Su::filterReal(str, raw);
+        setValue(Char::toFloat(str));
+    }
 
-        for (const char ch : raw)
+    void R32WidgetPrivate::setRate(const R32& val)
+    {
+        if (val != _rate)
         {
-            if (ch == '-' || isDecimal(ch))
-                str.push_back(ch);
+            _rate = Clamp(val, _mm.x, _mm.y);
+            update();
         }
-
-        setValue(Char::toInt32(str));
     }
 
     void R32WidgetPrivate::setRange(const Vec2F& val)
@@ -108,9 +111,9 @@ namespace Jam::Editor
     void R32WidgetPrivate::handleSingleTick(const QPointF& d)
     {
         if (d.x() < Sr)
-            setValue(_val - 1);
+            setValue(_val - _rate);
         else if (d.x() > width() - Sr)
-            setValue(_val + 1);
+            setValue(_val + _rate);
     }
 
     void R32WidgetPrivate::mousePressEvent(QMouseEvent* event)
@@ -175,7 +178,7 @@ namespace Jam::Editor
             p1 /= width();
             _d = {R32(p1.x()), R32(p1.x())};
             _d.clamp(0, 1);
-            //setValue(I32(_mm.dmm() * _d.x + _mm.rx()));
+            setValue(_mm.dmm() * _d.x + _mm.x);
         }
         else
             QWidget::mouseMoveEvent(event);
@@ -196,8 +199,8 @@ namespace Jam::Editor
         paint.setPen(_pal.color(QPalette::Shadow));
         paint.drawRect(1, 1, w - 1, h - 1);
 
-       // const R32 ws = (fabs(_mm.rx()) + R32(_val)) / _mm.dmm() * R32(w);
-        //paint.fillRect(0, 0, I32(ws), h, _pal.dark());
+       const R32 ws = (fabs(_mm.x) + R32(_val)) / _mm.dmm() * R32(w);
+       paint.fillRect(0, 0, I32(ws), h, _pal.dark());
 
         paint.setPen(_pal.color(QPalette::Text));
 

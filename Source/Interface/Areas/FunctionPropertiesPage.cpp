@@ -57,9 +57,9 @@ namespace Jam::Editor
 
         for (const auto object : layer->objects())
         {
-            if (object->type == State::FstExpression)
+            if (object->type() == State::FstExpression)
                 addExpression((State::ExpressionStateObject*)object);
-            if (object->type == State::FstVariable)
+            if (object->type() == State::FstVariable)
                 addSlider((State::VariableStateObject*)object);
         }
     }

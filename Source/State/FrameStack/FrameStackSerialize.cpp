@@ -61,13 +61,16 @@ namespace Jam::Editor::State
             if (node->isTypeOf(ExpressionTag))
             {
                 ExpressionStateObject* eso = fnc->createExpression();
-                eso->text                  = node->attribute("text");
+                eso->setText(node->attribute("text"));
             }
             else if (node->isTypeOf(VariableTag))
             {
                 VariableStateObject* vso = fnc->createVariable();
 
-                vso->name = node->attribute("name");
+                vso->setRange(Xc::toVec2F("range", node, {-10.f, 10}));
+                vso->setRate(node->float32("rate", 1));
+                vso->setRate(node->float32("value", 1));
+                vso->setName(node->attribute("name"));
             }
             else
             {
@@ -157,23 +160,26 @@ namespace Jam::Editor::State
 
         for (const auto id : layer->objects())
         {
-            if (id->type == FstExpression)
+            if (id->type() == FstExpression)
             {
                 const ExpressionStateObject* eso = (ExpressionStateObject*)id;
 
                 XmlNode* expr = new XmlNode("expression", ExpressionTag);
-                expr->insert("text", eso->text);
+                expr->insert("text", eso->text());
                 func->addChild(expr);
             }
-            else if (id->type == FstVariable)
+            else if (id->type() == FstVariable)
             {
                 const VariableStateObject* vso = (VariableStateObject*)id;
 
                 XmlNode* expr = new XmlNode("variable", VariableTag);
-
-                expr->insert("name", vso->name);
+                expr->insert("name", vso->name());
                 expr->insert("range",
-                             Sc::join(ValueSetF({vso->range.x, vso->range.y}, 0, 6)));
+                             Sc::join(ValueSetF({vso->range().x, vso->range().y}, 0, 6)));
+                expr->insert("rate",
+                             Sc::join(FloatPrint(vso->rate())));
+                expr->insert("value",
+                             Sc::join(FloatPrint(vso->value())));
                 func->addChild(expr);
             }
         }

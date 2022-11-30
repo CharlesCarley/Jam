@@ -64,6 +64,8 @@ namespace Jam::Editor::State
 
         void addLayer(BaseLayer* layer) const;
 
+        void notifyStateChange() const;
+
         const LayerArray& layers() const;
 
         void render(RenderContext* canvas) const;

@@ -33,7 +33,7 @@ namespace Jam::Editor
     struct VariableStepData
     {
         String name{};
-        Vec2F  range{0.f,0};
+        Vec2F  range{0.f, 0};
         R32    rate{0};
     };
 
@@ -54,10 +54,9 @@ namespace Jam::Editor
     public:
         explicit VariableStepWidget(QWidget* parent = nullptr);
 
-
         void setName(const String& value);
         void setRange(const Vec2F& value);
-
+        void setRate(const R32& value);
 
     private:
         void construct();

@@ -52,6 +52,8 @@ namespace Jam::Editor
 
         void setRange(const R32& min, const R32& max) const;
 
+        void setRate(const R32& value) const;
+
         void setLabel(const String& value) const;
 
         R32 value() const;

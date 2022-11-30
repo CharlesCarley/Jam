@@ -34,36 +34,60 @@ namespace Jam::Editor::State
 
     class FunctionStateObject
     {
+    private:
+        const I32 _type{FstNone};
+
     public:
         explicit FunctionStateObject(const I32 type) :
-            type(type) {}
+            _type(type) {}
         ~FunctionStateObject() = default;
 
-        const I32 type{FstNone};
+        const I32& type() const { return _type; }
     };
 
     using FunctionObjectArray = SimpleArray<FunctionStateObject*>;
 
     class VariableStateObject : public FunctionStateObject
     {
+    private:
+        String _name{};
+        Vec2F  _range{1.f, 100};
+        R32    _rate{1.f};
+        R32    _value{1.f};
+
     public:
         explicit VariableStateObject() :
             FunctionStateObject(FstVariable) {}
+
         ~VariableStateObject() = default;
 
-        String name{};
-        Vec2F  range{1.f, 100};
-        R32    rate{1.f};
+        const String& name() const { return _name; }
+        const Vec2F&  range() const { return _range; }
+        const R32&    rate() const { return _rate; }
+        const R32&    value() const { return _value; }
+
+        void setName(const String& val) { _name = val; }
+        void setRange(const Vec2F& val) { _range = val; }
+        void setRate(const R32& val) { _rate = val; }
+        void setValue(const R32& val) { _value = val; }
     };
 
     class ExpressionStateObject : public FunctionStateObject
     {
+    private:
+        String         _text{};
+        Eq::StmtParser _parser;
+
     public:
         explicit ExpressionStateObject() :
             FunctionStateObject(FstExpression) {}
         ~ExpressionStateObject() = default;
 
-        String text{};
+        const String& text() const { return _text; }
+
+        const Eq::SymbolArray& symbols() const { return _parser.symbols(); }
+
+        void setText(const String& text);
     };
 
-}  // namespace Jam::Layers
+}  // namespace Jam::Editor::State

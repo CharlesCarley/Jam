@@ -212,6 +212,55 @@ namespace Jam
         return modified;
     }
 
+    bool StringUtils::filterAscii(String& destination, const String& input)
+    {
+        bool modified = false;
+        destination.clear();
+        for (const char ch : input)
+        {
+            if (ch >= 0x20 && ch < 0x7F)
+                destination.push_back(ch);
+            else
+                modified = true;
+        }
+        return modified;
+    }
+
+    bool StringUtils::filterInt(String& destination, const String& input)
+    {
+        bool modified = false;
+        destination.clear();
+        for (const char ch : input)
+        {
+            if (ch >= '0' && ch < '9' || ch == '-')
+                destination.push_back(ch);
+            else
+                modified = true;
+        }
+        return modified;
+    }
+
+    bool StringUtils::filterReal(String& destination, const String& input)
+    {
+        bool modified = false;
+        destination.clear();
+        for (const char ch : input)
+        {
+            if (ch >= '0' && ch < '9' || 
+                ch == '-' || 
+                ch == '+' || 
+                ch == 'E' || 
+                ch == 'e' || 
+                ch == 'F'|| 
+                ch == 'f' || 
+                ch == '.')
+                destination.push_back(ch);
+            else
+                modified = true;
+        }
+        return modified;
+    }
+
     void StringUtils::trimWs(
         String& di, const String& in)
     {

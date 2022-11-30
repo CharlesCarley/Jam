@@ -100,6 +100,16 @@ namespace Jam
             const String& input,
             int8_t start, int8_t end);
 
+        static bool filterAscii(
+            String&       destination,
+            const String& input);
+        static bool filterInt(
+            String&       destination,
+            const String& input);
+        static bool filterReal(
+            String&       destination,
+            const String& input);
+
         static void replaceAll(
             String&       dest,
             const String& input,

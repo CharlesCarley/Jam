@@ -45,7 +45,7 @@ namespace Jam::Editor
 
         _line = new StringWidget();
         if (_state)
-            _line->setText(_state->text);
+            _line->setText(_state->text());
 
         _line->setHeight(Const::ButtonHeight);
         _del = IconButton::create(Icons::Delete);
@@ -80,7 +80,7 @@ namespace Jam::Editor
     void ExpressionWidget::textEntered(const String& text) const
     {
         if (_state)
-            _state->text = text;
+            _state->setText(text);
     }
 
     void ExpressionWidget::setText(const String& text) const

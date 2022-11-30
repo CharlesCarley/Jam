@@ -25,6 +25,7 @@
 #include "Interface/Extensions.h"
 #include "R32Widget.h"
 #include "State/App.h"
+#include "State/FrameStackManager.h"
 #include "StringWidget.h"
 #include "VariableStepWidget.h"
 
@@ -47,8 +48,10 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _line = new R32Widget();
-        _line->setRange(_state->range.x, _state->range.y);
-        _line->setLabel(_state->name);
+        _line->setRange(_state->range().x, _state->range().y);
+        _line->setRate(_state->rate());
+        _line->setValue(_state->value());
+        _line->setLabel(_state->name());
         _del = IconButton::create(Icons::Delete);
         View::copyColorRoles(_del, this);
 
@@ -69,22 +72,36 @@ namespace Jam::Editor
                 &R32Widget::stepDataChanged,
                 this,
                 &VariableWidget::stepDataChanged);
+        connect(_line,
+                &R32Widget::valueChanged,
+                this,
+                &VariableWidget::onValueChange);
     }
 
     void VariableWidget::stepDataChanged(const VariableStepData& data) const
     {
         if (_state)
         {
-            _state->range = data.range;
-            _state->name  = data.name;
+            _state->setRange(data.range);
+            _state->setName(data.name);
+            _state->setRate(data.rate);
+            _state->setValue(_line->value());
         }
+    }
+
+    void VariableWidget::onValueChange(const R32& data) const
+    {
+        _state->setValue(data);
+        State::layerStack()->notifyStateChange();
+        State::functionLayer()->update();
     }
 
     void VariableWidget::onDelete()
     {
         State::functionLayer()->removeVariable(_state);
-        _state = nullptr;
+        State::layerStack()->notifyStateChange();
 
+        _state = nullptr;
         emit wantsToDelete();
     }
 

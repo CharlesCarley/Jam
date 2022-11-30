@@ -39,15 +39,18 @@ namespace Jam::Editor::State
         String         _text;
 
         FunctionObjectArray _array;
+        FunctionObjectArray _expr;
 
-        Vec2F eval(R32 i0);
+        Vec2F eval(R32 i0, const Eq::SymbolArray& sym);
 
         bool resizeEvent(const Vec2I& oldSize) override;
 
         bool injectVec2FImpl(const FrameStackCode& code,
                              const Vec2F&          size) override;
 
+
         void render(RenderContext& canvas) override;
+        void renderExpression(RenderContext& canvas, I32 i0);
 
     public:
         FunctionLayer();
@@ -60,6 +63,9 @@ namespace Jam::Editor::State
         bool injectText(const String& text) override;
 
         const String& getText() const { return _text; }
+
+
+        bool update() override;
 
         VariableStateObject* createVariable();
         ExpressionStateObject* createExpression();

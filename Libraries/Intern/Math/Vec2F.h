@@ -172,6 +172,11 @@ namespace Jam
             clamp(v.x, v.y);
         }
 
+        R32 dmm() const
+        {
+            return R32(Max(y, x) - Min(y, x));
+        }
+
         I32 ix() const { return I32(x); }
         I32 iy() const { return I32(y); }
     };

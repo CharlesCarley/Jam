@@ -46,22 +46,27 @@ namespace Jam::Editor::State
         canvas.drawVec2F(20, 20, toVec2F(_size), 0);
         canvas.drawAxisF(20, 40, _axis);
 
-        constexpr R32 ss  = 5.f;
-        const R32     rss = _size.ry();
-
         for (I32 i0 = 1; i0 < _size.x; ++i0)
-        {
-            const Vec2F a = eval(R32(i0 - 1));
-            const Vec2F b = eval(R32(i0));
+            renderExpression(canvas, i0);
+    }
 
-            if (abs(a.y - b.y) <= rss)
+    void FunctionLayer::renderExpression(RenderContext& canvas, I32 i0)
+    {
+        for (const auto obj : _expr)
+        {
+            const ExpressionStateObject* vso = (ExpressionStateObject*)obj;
+
+            const Vec2F a = eval(R32(i0 - 1), vso->symbols());
+            const Vec2F b = eval(R32(i0), vso->symbols());
+
+            if (abs(a.y - b.y) <= _size.ry())
             {
                 canvas.selectColor(Blue04, 2);
                 canvas.drawLine(a.x, a.y, b.x, b.y);
             }
             else
             {
-                const Vec2F c = eval(R32(i0 - 1) + Half);
+                const Vec2F c = eval(R32(i0 - 1) + Half, vso->symbols());
 
                 if (isnan(c.y) && !isnan(b.y))
                 {
@@ -73,19 +78,13 @@ namespace Jam::Editor::State
         }
     }
 
-    Vec2F FunctionLayer::eval(const R32 i0)
+    Vec2F FunctionLayer::eval(const R32 i0, const Eq::SymbolArray& code)
     {
         Vec2F p0{i0 - R32(_origin.ix()), 0.f};
-        if (!_parser.symbols().empty())
+        if (!code.empty())
         {
-            const Eq::SymbolArray& code = _parser.symbols();
-
-            if (_xLoc != JtNpos)
-                _stmt.set(_xLoc, R64(_axis.x.pointByI(p0.x)));
-
-            const R64 val = _stmt.execute(code);
-
-            p0.y = _axis.y.pointBy(R32(val));
+            _stmt.set("x", R64(_axis.x.pointByI(p0.x)));
+            p0.y = _axis.y.pointBy(R32(_stmt.execute(code)));
         }
 
         p0.x += _origin.x;
@@ -162,6 +161,19 @@ namespace Jam::Editor::State
         return false;
     }
 
+    bool FunctionLayer::update()
+    {
+        for (const auto obj : _array)
+        {
+            if (obj->type() == FstVariable)
+            {
+                const VariableStateObject* vso = (VariableStateObject*)obj;
+                _stmt.set(vso->name(), R64(vso->value()));
+            }
+        }
+        return true;
+    }
+
     VariableStateObject* FunctionLayer::createVariable()
     {
         VariableStateObject* vso = new VariableStateObject();
@@ -172,6 +184,7 @@ namespace Jam::Editor::State
     ExpressionStateObject* FunctionLayer::createExpression()
     {
         ExpressionStateObject* eso = new ExpressionStateObject();
+        _expr.push_back(eso);
         _array.push_back(eso);
         return eso;
     }
@@ -187,6 +200,8 @@ namespace Jam::Editor::State
     void FunctionLayer::removeExpression(ExpressionStateObject* eso)
     {
         // TODO: preserve creation order, so that execution order is predictable.
+        if (const U32 idx = _expr.find(eso); idx != JtNpos32)
+            _expr.remove(idx);
         if (const U32 idx = _array.find(eso); idx != JtNpos32)
             _array.remove(idx);
         delete eso;
