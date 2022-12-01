@@ -50,7 +50,7 @@ namespace Jam::Editor
         setContentsMargins(0, 0, 0, 0);
         setAutoFillBackground(true);
         setMinimumHeight(20);
-        Const::applyPalette(_pal);
+        Const::copyStylePalette(_pal);
     }
 
     bool I32WidgetPrivate::isInInnerRect(const QPointF& d) const

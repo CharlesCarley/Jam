@@ -25,7 +25,6 @@
 #include <QWidget>
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/ExpressionWidget.h"
-#include "Interface/Widgets/R32Widget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "Interface/Widgets/StringWidget.h"
 #include "Interface/Widgets/VariableWidget.h"

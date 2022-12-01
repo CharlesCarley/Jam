@@ -25,7 +25,6 @@
 
 namespace Jam::Editor::Const
 {
-
     const QColor AlternateBase   = Blue;
     const QColor Shadow          = Base.lighter(NormalFactor);
     const QColor Dark            = Shadow.lighter(NormalFactor);
@@ -95,10 +94,9 @@ namespace Jam::Editor::Const
     void initializePalette()
     {
         QPalette palette;
-
         clearAppPalette(palette);
-
-        applyPalette(palette);
+        copyStylePalette(palette, QPalette::All);
+        QGuiApplication::setPalette(palette);
     }
 
     void copyStylePalette(QPalette& palette, QPalette::ColorGroup group)
@@ -124,12 +122,6 @@ namespace Jam::Editor::Const
         palette.setColor(group, QPalette::ToolTipBase, ToolTipBase);
         palette.setColor(group, QPalette::ToolTipText, ToolTipText);
         palette.setColor(group, QPalette::PlaceholderText, PlaceholderText);
-    }
-
-    void applyPalette(QPalette& palette, const QPalette::ColorGroup group)
-    {
-        copyStylePalette(palette, group);
-        QGuiApplication::setPalette(palette);
     }
 
     inline qreal ByteToReal(const int x)

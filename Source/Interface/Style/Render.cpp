@@ -305,16 +305,16 @@ namespace Jam::Editor::Const
     {
         if (const QStyleOptionMenuItem* item = menuOption())
         {
-            fillRect(item->rect, _cache->menubarBackground());
+            fillRect(item->rect, _cache->menuBarBackground());
 
             if (!item->text.isEmpty())
             {
                 _margin.setX(5);
 
                 if (item->state & QStyle::State_Selected)
-                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menubarHighlight());
+                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menuBarHighlight());
                 else
-                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menubarForeground());
+                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menuBarForeground());
             }
         }
     }
@@ -375,7 +375,7 @@ namespace Jam::Editor::Const
             else
                 slider.adjust(1, 3, -1, -3);
 
-            _painter->fillRect(item->rect, _cache->scrollbarGutter());
+            _painter->fillRect(item->rect, _cache->scrollBarGutter());
             _painter->fillRect(slider, _cache->scrollbarSlider());
         }
     }

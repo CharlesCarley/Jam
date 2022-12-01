@@ -33,11 +33,11 @@ namespace Jam::Editor::Const
     class Renderer
     {
     private:
-        PaletteCache*       _cache;
-        const QStyle*       _style;
-        const QStyleOption* _option;
-        QPainter*           _painter;
-        const QWidget*      _widget;
+        PaletteCache*       _cache{nullptr};
+        const QStyle*       _style{nullptr};
+        const QStyleOption* _option{nullptr};
+        QPainter*           _painter{nullptr};
+        const QWidget*      _widget{nullptr};
         mutable QPoint      _margin{0, 0};
 
         inline const QStyleOptionButton* buttonOption() const;
@@ -118,7 +118,8 @@ namespace Jam::Editor::Const
         void slider() const;
 
         void fillLineEdit() const;
-        void  spinBox() const;
+
+        void spinBox() const;
     };
 
 }  // namespace Jam::Editor::Const
