@@ -30,7 +30,7 @@ namespace Jam::Editor::State
 {
     using LineBuffer = SimpleArray<QLineF>;
 
-    class RenderContext // Todo: move grid drawing to the grid layer and supply controll variables...
+    class RenderContext
     {
     private:
         IColor    _color{0, 0, 0, 1};
@@ -39,34 +39,9 @@ namespace Jam::Editor::State
         QPainter* _painter;
         QPen      _pen{};
 
-        LineBuffer _major;
-        LineBuffer _minor;
-        LineBuffer _center;
-
-
-        void stepGrid(R32          x1,
-                      R32          y1,
-                      R32          x2,
-                      R32          y2,
-                      const Vec2F& ax,
-                      const Vec2F& offset,
-                      LineBuffer&  buffer) const;
-
-        void stepLabels(R32          x1,
-                        R32          y1,
-                        R32          x2,
-                        R32          y2,
-                        const Vec2F& ax,
-                        const Vec2F& offset,
-                        const Axis&  gx) const;
-
-        void axisLine(const R32&  step,
-                      int         dir,
-                      LineBuffer& dest) const;
+        mutable QString _text;
 
         bool isNotValid() const;
-
-        void axisValue(int x0, int y0, const R32& v, bool hor = true) const;
 
     public:
         explicit RenderContext(QPainter* painter,
@@ -75,11 +50,13 @@ namespace Jam::Editor::State
 
         const Vec2I& size() const;
 
-        void selectColor(const U32& col, int w = 1);
+        void axisValue(int x0, int y0, const R32& v, bool hor = true) const;
 
-        void selectColor(const Color& col, int w = 1);
+        void selectColor(const U32& col, U8 width = 1);
 
-        void selectColor(const QColor& col, int w = 1);
+        void selectColor(const Color& col, U8 width = 1);
+
+        void selectColor(const QColor& col, U8 width = 1);
 
         void drawLine(int x1, int y1, int x2, int y2) const;
 
@@ -93,12 +70,7 @@ namespace Jam::Editor::State
 
         void drawAxisF(int x0, int y0, const Axis& v) const;
 
-        void screenGrid(
-            const Axis& axis,
-            const U32&  majorColor,
-            const U32&  minorColor,
-            const U32&  centerColor,
-            const U32&  textColor);
+        void drawLines(const LineBuffer& buf) const;
 
         void copyBuffer(void* src, U32 w, U32 h) const;
 
@@ -106,11 +78,6 @@ namespace Jam::Editor::State
                    U8 green,
                    U8 blue,
                    U8 alpha) const;
-
-        void flush() const;
-
-
-        const Screen& getVpTemp() const {return _screen;}
     };
 
     inline const Vec2I& RenderContext::size() const

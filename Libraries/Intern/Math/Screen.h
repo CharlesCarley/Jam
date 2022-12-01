@@ -155,12 +155,12 @@ namespace Jam
             return _v.b();
         }
 
-        const R32& width() const
+        const R32& w() const
         {
             return _v.w;
         }
 
-        const R32& viewportHeight() const
+        const R32& h() const
         {
             return _v.h;
         }

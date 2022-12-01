@@ -49,6 +49,7 @@ namespace Jam::Editor
         loadState();
 
         addPanel(_panel);
+        update();
     }
 
     void FunctionAreaContent::loadState() const

@@ -32,10 +32,11 @@ namespace Jam::Editor::State
     {
     private:
         Vec2F               _origin{0.f, 0.f};
-        Axis                _axis;
         Eq::Statement       _stmt;
         FunctionObjectArray _array;
         FunctionObjectArray _expr;
+        VInt                _x{JtNpos};
+        // Todo: allow y step. VInt _y{JtNpos};
 
     public:
         FunctionLayer();

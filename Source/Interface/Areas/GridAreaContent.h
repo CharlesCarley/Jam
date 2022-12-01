@@ -44,7 +44,6 @@ namespace Jam::Editor
 
         void connectSignals();
 
-        void disconnectSignals();
 
         static void xAxisUpdate(I32 v);
 

@@ -20,9 +20,8 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "FrameStack.h"
 #include "Math/Screen.h"
-#include "Math/Vec2.h"
+#include "State/FrameStack/FrameStack.h"
 
 namespace Jam::Editor::State
 {
@@ -34,16 +33,12 @@ namespace Jam::Editor::State
         FunctionType,
     };
 
-
     class BaseLayer
     {
     public:
         const LayerType type;
-
     protected:
-        Vec2I  _size{0, 0};
         Screen _screen;
-
     public:
         explicit BaseLayer(LayerType type);
 

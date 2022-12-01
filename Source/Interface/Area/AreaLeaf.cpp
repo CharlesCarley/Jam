@@ -54,7 +54,7 @@ namespace Jam::Editor
     {
         if (_area)
             return _area->type();
-        return -1;
+        return NoAreaType;
     }
 
     void AreaLeaf::updateMask()

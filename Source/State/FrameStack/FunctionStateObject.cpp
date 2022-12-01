@@ -27,6 +27,9 @@ namespace Jam::Editor::State
 {
     void ExpressionStateObject::setText(const String& text)
     {
+        if (_text == text)
+            return;
+
         _text = text;
         try
         {
@@ -42,7 +45,7 @@ namespace Jam::Editor::State
             }
             Log::writeLine(ss.str());
         }
-        catch (Exception &ex)
+        catch (Exception& ex)
         {
             Log::writeLine(ex.what());
         }

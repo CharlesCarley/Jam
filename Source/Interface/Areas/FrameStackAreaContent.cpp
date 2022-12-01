@@ -107,14 +107,11 @@ namespace Jam::Editor
 
     void FrameStackAreaContent::wheelEvent(QWheelEvent* event)
     {
-        const auto stack = layerStack();
-
         const R32 d = 6 * R32(event->angleDelta().y() > 0 ? 1 : -1);
         _scrollX += d;
         _scrollY += d;
         _screen.setXStep(I32(_scrollX));
         _screen.setYStep(I32(_scrollY));
-
         update();
     }
 

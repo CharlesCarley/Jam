@@ -22,8 +22,8 @@
 #pragma once
 #include "BaseLayer.h"
 #include "Math/Axis.h"
-#include "Math/Real.h"
 #include "Math/Vec2F.h"
+#include "RenderContext.h"
 
 namespace Jam::Editor::State
 {
@@ -37,15 +37,15 @@ namespace Jam::Editor::State
         };
 
     private:
-        U32   _majorColor{0x2b2b2bFF};
-        U32   _minorColor{0x212121FF};
-        U32   _originColor{0x4B4B4BFF};
-        U32   _textColor{0xC0C0CFFF};
-        U8    _flags{None};
-        Vec2F _origin;
-        Axis  _axis;
-
-        Vec2F scale() const;
+        U32        _majorColor{0x2b2b2bFF};
+        U32        _minorColor{0x212121FF};
+        U32        _originColor{0x4B4B4BFF};
+        U32        _textColor{0x9B9B9BFF};
+        U8         _flags{None};
+        Vec2F      _origin;
+        LineBuffer _major;
+        LineBuffer _minor;
+        LineBuffer _center;
 
     public:
         GridLayer();
@@ -61,17 +61,36 @@ namespace Jam::Editor::State
 
         void setFlags(const U8& flags);
 
-        void setAxis(const Axis& ax) { _axis = ax; }
-
         void setOrigin(const Vec2F& origin);
 
         const Vec2F& origin() const;
-    };
 
-    inline Vec2F GridLayer::scale() const
-    {
-        return {R32(_size.x), R32(_size.y)};
-    }
+    private:
+        void screenGrid(
+            RenderContext& canvas,
+            const Axis&    axis);
+
+        void stepGrid(R32          x1,
+                      R32          y1,
+                      R32          x2,
+                      R32          y2,
+                      const Vec2F& ax,
+                      const Vec2F& offset,
+                      LineBuffer&  buffer) const;
+
+        void stepLabels(const RenderContext& canvas,
+                        R32                  x1,
+                        R32                  y1,
+                        R32                  x2,
+                        R32                  y2,
+                        const Vec2F&         ax,
+                        const Vec2F&         offset,
+                        const Axis&          gx) const;
+
+        void axisLine(const R32&  step,
+                      int         dir,
+                      LineBuffer& dest) const;
+    };
 
     inline void GridLayer::setMajorGrid(const U32& color)
     {

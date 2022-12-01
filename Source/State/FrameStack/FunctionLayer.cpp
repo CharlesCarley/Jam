@@ -41,21 +41,14 @@ namespace Jam::Editor::State
 
     void FunctionLayer::render(RenderContext& canvas)
     {
-        // TODO: remove _size, _axis, and use _screen instead 
-        _size = toVec2I(_screen.size());
-        _axis = _screen.axis();
+        // TODO: remove _size, _axis, and use _screen instead
 
         const Vec2F ss = _screen.size() * Half;
-        _origin.x = ss.x + _screen.offset().x;
-        _origin.y = ss.y - _screen.offset().y;
+        _origin.x      = ss.x + _screen.offset().x;
+        _origin.y      = ss.y - _screen.offset().y;
 
-
-        canvas.selectColor(0xC0C0C0FF);
-        canvas.drawVec2F(20, 20, toVec2F(_size), 0);
-        canvas.drawAxisF(20, 40, _axis);
-        canvas.drawVec2F(20, 60, _origin);
-
-        for (I32 i0 = 1; i0 < _size.x; ++i0)
+        const I32 w = I32(_screen.w());
+        for (I32 i0 = 1; i0 < w; ++i0)
             renderExpression(canvas, i0);
     }
 
@@ -68,7 +61,7 @@ namespace Jam::Editor::State
             const Vec2F a = eval(R32(i0 - 1), vso->symbols());
             const Vec2F b = eval(R32(i0), vso->symbols());
 
-            if (abs(a.y - b.y) <= _size.ry())
+            if (abs(a.y - b.y) <= _screen.h())
             {
                 canvas.selectColor(Blue04, 2);
                 canvas.drawLine(a.x, a.y, b.x, b.y);
@@ -80,7 +73,7 @@ namespace Jam::Editor::State
                 if (isnan(c.y) && !isnan(b.y))
                 {
                     canvas.selectColor(Green04, 2);
-                    const R32 yV = sign(a.x) * (_size.ry() + 3);
+                    const R32 yV = sign(a.x) * (_screen.h() + 3);
                     canvas.drawLine(a.x, yV, b.x, b.y);
                 }
             }
@@ -92,13 +85,22 @@ namespace Jam::Editor::State
         Vec2F p0{i0 - R32(_origin.ix()), 0.f};
         if (!code.empty())
         {
-            _stmt.set("x", R64(_axis.x.pointByI(p0.x)));
-            p0.y = _axis.y.pointBy(R32(_stmt.execute(code)));
+            const R64 ix = R64(_screen.axis().x.pointByI(p0.x));
+            if (_x == JtNpos)
+                _stmt.set("x", ix);
+            else
+                _stmt.set(_x, ix);
+
+            const R64 oy = _stmt.execute(code);
+
+            p0.y = _screen.axis().y.pointBy(R32(oy));
+            if (_x == JtNpos)
+                _x = _stmt.indexOf("x");
         }
 
         p0.x += _origin.x;
         p0.y += _origin.y;
-        p0.y = _size.ry() - p0.y;
+        p0.y = _screen.h() - p0.y;
         return p0;
     }
 
