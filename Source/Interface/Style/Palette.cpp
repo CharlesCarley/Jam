@@ -26,26 +26,25 @@
 namespace Jam::Editor::Const
 {
 
-     const QColor AlternateBase   = Blue;
-     const QColor Shadow          = Base.lighter(NormalFactor);
-     const QColor Dark            = Shadow.lighter(NormalFactor);
-     const QColor Mid             = Dark.lighter(NormalFactor);
-     const QColor MidLight        = Mid.lighter(NormalFactor);
-     const QColor Light           = MidLight.lighter(NormalFactor);
-     const QColor Highlight       = Light.lighter(NormalFactor);
-     const QColor Text            = Highlight.lighter(/*NormalFactor*/);
-     const QColor BrightText      = Text.lighter(NormalFactor);
-     const QColor HighlightedText = BrightText.lighter(NormalFactor);
-     const QColor PlaceholderText = Empty;
-     const QColor WindowText      = Text;
-     const QColor Button          = Mid;
-     const QColor ButtonText      = Text;
-     const QColor Window          = Shadow;
-     const QColor Link            = Blue;
-     const QColor LinkVisited     = Green;
-     const QColor ToolTipBase     = Yellow;
-     const QColor ToolTipText     = Highlight;
-
+    const QColor AlternateBase   = Blue;
+    const QColor Shadow          = Base.lighter(NormalFactor);
+    const QColor Dark            = Shadow.lighter(NormalFactor);
+    const QColor Mid             = Dark.lighter(NormalFactor);
+    const QColor MidLight        = Mid.lighter(NormalFactor);
+    const QColor Light           = MidLight.lighter(NormalFactor);
+    const QColor Highlight       = Light.lighter(NormalFactor);
+    const QColor Text            = Highlight.lighter(/*NormalFactor*/);
+    const QColor BrightText      = Text.lighter(NormalFactor);
+    const QColor HighlightedText = BrightText.lighter(NormalFactor);
+    const QColor PlaceholderText = Empty;
+    const QColor WindowText      = Text;
+    const QColor Button          = Mid;
+    const QColor ButtonText      = Text;
+    const QColor Window          = Shadow;
+    const QColor Link            = Blue;
+    const QColor LinkVisited     = Green;
+    const QColor ToolTipBase     = Yellow;
+    const QColor ToolTipText     = Highlight;
 
     void clearAppPalette(QPalette& palette)
     {
@@ -93,7 +92,16 @@ namespace Jam::Editor::Const
         }
     }
 
-    void applyPalette(QPalette& palette, const QPalette::ColorGroup group)
+    void initializePalette()
+    {
+        QPalette palette;
+
+        clearAppPalette(palette);
+
+        applyPalette(palette);
+    }
+
+    void copyStylePalette(QPalette& palette, QPalette::ColorGroup group)
     {
         palette.setColor(group, QPalette::WindowText, WindowText);
         palette.setColor(group, QPalette::Button, Button);
@@ -116,17 +124,12 @@ namespace Jam::Editor::Const
         palette.setColor(group, QPalette::ToolTipBase, ToolTipBase);
         palette.setColor(group, QPalette::ToolTipText, ToolTipText);
         palette.setColor(group, QPalette::PlaceholderText, PlaceholderText);
-
-        QGuiApplication::setPalette(palette);
     }
 
-    void initializePalette()
+    void applyPalette(QPalette& palette, const QPalette::ColorGroup group)
     {
-        QPalette palette;
-
-        clearAppPalette(palette);
-
-        applyPalette(palette);
+        copyStylePalette(palette, group);
+        QGuiApplication::setPalette(palette);
     }
 
     inline qreal ByteToReal(const int x)
@@ -162,4 +165,4 @@ namespace Jam::Editor::Const
         return r.toRgb();
     }
 
-}  // namespace Jam::Editor::Locals
+}  // namespace Jam::Editor::Const

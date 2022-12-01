@@ -5,6 +5,7 @@
 #include "Interface/RememberLastCache.h"
 #include "Interface/Widgets/I32Widget.h"
 #include "Interface/Widgets/IconButton.h"
+#include "Interface/Widgets/R32Widget.h"
 #include "Interface/Widgets/StringWidget.h"
 #include "State/ProjectManager.h"
 
@@ -72,6 +73,16 @@ namespace Jam::Editor::Testing
 
         QCOMPARE(nr, 4);
         QCOMPARE(nr2, 1);
+    }
+
+    void WidgetTests::testR32()
+    {
+        const auto val = new R32Widget();
+        _test          = val;
+        val->setRange(-1, 1);
+        val->setValue(111);
+        QCOMPARE(val->value(), 1);
+        QCOMPARE(val->string(), "1");
     }
 
     void WidgetTests::pathList()

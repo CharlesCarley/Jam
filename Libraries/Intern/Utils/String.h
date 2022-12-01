@@ -98,17 +98,24 @@ namespace Jam
         static bool filterRange(
             String&       destination,
             const String& input,
-            int8_t start, int8_t end);
+            int8_t        start,
+            int8_t        end,
+            size_t        max = 256);
 
         static bool filterAscii(
             String&       destination,
-            const String& input);
+            const String& input,
+            size_t        max = 256);
+
         static bool filterInt(
             String&       destination,
-            const String& input);
+            const String& input,
+            size_t        max = 256);
+
         static bool filterReal(
             String&       destination,
-            const String& input);
+            const String& input,
+            size_t        max = 256);
 
         static void replaceAll(
             String&       dest,

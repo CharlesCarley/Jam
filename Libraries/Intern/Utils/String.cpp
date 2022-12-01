@@ -198,67 +198,76 @@ namespace Jam
         String&       destination,
         const String& input,
         const int8_t  start,
-        const int8_t  end)
+        const int8_t  end,
+        size_t        max)
     {
-        bool modified = false;
         destination.clear();
         for (const char ch : input)
         {
+            if (destination.size() > max)
+                break;
+
             if (ch >= start && ch <= end)
                 destination.push_back(ch);
-            else
-                modified = true;
         }
-        return modified;
+        return destination.size() != input.size();
     }
 
-    bool StringUtils::filterAscii(String& destination, const String& input)
+    bool StringUtils::filterAscii(
+        String&       destination,
+        const String& input,
+        size_t        max)
     {
-        bool modified = false;
         destination.clear();
         for (const char ch : input)
         {
+            if (destination.size() > max)
+                break;
             if (ch >= 0x20 && ch < 0x7F)
                 destination.push_back(ch);
-            else
-                modified = true;
         }
-        return modified;
+        return destination.size() != input.size();
     }
 
-    bool StringUtils::filterInt(String& destination, const String& input)
+    bool StringUtils::filterInt(
+        String&       destination,
+        const String& input,
+        size_t        max)
     {
-        bool modified = false;
         destination.clear();
         for (const char ch : input)
         {
+            if (destination.size() > max)
+                break;
+
             if (ch >= '0' && ch < '9' || ch == '-')
                 destination.push_back(ch);
-            else
-                modified = true;
         }
-        return modified;
+        return destination.size() != input.size();
     }
 
-    bool StringUtils::filterReal(String& destination, const String& input)
+    bool StringUtils::filterReal(
+        String&       destination,
+        const String& input,
+        size_t        max)
     {
-        bool modified = false;
         destination.clear();
         for (const char ch : input)
         {
-            if (ch >= '0' && ch < '9' || 
-                ch == '-' || 
-                ch == '+' || 
-                ch == 'E' || 
-                ch == 'e' || 
-                ch == 'F'|| 
-                ch == 'f' || 
+            if (destination.size() > max)
+                break;
+
+            if (ch >= '0' && ch < '9' ||
+                ch == '-' ||
+                ch == '+' ||
+                ch == 'E' ||
+                ch == 'e' ||
+                ch == 'F' ||
+                ch == 'f' ||
                 ch == '.')
                 destination.push_back(ch);
-            else
-                modified = true;
         }
-        return modified;
+        return destination.size() != input.size();
     }
 
     void StringUtils::trimWs(

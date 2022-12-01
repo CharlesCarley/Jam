@@ -25,6 +25,7 @@
 namespace Jam::Editor::Const
 {
     extern void initializePalette();
+    extern void copyStylePalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
     extern void applyPalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
 
     extern QColor ModColor(const QColor& color, int hue, qreal saturation = 1, qreal value = 1);

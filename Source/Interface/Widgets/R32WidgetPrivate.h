@@ -37,13 +37,13 @@ namespace Jam::Editor
         void valueChanged(R32 val);
 
     private:
-        R32      _val{0};
+        R32      _value{0};
         R32      _rate{0};
-        QPalette _pal;
         U8       _cap{0};
         Vec2F    _d{0.f, 0};
-        Vec2F    _mm{-R32(0x10000), R32(0x10000)};
+        Vec2F    _range{-R32(0x10000), R32(0x10000)};
         String   _label;
+        QPalette _pal;
 
     public:
         explicit R32WidgetPrivate(QWidget* parent = nullptr);
@@ -84,7 +84,7 @@ namespace Jam::Editor
 
     inline R32 R32WidgetPrivate::value() const
     {
-        return _val;
+        return _value;
     }
     
     inline const String& R32WidgetPrivate::label() const

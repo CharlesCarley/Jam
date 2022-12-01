@@ -33,7 +33,6 @@ namespace Jam::Editor
         Q_OBJECT
     signals:
         void editingFinished(const String& text);
-        void returnPressed(const String& text);
 
     private:
         QLineEdit* _line{nullptr};

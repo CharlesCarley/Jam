@@ -24,10 +24,10 @@
 #include <QBoxLayout>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
+#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "R32WidgetPrivate.h"
 #include "VariableStepWidget.h"
-#include "Interface/Constants.h"
 
 namespace Jam::Editor
 {
@@ -53,19 +53,15 @@ namespace Jam::Editor
         View::layoutDefaults(_layout);
 
         _value = new R32WidgetPrivate();
-        _value->setMinimumHeight(Const::ButtonHeight);
-        View::copyColorRoles(_value, this);
 
         _step = new VariableStepWidget();
-        _step->setMinimumHeight(Const::ButtonHeight);
         _step->setVisible(false);
-        View::copyColorRoles(_step, this);
 
         _layout->addWidget(_value);
         _layout->addWidget(_step);
 
-
         setLayout(_layout);
+
         connectSignals();
     }
 
@@ -90,6 +86,7 @@ namespace Jam::Editor
         setLabel(data.name);
         setRange(data.range.x, data.range.y);
         setRate(data.rate);
+        setValue(data.value);
 
         emit stepDataChanged(data);
     }
@@ -104,6 +101,7 @@ namespace Jam::Editor
 
         if (edit)
         {
+            _step->setValue(_value->value());
             _step->setFocus(Qt::MouseFocusReason);
             _value->setFocus(Qt::NoFocusReason);
         }
@@ -165,6 +163,8 @@ namespace Jam::Editor
     {
         if (_value)
             _value->setValue(value);
+        if (_step)
+            _step->setValue(value);
     }
 
     void R32Widget::setRange(const R32& min, const R32& max) const

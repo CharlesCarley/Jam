@@ -21,7 +21,6 @@
 */
 #pragma once
 #include "Interface/Widgets/StackedPanelContent.h"
-#include "State/FrameStack/FrameStack.h"
 
 namespace Jam::Editor
 {

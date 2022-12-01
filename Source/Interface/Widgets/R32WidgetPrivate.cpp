@@ -47,12 +47,10 @@ namespace Jam::Editor
     void R32WidgetPrivate::construct()
     {
         View::emptyWidget(this);
+        Const::copyStylePalette(_pal);
 
-        setContentsMargins(0, 0, 0, 0);
-        setAutoFillBackground(true);
         setMinimumHeight(Const::ButtonHeight);
-
-        Const::applyPalette(_pal);
+        setMaximumHeight(Const::ButtonHeight);
     }
 
     bool R32WidgetPrivate::isInInnerRect(const QPointF& d) const
@@ -63,11 +61,11 @@ namespace Jam::Editor
 
     void R32WidgetPrivate::setValue(const R32& val)
     {
-        if (!equals(val, _val))
+        if (!equals(val, _value))
         {
-            _val = Clamp(val, _mm.x, _mm.y);
+            _value = Clamp(val, _range.x, _range.y);
 
-            emit valueChanged(_val);
+            emit valueChanged(_value);
             update();
         }
     }
@@ -84,15 +82,15 @@ namespace Jam::Editor
     {
         if (!equals(val, _rate))
         {
-            _rate = Clamp(val, _mm.x, _mm.y);
+            _rate = Clamp(val, _range.x, _range.y);
             update();
         }
     }
 
     void R32WidgetPrivate::setRange(const Vec2F& val)
     {
-        _mm = val;
-        setValue(Clamp(_val, _mm.x, _mm.y));
+        _range = val;
+        setValue(Clamp(_value, _range.x, _range.y));
     }
 
     void R32WidgetPrivate::setLabel(const String& value)
@@ -103,15 +101,15 @@ namespace Jam::Editor
 
     String R32WidgetPrivate::text() const
     {
-        return Char::toString(_val);
+        return Char::toString(_value);
     }
 
     void R32WidgetPrivate::handleSingleTick(const QPointF& d)
     {
         if (d.x() < Sr)
-            setValue(_val - _rate);
+            setValue(_value - _rate);
         else if (d.x() > width() - Sr)
-            setValue(_val + _rate);
+            setValue(_value + _rate);
     }
 
     void R32WidgetPrivate::mousePressEvent(QMouseEvent* event)
@@ -176,7 +174,7 @@ namespace Jam::Editor
             p1 /= width();
             _d = {R32(p1.x()), R32(p1.x())};
             _d.clamp(0, 1);
-            setValue(_mm.dmm() * _d.x + _mm.x);
+            setValue(_range.dmm() * _d.x + _range.x);
         }
         else
             QWidget::mouseMoveEvent(event);
@@ -197,7 +195,7 @@ namespace Jam::Editor
         paint.setPen(_pal.color(QPalette::Shadow));
         paint.drawRect(1, 1, w - 1, h - 1);
 
-        const R32 ws = (fabs(_mm.x) + R32(_val)) / _mm.dmm() * R32(w);
+        const R32 ws = (fabs(_range.x) + R32(_value)) / _range.dmm() * R32(w);
         paint.fillRect(0, 0, I32(ws), h, _pal.dark());
         paint.setPen(_pal.color(QPalette::Text));
 
@@ -206,7 +204,7 @@ namespace Jam::Editor
             th,
             StringUtils::join(
                 _label,
-                Char::toString(_val))
+                Char::toString(_value))
                 .c_str());
 
         paint.drawLine(

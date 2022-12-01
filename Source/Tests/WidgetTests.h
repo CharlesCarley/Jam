@@ -44,6 +44,8 @@ namespace Jam::Editor::Testing
 
         void testString();
 
+        void testR32();
+
         static void pathList();
 
         void cleanup();

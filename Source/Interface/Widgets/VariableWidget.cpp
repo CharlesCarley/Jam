@@ -86,7 +86,7 @@ namespace Jam::Editor
             _state->setRange(data.range);
             _state->setName(data.name);
             _state->setRate(data.rate);
-            _state->setValue(_line->value());
+            _state->setValue(data.value);
         }
     }
 

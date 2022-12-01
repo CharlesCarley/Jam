@@ -33,7 +33,10 @@ namespace Jam::Editor
         String name{};
         Vec2F  range{0.f, 0};
         R32    rate{0};
+        R32    value{0};
     };
+
+    using LabelLineEditPair = std::pair<QLabel*, QLineEdit*>;
 
     class VariableStepWidget final : public QWidget
     {
@@ -42,11 +45,11 @@ namespace Jam::Editor
         void finished(const VariableStepData& data);
 
     private:
-        QLineEdit* _name{nullptr};
-        QLineEdit* _min{nullptr};
-        QLineEdit* _max{nullptr};
-        QLineEdit* _rate{nullptr};
-
+        LabelLineEditPair _name{nullptr, nullptr};
+        LabelLineEditPair _min{nullptr, nullptr};
+        LabelLineEditPair _max{nullptr, nullptr};
+        LabelLineEditPair _rate{nullptr, nullptr};
+        LabelLineEditPair _value{nullptr, nullptr};
         VariableStepData _data;
 
     public:
@@ -58,10 +61,14 @@ namespace Jam::Editor
 
         void setRate(const R32& value);
 
+        void setValue(const R32& value);
+
     private:
         void construct();
 
-        void connectSignals();
+        bool anyFocused() const;
+
+        void makePair(LabelLineEditPair& dest, const char* name);
 
         void onTextChanged();
 
