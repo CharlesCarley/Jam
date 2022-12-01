@@ -20,6 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#include "Math/Screen.h"
 #include "Math/Vec2.h"
 #include "Utils/Array.h"
 
@@ -30,16 +31,6 @@ namespace Jam::Editor::State
 
     using LayerArray = SimpleArray<BaseLayer*>;
 
-    enum FrameStackCode
-    {
-        SIZE = 0,
-        X_AXIS,
-        Y_AXIS,
-        X_STEP,
-        Y_STEP,
-        ORIGIN,
-    };
-
     class FrameStack
     {
     private:
@@ -49,12 +40,9 @@ namespace Jam::Editor::State
         FrameStack();
         ~FrameStack();
 
-        void render(RenderContext* canvas);
+        void render(const Screen& sc, RenderContext* canvas);
 
         void update();
-
-        bool injectVec2(const FrameStackCode& code,
-                        const Vec2F&          value);
 
         // NOTE: passes ownership
         U32 addLayer(BaseLayer* layer);
@@ -63,10 +51,8 @@ namespace Jam::Editor::State
 
         const LayerArray& layers() const;
 
-        bool hasLayers() const;
-
         template <typename T>
-        T* cast(const U32 idx);
+        T* cast(U32 idx);
 
         void serialize(IStream& data);
 
@@ -82,11 +68,6 @@ namespace Jam::Editor::State
     inline const LayerArray& FrameStack::layers() const
     {
         return _layers;
-    }
-
-    inline bool FrameStack::hasLayers() const
-    {
-        return !_layers.empty();
     }
 
 }  // namespace Jam::Editor::State

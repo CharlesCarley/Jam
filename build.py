@@ -112,9 +112,9 @@ class Builder:
 
         sourceDir = Path()
         self.opts['source'] = sourceDir
-        self.opts['build'] = sourceDir.create("Build")
+        self.opts['build']  = sourceDir.create("Build")
         self.opts['deploy'] = sourceDir.create("Bin")
-        self.opts['test'] = sourceDir.join("Testing")
+        self.opts['test']   = sourceDir.join("Testing")
 
         if (sys.platform == "win32"):
             platName = "windows"
@@ -123,10 +123,10 @@ class Builder:
 
         self.opts['platform'] = platName
 
-    def home(self): return self.opts['source']
-    def sourceDir(self): return self.opts['source']
-    def buildDir(self): return self.opts['build']
-    def deployDir(self): return self.opts['deploy']
+    def home(self):       return self.opts['source']
+    def sourceDir(self):  return self.opts['source']
+    def buildDir(self):   return self.opts['build']
+    def deployDir(self):  return self.opts['deploy']
 
     def dumpOpts(self):
         print("")
@@ -161,6 +161,7 @@ class Builder:
     def clean(self, reCreate=False):
         print("Cleaning...".ljust(20), self.argv)
         self.buildDir().remove()
+        self.deployDir().remove()
         self.goto(self.home())
 
     def configure(self, reCreate=False):
@@ -173,7 +174,6 @@ class Builder:
     def build(self):
         print("Building...".ljust(20), self.argv)
         self.goto(self.buildDir())
-
         self.run("cmake .. -DJam_BUILD_TEST=ON -DJam_AUTO_RUN_TEST=ON ")
         self.run("cmake  --build %s --config=%s "%(self.buildDir(), self.configString()))
         self.goto(self.home())
@@ -181,8 +181,6 @@ class Builder:
     def deploy(self ):
         self.release = True
         self.build()
-
-
         print("Deploy...".ljust(20), self.argv)
         self.goto(self.deployDir())
         self.run("windeployqt .")

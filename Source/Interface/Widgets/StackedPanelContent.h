@@ -44,7 +44,7 @@ namespace Jam::Editor
         QSize sizeHint() const override;
 
     private:
-        void construct();
+        void constructContent();
     };
 
 }  // namespace Jam::Editor

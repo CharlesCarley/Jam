@@ -21,6 +21,7 @@
 */
 #pragma once
 #include "FrameStack.h"
+#include "Math/Screen.h"
 #include "Math/Vec2.h"
 
 namespace Jam::Editor::State
@@ -33,18 +34,15 @@ namespace Jam::Editor::State
         FunctionType,
     };
 
+
     class BaseLayer
     {
     public:
         const LayerType type;
 
     protected:
-        Vec2I _size{0, 0};
-
-        virtual bool resizeEvent(const Vec2I& size);
-
-        virtual bool injectVec2FImpl(const FrameStackCode& code,
-                                     const Vec2F&          size);
+        Vec2I  _size{0, 0};
+        Screen _screen;
 
     public:
         explicit BaseLayer(LayerType type);
@@ -55,8 +53,7 @@ namespace Jam::Editor::State
 
         virtual bool update();
 
-        bool injectVec2(const FrameStackCode& code,
-                        const Vec2F&          size);
+        void setScreen(const Screen& sc) { _screen = sc; }
     };
 
 }  // namespace Jam::Editor::State

@@ -127,7 +127,7 @@ namespace Jam::Editor
             _panel->remove(widget);
             delete widget;
             notifyResize();
-            State::layerStack()->notifyStateChange();
+            State::layerStack()->notifyStateChange(this);
         }
     }
 

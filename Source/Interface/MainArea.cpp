@@ -164,6 +164,7 @@ namespace Jam::Editor
             case ProjectOpened:
             case ProjectClosed:
             case LayerSelect:
+            case LayerUpdate:
                 if (_root)
                     _root->propagate(event);
                 return false;

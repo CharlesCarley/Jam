@@ -77,46 +77,46 @@ namespace Jam::Editor
                 this,
                 &GridAreaContent::xAxisUpdate);
 
-        connect(layerStack(),
-                &FrameStackManager::vec2Injected,
-                this,
-                &GridAreaContent::codeInjected);
+        //connect(layerStack(),
+        //        &FrameStackManager::vec2Injected,
+        //        this,
+        //        &GridAreaContent::codeInjected);
     }
 
     void GridAreaContent::disconnectSignals()
     {
-        disconnect(layerStack(),
-                   &FrameStackManager::vec2Injected,
-                   this,
-                   &GridAreaContent::codeInjected);
+        //disconnect(layerStack(),
+        //           &FrameStackManager::vec2Injected,
+        //           this,
+        //           &GridAreaContent::codeInjected);
     }
 
-    void GridAreaContent::codeInjected(const FrameStackCode& code,
-                                          const Vec2F&          value) const
-    {
-        const I32 v = I32(value.x);
-        if (code == X_AXIS || code == X_STEP)
-        {
-            if (v != _x->value())
-                _x->setValue(v);
-        }
-        else if (code == Y_AXIS || code == Y_STEP)
-        {
-            if (v != _y->value())
-                _y->setValue(v);
-        }
-    }
+    //void GridAreaContent::codeInjected(const FrameStackCode& code,
+    //                                      const Vec2F&          value) const
+    //{
+    //    const I32 v = I32(value.x);
+    //    if (code == X_AXIS || code == X_STEP)
+    //    {
+    //        if (v != _x->value())
+    //            _x->setValue(v);
+    //    }
+    //    else if (code == Y_AXIS || code == Y_STEP)
+    //    {
+    //        if (v != _y->value())
+    //            _y->setValue(v);
+    //    }
+    //}
 
     void GridAreaContent::xAxisUpdate(const I32 v)
     {
-        if (const auto stack = layerStack())
-            (void)stack->injectVec2(X_STEP, {R32(v), 0});
+
+
+        //layerStack()->scaleXAxis(R32(v));
     }
 
     void GridAreaContent::yAxisUpdate(const I32 v)
     {
-        if (const auto stack = layerStack())
-            (void)stack->injectVec2(Y_STEP, {R32(v), 0});
+        //layerStack()->scaleYAxis(R32(v));
     }
 
 }  // namespace Jam::Editor

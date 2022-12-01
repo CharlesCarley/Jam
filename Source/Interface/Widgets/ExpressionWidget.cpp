@@ -84,7 +84,7 @@ namespace Jam::Editor
         if (_state)
         {
             _state->setText(text);
-            State::layerStack()->notifyStateChange();
+            State::layerStack()->notifyStateChange(this);
         }
     }
 

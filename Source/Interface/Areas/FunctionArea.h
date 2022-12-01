@@ -31,7 +31,7 @@ namespace Jam::Editor
     {
         Q_OBJECT
     private:
-        VerticalScrollArea*     _area{nullptr};
+        VerticalScrollArea*  _area{nullptr};
         FunctionAreaContent* _func{nullptr};
 
     public:

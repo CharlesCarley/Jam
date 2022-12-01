@@ -24,6 +24,7 @@
 #include "Interface/Application.h"
 #include "Interface/Events/EventTypes.h"
 #include "Interface/MainArea.h"
+#include "State/FrameStackManager.h"
 
 namespace Jam::Editor
 {
@@ -39,17 +40,14 @@ namespace Jam::Editor
             QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectClosed));
     }
 
-    //void Application::notifyProjectStateChanged() const
-    //{
-    //    if (_mainArea)
-    //        QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectChanged));
-    //}
-
     bool Application::event(QEvent* event)
     {
         switch ((int)event->type())
         {
+        case LayerUpdate:
         case LayerSelect:
+            //Log::writeLine("notify");
+            State::layerStack()->unlock();
             _mainArea->notify(event);
             return false;
         case ProjectClosed:

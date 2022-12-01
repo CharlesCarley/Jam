@@ -20,16 +20,33 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#include "Interface/Events/EventTypes.h"
+#include "State/FrameStack/BaseLayer.h"
 
 namespace Jam::Editor
 {
-    class MergeEvent final : public QEvent
+    class LayerSelectEvent final : public QEvent // REMOVE?
     {
+    private:
+        State::LayerType _type{State::NoType};
+        U32              _index{JtNpos32};
+
     public:
-        explicit MergeEvent(const int type) :
-            QEvent((Type)(int)(type))
+        explicit LayerSelectEvent(State::LayerType type, U32 idx) :
+            QEvent((Type)(int)LayerSelect),
+            _type(type),
+            _index(idx)
         {
         }
-    };
 
+        const State::LayerType& layerType() const
+        {
+            return _type;
+        }
+
+        const U32& stackIndex() const
+        {
+            return _index;
+        }
+    };
 }  // namespace Jam::Editor

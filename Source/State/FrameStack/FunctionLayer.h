@@ -31,37 +31,15 @@ namespace Jam::Editor::State
     class FunctionLayer final : public BaseLayer
     {
     private:
-        Vec2F          _origin{0.f, 0.f};
-        Axis           _axis;
-        Eq::StmtParser _parser;
-        Eq::Statement  _stmt;
-        VInt           _xLoc{JtNpos};
-        String         _text;
-
+        Vec2F               _origin{0.f, 0.f};
+        Axis                _axis;
+        Eq::Statement       _stmt;
         FunctionObjectArray _array;
         FunctionObjectArray _expr;
-
-        Vec2F eval(R32 i0, const Eq::SymbolArray& sym);
-
-        bool resizeEvent(const Vec2I& oldSize) override;
-
-        bool injectVec2FImpl(const FrameStackCode& code,
-                             const Vec2F&          size) override;
-
-        void render(RenderContext& canvas) override;
-        void renderExpression(RenderContext& canvas, I32 i0);
 
     public:
         FunctionLayer();
         ~FunctionLayer() override;
-
-        void setAxis(const Axis& units);
-
-        void setOrigin(const Vec2F& origin);
-
-        const String& getText() const;
-
-        bool update() override;
 
         VariableStateObject*   createVariable();
         ExpressionStateObject* createExpression();
@@ -70,26 +48,20 @@ namespace Jam::Editor::State
         void removeExpression(ExpressionStateObject* eso);
 
         const FunctionObjectArray& objects() const;
+
+    private:
+        Vec2F eval(R32 i0, const Eq::SymbolArray& code);
+
+        void render(RenderContext& canvas) override;
+
+        bool update() override;
+
+        void renderExpression(RenderContext& canvas, I32 i0);
     };
-
-    inline void FunctionLayer::setAxis(const Axis& units)
-    {
-        _axis.set(units);
-    }
-
-    inline void FunctionLayer::setOrigin(const Vec2F& origin)
-    {
-        _origin = origin;
-    }
 
     inline const FunctionObjectArray& FunctionLayer::objects() const
     {
         return _array;
-    }
-
-    inline const String& FunctionLayer::getText() const
-    {
-        return _text;
     }
 
 }  // namespace Jam::Editor::State

@@ -26,12 +26,14 @@ namespace Jam::Editor
 {
     enum AreaEvents
     {
-        SplitEvent = QEvent::User + 1,
-        MergeLeftEvent,
-        MergeRightEvent,
-        SwitchContentEvent,
-        ProjectOpened,
-        ProjectClosed,
-        LayerSelect
+        EditorEventStart = QEvent::User,
+        SplitEvent,          // BranchEvent
+        MergeLeftEvent,      // QEvent
+        MergeRightEvent,     // QEvent
+        SwitchContentEvent,  // SwitchEvent
+        ProjectOpened,       // QEvent
+        ProjectClosed,       // QEvent
+        LayerSelect,         // LayerSelectEvent
+        LayerUpdate,         // QEvent
     };
 }  // namespace Jam::Editor

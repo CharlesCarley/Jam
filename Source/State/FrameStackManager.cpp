@@ -20,7 +20,10 @@
 -------------------------------------------------------------------------------
 */
 #include "FrameStackManager.h"
+#include <QGuiApplication>
+#include <QWidget>
 #include "FrameStack/FrameStack.h"
+#include "Interface/Events/EventTypes.h"
 
 namespace Jam::Editor::State
 {
@@ -38,30 +41,13 @@ namespace Jam::Editor::State
     void FrameStackManager::clear() const
     {
         if (_stack)
-        {
             _stack->clear();
-        }
     }
 
     void FrameStackManager::load(IStream& data) const
     {
         if (_stack)
             _stack->serialize(data);
-    }
-
-    bool FrameStackManager::injectVec2(
-        const FrameStackCode& code,
-        const Vec2F&          value) const
-    {
-        bool result = false;
-        if (_stack)
-        {
-            result = _stack->injectVec2(code, value);
-            if (result)
-                emit vec2Injected(code, value);
-            emit stateChanged();
-        }
-        return result;
     }
 
     void FrameStackManager::addLayer(BaseLayer* layer) const
@@ -74,9 +60,23 @@ namespace Jam::Editor::State
         }
     }
 
-    void FrameStackManager::notifyStateChange() const
+    void FrameStackManager::notifyStateChange(const QWidget* widget)
     {
-        emit stateChanged();
+        if (_lock || !widget)
+            return;
+
+        // broadcast an event
+        _lock = true;
+        QGuiApplication::postEvent(
+            widget->window(),
+            new QEvent((QEvent::Type)(int)LayerUpdate));
+    }
+
+    void FrameStackManager::unlock()
+    {
+        if (_stack)
+            _stack->update();
+        _lock = false;
     }
 
     const LayerArray& FrameStackManager::layers() const
@@ -86,10 +86,10 @@ namespace Jam::Editor::State
         return _stack->layers();
     }
 
-    void FrameStackManager::render(RenderContext* canvas) const
+    void FrameStackManager::render(const Screen& sc, RenderContext* canvas) const
     {
         if (_stack && canvas)
-            _stack->render(canvas);
+            _stack->render(sc, canvas);
     }
 
 }  // namespace Jam::Editor::State

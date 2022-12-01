@@ -27,7 +27,7 @@
 #include "Interface/Events/BranchEvent.h"
 #include "Interface/Events/EventTypes.h"
 #include "Interface/Events/SwitchEvent.h"
-#include "Interface/Events/LayerSelectEvent.h"
+#include "Interface/Events/LayerEvents.h"
 
 namespace Jam::Editor
 {

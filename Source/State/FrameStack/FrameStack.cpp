@@ -20,7 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "State/FrameStack/FrameStack.h"
-#include "FunctionLayer.h"
+#include "RenderContext.h"
 #include "State/FrameStack/BaseLayer.h"
 #include "State/FrameStack/FrameStackSerialize.h"
 
@@ -33,26 +33,19 @@ namespace Jam::Editor::State
         clear();
     }
 
-    void FrameStack::render(RenderContext* canvas)
+    void FrameStack::render(const Screen& sc, RenderContext* canvas)
     {
         for (BaseLayer* element : _layers)
+        {
+            element->setScreen(sc);
             element->render(*canvas);
+        }
     }
 
     void FrameStack::update()
     {
         for (BaseLayer* element : _layers)
             element->update();
-    }
-
-    bool FrameStack::injectVec2(
-        const FrameStackCode& code,
-        const Vec2F&          value)
-    {
-        bool mod = false;
-        for (BaseLayer* element : _layers)
-            mod = element->injectVec2(code, value) || mod;
-        return mod;
     }
 
     U32 FrameStack::addLayer(BaseLayer* layer)

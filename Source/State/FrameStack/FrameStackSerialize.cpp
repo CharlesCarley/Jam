@@ -37,15 +37,15 @@ namespace Jam::Editor::State
     {
     }
 
-    GridLayer* FrameStackSerialize::loadGrid(const XmlNode* root) const
+    GridLayer* FrameStackSerialize::loadGrid(const XmlNode* root)
     {
         const auto grid = new GridLayer();
         grid->setMajorGrid(0x2b2b2bFF);
         grid->setMinorGrid(0x212121FF);
         grid->setOrigin(0x4B4B4BFF);
 
-        grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
-        grid->setAxis(Xc::toAxis("axis", root));
+        //grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
+        //grid->setAxis(Xc::toAxis("axis", root));
         return grid;
     }
 
@@ -132,23 +132,9 @@ namespace Jam::Editor::State
     void FrameStackSerialize::saveGrid() const
     {
         const auto layer = _stack->cast<GridLayer>(0);
-
-        const Vec2F& o  = layer->origin();
-        const Axis&  ax = layer->axis();
-
         XmlNode* grid = new XmlNode("grid", GridTag);
 
-        grid->insert("origin",
-                     Sc::join(ValueSetF({o.x, o.y}, 0, 6)));
-
-        grid->insert("axis",
-                     Sc::join(ValueSetU({
-                         ax.x.n(),
-                         ax.x.d(),
-                         ax.y.n(),
-                         ax.y.d(),
-                     })));
-
+        // TODO: Save grid control properties, not viewport information... 
         _root->addChild(grid);
     }
 

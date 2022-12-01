@@ -21,6 +21,7 @@
 */
 #pragma once
 
+#include "Axis.h"
 #include "RectF.h"
 #include "Slice.h"
 #include "Vec2.h"
@@ -37,6 +38,8 @@ namespace Jam
         Vec2F _c{0.f, 0};      // offset to viewport center
         RectF _v{0, 0, 1, 1};  // fixed bounds of the viewport ([x] [x] [L] [L])
         Vec2F _i{0.f, 0};      // the 'home' origin
+        Axis  _axis{};
+
     public:
         Screen() = default;
 
@@ -92,9 +95,34 @@ namespace Jam
             return _o;
         }
 
-        Vec2F extent() const
+        [[deprecated("use size instead")]] Vec2F extent() const
         {
             return _v.extent();
+        }
+
+        Vec2F size() const
+        {
+            return _v.extent();
+        }
+
+        void setXStep(const I32 x)
+        {
+            _axis.x.stepI(x);
+        }
+
+        void setYStep(const I32 y)
+        {
+            _axis.y.stepI(y);
+        }
+
+        void setXAxis(const R32 v)
+        {
+            _axis.set(0, {v, 1.f});
+        }
+
+        void setYAxis(const R32 v)
+        {
+            _axis.set(1, {v, 1.f});
         }
 
         const Vec2F& center() const
@@ -141,6 +169,7 @@ namespace Jam
         {
             _i = ori;
         }
+        const Axis& axis() const { return _axis; }
 
         void setViewport(const RectF& v);
 

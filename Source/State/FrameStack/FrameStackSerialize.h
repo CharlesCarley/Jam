@@ -32,7 +32,7 @@ namespace Jam::Editor::State
         XmlNode*    _root{nullptr};  // only valid on save
 
     private:
-        GridLayer*            loadGrid(const XmlNode* root) const;
+        static GridLayer*     loadGrid(const XmlNode* root);
         static FunctionLayer* loadFunction(const XmlNode* root);
 
         void saveGrid() const;

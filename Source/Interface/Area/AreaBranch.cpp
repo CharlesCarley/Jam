@@ -23,15 +23,15 @@
 #include <QCoreApplication>
 #include <QMenu>
 #include <QSplitter>
-#include <QVBoxLayout>
 #include "Interface/Area/AreaBinaryLayout.h"
 #include "Interface/Area/AreaNode.h"
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Events/MergeEvent.h"
 
 namespace Jam::Editor
 {
-    AreaBranch::AreaBranch(const Qt::Orientation ori, AreaNode* left, AreaNode* right) :
+    AreaBranch::AreaBranch(const Qt::Orientation ori,
+                           AreaNode*             left,
+                           AreaNode*             right) :
         AreaContent(true),
         _left(left),
         _right(right),
@@ -109,6 +109,9 @@ namespace Jam::Editor
 
     void AreaBranch::dangleLayout() const
     {
+        // used in AreaNode::swapBranch to delete only
+        // the left or right node. The one that's not
+        // deleted is reused..
         if (_splitter)
         {
             (void)_splitter->disconnect(this);
@@ -136,10 +139,10 @@ namespace Jam::Editor
         AreaNode* parent = parentNode();
         context.addAction(
             title1, [=]
-            { QCoreApplication::postEvent(parent, new MergeEvent(MergeLeftEvent)); });
+            { QCoreApplication::postEvent(parent, new QEvent((QEvent::Type)(int)MergeLeftEvent)); });
         context.addAction(
             title2, [=]
-            { QCoreApplication::postEvent(parent, new MergeEvent(MergeRightEvent)); });
+            { QCoreApplication::postEvent(parent, new QEvent((QEvent::Type)(int)MergeRightEvent)); });
 
         context.exec(at);
     }

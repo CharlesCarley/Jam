@@ -40,13 +40,15 @@ namespace Jam::Editor
         void split(Qt::Orientation current, Qt::Orientation dest);
 
     private:
-        Area*         _leafInnerArea{nullptr};
+        Area*         _area{nullptr};
         AreaEdgeRect* _edges{nullptr};
         int           _mask{AreaEdgeAll};
 
         void construct();
 
-        void contextMenu(Qt::Orientation from, Qt::Orientation to, const QPoint& at);
+        void contextMenu(Qt::Orientation from,
+                         Qt::Orientation to,
+                         const QPoint&   at);
 
         int computeMask();
 

@@ -29,45 +29,13 @@ namespace Jam::Editor::State
     {
     }
 
-    bool BaseLayer::resizeEvent(const Vec2I& size)
-    {
-        return false;
-    }
-
     void BaseLayer::render(RenderContext& canvas)
     {
+        // nadda
     }
 
     bool BaseLayer::update()
     {
-        return false;
-    }
-
-    bool BaseLayer::injectVec2FImpl(const FrameStackCode& code,
-                                    const Vec2F&          size)
-    {
-        return false;
-    }
-
-    bool BaseLayer::injectVec2(const FrameStackCode& code,
-                               const Vec2F&          size)
-    {
-        switch (code)
-        {
-        case SIZE:
-            if (_size != toVec2I(size))
-            {
-                _size = toVec2I(size);
-                return resizeEvent(_size);
-            }
-            return false;
-        case X_AXIS:
-        case Y_AXIS:
-        case X_STEP:
-        case Y_STEP:
-        case ORIGIN:
-            return injectVec2FImpl(code, size);
-        }
         return false;
     }
 

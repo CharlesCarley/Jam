@@ -36,32 +36,22 @@ namespace Jam::Editor::State
             YUp = 0x01
         };
 
-    protected:
-        [[deprecated("remove me")]] bool resizeEvent(const Vec2I& oldSize) override;
-
     private:
         U32   _majorColor{0x2b2b2bFF};
         U32   _minorColor{0x212121FF};
         U32   _originColor{0x4B4B4BFF};
         U32   _textColor{0xC0C0CFFF};
-        Vec2F _origin{U32(0), 0};
-        Axis  _axis;
         U8    _flags{None};
+        Vec2F _origin;
+        Axis  _axis;
 
         Vec2F scale() const;
-
-        bool injectVec2FImpl(const FrameStackCode& code,
-                             const Vec2F&          size) override;
 
     public:
         GridLayer();
         ~GridLayer() override = default;
 
         void render(RenderContext& canvas) override;
-
-        Vec2F project(const Vec2F& v) const;
-
-        void setAxis(const Axis& ax);
 
         void setMajorGrid(const U32& color);
 
@@ -71,11 +61,9 @@ namespace Jam::Editor::State
 
         void setFlags(const U8& flags);
 
+        void setAxis(const Axis& ax) { _axis = ax; }
+
         void setOrigin(const Vec2F& origin);
-
-        const Axis& axis() const;
-
-        Axis& refAxis();
 
         const Vec2F& origin() const;
     };
@@ -110,19 +98,9 @@ namespace Jam::Editor::State
         _flags = flags;
     }
 
-    inline const Axis& GridLayer::axis() const
-    {
-        return _axis;
-    }
-
     inline const Vec2F& GridLayer::origin() const
     {
         return _origin;
-    }
-    
-    inline Axis& GridLayer::refAxis()
-    {
-        return _axis;
     }
 
 }  // namespace Jam::Editor::State

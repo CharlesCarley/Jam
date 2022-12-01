@@ -30,7 +30,7 @@ namespace Jam::Editor::State
 {
     using LineBuffer = SimpleArray<QLineF>;
 
-    class RenderContext
+    class RenderContext // Todo: move grid drawing to the grid layer and supply controll variables...
     {
     private:
         IColor    _color{0, 0, 0, 1};
@@ -42,6 +42,7 @@ namespace Jam::Editor::State
         LineBuffer _major;
         LineBuffer _minor;
         LineBuffer _center;
+
 
         void stepGrid(R32          x1,
                       R32          y1,
@@ -107,6 +108,9 @@ namespace Jam::Editor::State
                    U8 alpha) const;
 
         void flush() const;
+
+
+        const Screen& getVpTemp() const {return _screen;}
     };
 
     inline const Vec2I& RenderContext::size() const
@@ -119,4 +123,4 @@ namespace Jam::Editor::State
         return _painter == nullptr;
     }
 
-}  // namespace Jam
+}  // namespace Jam::Editor::State

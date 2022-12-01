@@ -30,65 +30,13 @@ namespace Jam::Editor::State
     {
     }
 
-    bool GridLayer::resizeEvent(const Vec2I&)
-    {
-        _origin.x = _size.rx() * Half;
-        _origin.y = _size.ry() * Half;
-        return false;
-    }
-
-    bool GridLayer::injectVec2FImpl(const FrameStackCode& code, const Vec2F& size)
-    {
-        switch (code)
-        {
-        case X_AXIS:
-            _axis.set(0, size);
-            return true;
-        case Y_AXIS:
-            _axis.set(1, size);
-            return true;
-        case X_STEP:
-            _axis.x.stepI(size.ix());
-            return true;
-        case Y_STEP:
-            _axis.y.stepI(size.ix());
-            return true;
-        case ORIGIN:
-            _origin = size;
-            return true;
-        case SIZE:
-            break;
-        }
-        return false;
-    }
-
     void GridLayer::render(RenderContext& canvas)
     {
-        canvas.screenGrid(_axis,
+        canvas.screenGrid(_screen.axis(),
                           _majorColor,
                           _minorColor,
                           _originColor,
                           _textColor);
-    }
-
-    Vec2F GridLayer::project(const Vec2F& v) const
-    {
-        const Vec2F extent = scale();
-
-        if (_flags & YUp)
-        {
-            return {
-                extent.x * Half + v.x,
-                extent.y - (extent.y * Half + v.y),
-            };
-        }
-        return {(extent.x * Half + v.x),
-                (extent.y * Half + v.y)};
-    }
-
-    void GridLayer::setAxis(const Axis& ax)
-    {
-        _axis.set(ax);
     }
 
 }  // namespace Jam::Editor::State

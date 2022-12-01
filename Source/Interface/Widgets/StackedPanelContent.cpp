@@ -30,10 +30,10 @@ namespace Jam::Editor
     StackedPanelContent::StackedPanelContent(QWidget* parent) :
         QWidget(parent)
     {
-        construct();
+        constructContent();
     }
 
-    void StackedPanelContent::construct()
+    void StackedPanelContent::constructContent()
     {
         View::applyColorRoles(this);
         _manger = new StackedPanelManager();

@@ -21,7 +21,6 @@
 */
 #include "State/FrameStack/FunctionLayer.h"
 #include "Equation/Statement.h"
-#include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Palette.h"
 #include "State/FrameStack/RenderContext.h"
 
@@ -42,9 +41,19 @@ namespace Jam::Editor::State
 
     void FunctionLayer::render(RenderContext& canvas)
     {
+        // TODO: remove _size, _axis, and use _screen instead 
+        _size = toVec2I(_screen.size());
+        _axis = _screen.axis();
+
+        const Vec2F ss = _screen.size() * Half;
+        _origin.x = ss.x + _screen.offset().x;
+        _origin.y = ss.y - _screen.offset().y;
+
+
         canvas.selectColor(0xC0C0C0FF);
         canvas.drawVec2F(20, 20, toVec2F(_size), 0);
         canvas.drawAxisF(20, 40, _axis);
+        canvas.drawVec2F(20, 60, _origin);
 
         for (I32 i0 = 1; i0 < _size.x; ++i0)
             renderExpression(canvas, i0);
@@ -91,46 +100,6 @@ namespace Jam::Editor::State
         p0.y += _origin.y;
         p0.y = _size.ry() - p0.y;
         return p0;
-    }
-
-    bool FunctionLayer::resizeEvent(const Vec2I&)
-    {
-        _origin.x = _size.rx() * Half;
-        _origin.y = _size.ry() * Half;
-        return false;
-    }
-
-    bool FunctionLayer::injectVec2FImpl(
-        const FrameStackCode& code,
-        const Vec2F&          size)
-    {
-        if (code == X_AXIS)
-        {
-            _axis.set(1, size);
-            return true;
-        }
-        if (code == Y_AXIS)
-        {
-            _axis.set(0, size);
-            return true;
-        }
-        if (code == X_STEP)
-        {
-            _axis.x.stepI(I32(size.x));
-            return true;
-        }
-        if (code == Y_STEP)
-        {
-            _axis.y.stepI(I32(size.x));
-            return true;
-        }
-        if (code == ORIGIN)
-        {
-            _origin.x = _size.rx() * Half + size.x;
-            _origin.y = _size.ry() * Half - size.y;
-            return true;
-        }
-        return false;
     }
 
     bool FunctionLayer::update()

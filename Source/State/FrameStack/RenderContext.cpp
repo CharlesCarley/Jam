@@ -32,7 +32,8 @@ namespace Jam::Editor::State
     // temp
     using namespace Editor::Log;
 
-    RenderContext::RenderContext(QPainter* painter, Screen screen) :
+    RenderContext::RenderContext(QPainter* painter,
+                                 Screen    screen) :
         _screen{std::move(screen)},
         _painter{painter}
     {
@@ -346,4 +347,4 @@ namespace Jam::Editor::State
             v -= ax.y;
         }
     }
-}  // namespace Jam
+}  // namespace Jam::Editor::State

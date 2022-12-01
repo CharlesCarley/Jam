@@ -94,16 +94,14 @@ namespace Jam::Editor
     {
         _state->setValue(data);
 
-        State::layerStack()->notifyStateChange();
-        State::functionLayer()->update();
-    }
+        State::layerStack()->notifyStateChange(this);
+     }
 
     void VariableWidget::onDelete()
     {
         State::functionLayer()->removeVariable(_state);
         _state = nullptr;
-        State::layerStack()->notifyStateChange();
-
+        State::layerStack()->notifyStateChange(this);
         emit wantsToDelete();
     }
 

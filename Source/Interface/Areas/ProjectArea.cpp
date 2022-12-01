@@ -30,7 +30,7 @@
 #include "Interface/Constants.h"
 #include "Interface/Dialogs/SettingsDialog.h"
 #include "Interface/Events/EventTypes.h"
-#include "Interface/Events/LayerSelectEvent.h"
+#include "Interface/Events/LayerEvents.h"
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/IconButton.h"
 #include "State/App.h"

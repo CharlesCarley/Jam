@@ -34,7 +34,7 @@ namespace Jam::Editor
 
     AreaLeaf::AreaLeaf(Area* root, const int mask) :
         AreaContent(false),
-        _leafInnerArea(root),
+        _area(root),
         _mask(mask)
     {
         construct();
@@ -47,13 +47,13 @@ namespace Jam::Editor
 
     Area* AreaLeaf::contents() const
     {
-        return _leafInnerArea;
+        return _area;
     }
 
     int32_t AreaLeaf::type() const
     {
-        if (_leafInnerArea)
-            return _leafInnerArea->type();
+        if (_area)
+            return _area->type();
         return -1;
     }
 
@@ -68,18 +68,32 @@ namespace Jam::Editor
         if (!event)
             return false;
 
-        if (_leafInnerArea)
-            return _leafInnerArea->propagate(event);
-
+        if (_area)
+        {
+            if ((int)event->type() == LayerUpdate)
+            {
+                // Do not relay this any further.
+                // It's handled on the layer side when
+                // the app receives it, then unlocks it.
+                // It's allowed to propagate through the
+                // tree in-order to force an update..
+                _area->update();
+                return false;
+            }
+            return _area->propagate(event);
+        }
         return AreaContent::propagate(event);
     }
 
     void AreaLeaf::construct()
     {
-        _edges = new AreaEdgeRect(_leafInnerArea);
-        connect(_edges, &AreaEdgeRect::wantsContextMenu, this, &AreaLeaf::contextMenu);
+        _edges = new AreaEdgeRect(_area);
+        connect(_edges,
+                &AreaEdgeRect::wantsContextMenu,
+                this,
+                &AreaLeaf::contextMenu);
 
-        connect(_leafInnerArea, &Area::wantsContextSwitch, this, [=](int at)
+        connect(_area, &Area::wantsContextSwitch, this, [=](int at)
                 { QCoreApplication::postEvent(parentNode(), new SwitchEvent(at)); });
 
         setLayout(_edges->container());
@@ -101,7 +115,6 @@ namespace Jam::Editor
     {
         if (!_parent)
             return _mask;
-
 
         constexpr int values[4] = {
             AreaEdgeRight,
@@ -126,5 +139,5 @@ namespace Jam::Editor
         }
         return _mask;
     }
-    
+
 }  // namespace Jam::Editor

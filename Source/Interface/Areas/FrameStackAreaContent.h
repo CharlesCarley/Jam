@@ -43,15 +43,16 @@ namespace Jam::Editor
         R32    _scrollX{0};
         R32    _scrollY{0};
 
+
     public:
         explicit FrameStackAreaContent(QWidget* parent = nullptr);
         ~FrameStackAreaContent() override;
 
         void resetAxis();
 
-
     private:
         void  construct();
+
         Vec2F updatePoint(const QMouseEvent* event);
 
         void updateSize(const QSize& sz);
@@ -72,8 +73,6 @@ namespace Jam::Editor
 
         void keyReleaseEvent(QKeyEvent* event) override;
 
-        void vec2Injected(const State::FrameStackCode& code, const Vec2F& vec);
 
-        void stateChanged();
     };
 }  // namespace Jam::Editor

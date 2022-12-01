@@ -26,15 +26,16 @@
 
 namespace Jam::Editor::State
 {
+
     class FrameStackManager final : public QObject
     {
     public:
         Q_OBJECT
 
     signals:
-        void vec2Injected(const FrameStackCode& code, const Vec2F& size) const;
+        // void vec2Injected(const FrameStackCode& code, const Vec2F& size) const;
 
-        void stateChanged() const;
+        // void stateChanged() const;
 
         void layerAdded(const I32& type, const U32& index) const;
 
@@ -44,8 +45,9 @@ namespace Jam::Editor::State
         // with the extra freedom)
         friend class App;
 
-        FrameStack*  _stack{nullptr};
-        mutable bool _error{false};
+        FrameStack* _stack{nullptr};
+
+        bool _lock{false};
 
         FrameStackManager();
 
@@ -58,16 +60,15 @@ namespace Jam::Editor::State
 
         void load(IStream& data) const;
 
-        bool injectVec2(const FrameStackCode& code,
-                        const Vec2F&          value) const;
+        void render(const Screen& sc, RenderContext* canvas) const;
 
         void addLayer(BaseLayer* layer) const;
 
-        void notifyStateChange() const;
-
         const LayerArray& layers() const;
 
-        void render(RenderContext* canvas) const;
+        void unlock();
+
+        void notifyStateChange(const QWidget* widget);
 
         template <typename T, I32 Type>
         T* cast(U32 idx);
