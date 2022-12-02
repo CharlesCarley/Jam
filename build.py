@@ -1,27 +1,30 @@
+import platform
 import sys
 import os
 import subprocess
 import shutil
+from zipfile import ZipFile
+import zipfile
+
 
 class Path:
-
     def __init__(self, directory=None):
-        if (directory != None):
+        if directory != None:
             self.path = directory
             self.normalize()
         else:
             self.path = os.getcwd()
             self.normalize()
 
-        if (not self.check()):
+        if not self.check():
             msg = "The supplied path %s is invalid" % self.path
             raise Exception(msg)
 
     def normalize(self):
-        if (sys.platform == "win32"):
-            self.path = self.path.replace('/', '\\')
+        if sys.platform == "win32":
+            self.path = self.path.replace("/", "\\")
         else:
-            self.path = self.path.replace('\\', '/')
+            self.path = self.path.replace("\\", "/")
         self.path = os.path.abspath(self.path)
 
     def check(self):
@@ -48,25 +51,25 @@ class Path:
 
     def create(self, relative):
         result = self.path
-        if (sys.platform == "win32"):
-            relative = relative.replace('/', '\\')
+        if sys.platform == "win32":
+            relative = relative.replace("/", "\\")
         else:
-            relative = relative.replace('\\', '/')
+            relative = relative.replace("\\", "/")
 
         joinResult = os.path.join(result, relative)
-        if (not os.path.isdir(joinResult)):
+        if not os.path.isdir(joinResult):
             os.makedirs(joinResult)
         return Path(joinResult)
 
     def subdir(self, relative):
         result = self.path
-        if (sys.platform == "win32"):
-            relative = relative.replace('/', '\\')
+        if sys.platform == "win32":
+            relative = relative.replace("/", "\\")
         else:
-            relative = relative.replace('\\', '/')
+            relative = relative.replace("\\", "/")
 
         joinResult = os.path.join(result, relative)
-        if (not os.path.isdir(joinResult)):
+        if not os.path.isdir(joinResult):
             msg = "The path '%s' does not exist " % joinResult
             raise Exception(msg)
 
@@ -79,7 +82,7 @@ class Path:
         return Path(result)
 
     def remove(self):
-        if (os.path.isdir(self.path)):
+        if os.path.isdir(self.path):
             print("Removing".ljust(20), "=> ", self.path)
             shutil.rmtree(self.path, ignore_errors=True)
 
@@ -96,13 +99,12 @@ class Path:
     def removeFile(self, file):
         localFile = os.path.join(self.path, file)
 
-        if (os.path.isfile(localFile)):
+        if os.path.isfile(localFile):
             print("Removing", localFile)
             os.remove(localFile)
 
 
 class Builder:
-
     def __init__(self, argc, argv):
 
         self.argc = argc
@@ -111,29 +113,36 @@ class Builder:
         self.opts = {}
 
         sourceDir = Path()
-        self.opts['source'] = sourceDir
-        self.opts['build']  = sourceDir.create("Build")
-        self.opts['deploy'] = sourceDir.create("Bin")
-        self.opts['test']   = sourceDir.join("Testing")
+        self.opts["source"] = sourceDir
+        self.opts["build"] = sourceDir.create("Build")
+        self.opts["deploy"] = sourceDir.create("Bin")
+        self.opts["test"] = sourceDir.join("Testing")
 
-        if (sys.platform == "win32"):
+        if sys.platform == "win32":
             platName = "windows"
         else:
-            platName = 'linux'
+            platName = "linux"
 
-        self.opts['platform'] = platName
+        self.opts["platform"] = platName
 
-    def home(self):       return self.opts['source']
-    def sourceDir(self):  return self.opts['source']
-    def buildDir(self):   return self.opts['build']
-    def deployDir(self):  return self.opts['deploy']
+    def home(self):
+        return self.opts["source"]
+
+    def sourceDir(self):
+        return self.opts["source"]
+
+    def buildDir(self):
+        return self.opts["build"]
+
+    def deployDir(self):
+        return self.opts["deploy"]
 
     def dumpOpts(self):
-        print("")
+        print("".rjust(20, '-'))
         print("Build Paths")
         for k in self.opts.keys():
-            print(k.ljust(20), "=>", self.opts[k])
-        print("")
+            print(k.ljust(8), "=>", self.opts[k])
+        print("".rjust(20, '-'))
 
     def goto(self, path):
         try:
@@ -144,25 +153,28 @@ class Builder:
 
     def configString(self):
         config = "Debug"
-        if (self.release):
+        if self.release:
             config = "Release"
         return config
 
     def run(self, cmd):
-        print("Calling =>", cmd)
+        print("run".ljust(8), "=>", cmd, "\n")
         subprocess.run(cmd, shell=True, env=os.environ)
 
     def findOpt(self, opt):
         for i in range(self.argc):
-            if (opt == self.argv[i]):
+            if opt == self.argv[i]:
                 return True
         return False
 
+
     def clean(self, reCreate=False):
         print("Cleaning...".ljust(20), self.argv)
+        
         self.buildDir().remove()
         self.deployDir().remove()
         self.goto(self.home())
+
 
     def configure(self, reCreate=False):
         print("Configure...".ljust(20), self.argv)
@@ -172,25 +184,69 @@ class Builder:
         self.goto(self.home())
 
     def build(self):
-        print("Building...".ljust(20), self.argv)
+        print("build".ljust(8), '=>', self.argv)
+
         self.goto(self.buildDir())
         self.run("cmake .. -DJam_BUILD_TEST=ON -DJam_AUTO_RUN_TEST=ON ")
-        self.run("cmake  --build %s --config=%s "%(self.buildDir(), self.configString()))
+        self.run("cmake  --build %s --config=%s " 
+                 % (self.buildDir(), self.configString()))
+
         self.goto(self.home())
 
-    def deploy(self ):
+    def deploy(self):
+        print("deploy".ljust(8), "=>", self.argv)
+        self.clean()
+
+        self.sourceDir().create("Build")
+        self.sourceDir().create("Bin")
+
+        fp = open(self.sourceDir().path+"/Bin/output.log", "w")
+        fp.close()
+
         self.release = True
         self.build()
-        print("Deploy...".ljust(20), self.argv)
+
         self.goto(self.deployDir())
         self.run("windeployqt .")
-        self.goto(self.home())
-  
-    def edit(self ):
-        print("Testing...".ljust(20), self.argv)
+
+        self.goto(self.deployDir())
+        self.zipDir()
+
         self.goto(self.home())
 
+    def zipDir(self):
+        print("zip.".ljust(8), "=>", self.deployDir())
+
+        zipFile = ("build-%s%s-x86-64-dev.zip"
+            %(platform.system(), platform.release())).lower()
+
+        fp = ZipFile(
+            os.path.join(self.sourceDir().path, zipFile), 
+            'w', zipfile.ZIP_DEFLATED)
+
+        rootDir = self.deployDir().path
+        self.goto(self.deployDir())
+
+        for r, d, f in os.walk('.'):
+            rel = r.replace(rootDir, ".."+os.sep)
+            rel = rel.replace("\\\\", "\\")
+            rel = rel.replace("//", "/")
+            for file in f:
+                if (file.find("Test.") != -1): continue 
+
+                zfp = os.path.join(rel, file)
+                print("zipping".ljust(8), "=>", zfp)
+                fp.write(zfp)
+        pass
+
+    def test(self):
+        print("Testing...".ljust(20), self.argv)
+        print("Todo")
+        self.goto(self.home())
+
+
     def logUsage(self):
+
         print("build <kind> <options>")
         print("")
         print("  Where <kind> is one of the following")
@@ -199,8 +255,11 @@ class Builder:
         print("  config - Configure with CMake")
         print("  help   - Displays this message")
         print("  deploy - Build the windows deployment")
+        print("  zip    - Make a zip file from the bin directory")
         print("")
+        print(self.argv);
         print("")
+
 
 
 def main(argc, argv):
@@ -208,17 +267,21 @@ def main(argc, argv):
     build.dumpOpts()
     build.logUsage()
 
-    if (build.findOpt("clean")):
-        build.clean();
-    elif (build.findOpt("config")):
-        build.configure();
-    elif (build.findOpt("deploy")):
-        build.deploy();
+    if build.findOpt("clean"):
+        build.clean()
+    elif build.findOpt("config"):
+        build.configure()
+    elif build.findOpt("test"):
+        build.test()
+    elif build.findOpt("deploy"):
+        build.deploy()
+    elif build.findOpt("zip"):
+        build.zipDir()
     else:
-        build.build();
-
+        build.build()
 
     build.goto(build.home())
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(len(sys.argv), sys.argv)

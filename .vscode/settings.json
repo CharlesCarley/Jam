@@ -22,5 +22,8 @@
         ".gitignore": true,
         "**/desktop.ini": true
     },
-    "explorerExclude.backup": {}
+    "explorerExclude.backup": {},
+    "cSpell.words": [
+        "windeployqt"
+    ]
 }
