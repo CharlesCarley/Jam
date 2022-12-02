@@ -22,6 +22,7 @@
 #pragma once
 #include <functional>
 #include <unordered_map>
+#include "TypeFilter.h"
 #include "Utils/String.h"
 
 namespace Jam::Xml
@@ -51,6 +52,7 @@ namespace Jam::Xml
         Node() = default;
 
         explicit Node(String name, int64_t = -1);
+        explicit Node(const TypeFilter& filter);
 
         ~Node();
 

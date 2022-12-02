@@ -46,23 +46,23 @@ namespace Jam::Editor::State
     {
         // on success _path == projectPath
 
-        XmlFile psr(ProjectFileTags, ProjectFileTagsMax);
+        XmlFile psr(Tags::ProjectFileTags, Tags::ProjectFileTagsMax);
         psr.read(stream, projectPath);
 
         bool status = false;
 
-        if (const XmlNode* jam = psr.root(JamProjectTag))
+        if (const XmlNode* jam = psr.root(Tags::JamTagId))
         {
             clearProjectState();
 
-            if (const XmlNode* mainLayout = jam->firstChildOf(TreeTag))
+            if (const XmlNode* mainLayout = jam->firstChildOf(Tags::TreeTagId))
             {
                 Xml::Writer::toString(_layout, mainLayout);
                 if (!_layout.empty())
                     status = true;
             }
 
-            if (const XmlNode* stack = jam->firstChildOf(FrameStackTag))
+            if (const XmlNode* stack = jam->firstChildOf(Tags::FrameStackTagId))
             {
                 StringStream ss;
                 Xml::Writer::toStream(ss, stack);
@@ -86,24 +86,17 @@ namespace Jam::Editor::State
         if (out.is_open())
         {
             _path = path;
-            out << "<jam>" << std::endl;
+            out << "<" << Tags::JamTag.typeName << ">" << std::endl;
             out << layout;
 
             FrameStackSerialize serialize(layerStack()->stack());
             serialize.save(out);
 
-            // XmlProject::saveFrameStack(stream);
-            out << "</jam>" << std::endl;
+            out << "</" << Tags::JamTag.typeName << ">" << std::endl;
             return true;
         }
-        else
-        {
-            Console::writeLine(
-                "failed to open file for "
-                "saving: '",
-                path,
-                "'");
-        }
+
+        Console::writeLine("failed to open file for saving: '", path, "'");
         return false;
     }
 

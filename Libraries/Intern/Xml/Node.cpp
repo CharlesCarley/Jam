@@ -36,6 +36,12 @@ namespace Jam::Xml
     {
     }
 
+    Node::Node(const TypeFilter& filter) :
+        _typeCode(filter.typeCode),
+        _name(filter.typeName)
+    {
+    }
+
     Node::~Node()
     {
         clearChildren();

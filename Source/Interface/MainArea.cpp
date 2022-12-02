@@ -30,15 +30,16 @@
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Events/BranchEvent.h"
 #include "Interface/Extensions.h"
-#include "State/ProjectTags.h"
+#include "MainArea.Creator.inl"
 #include "State/ProjectManager.h"
+#include "State/ProjectTags.h"
 #include "Utils/XmlConverter.h"
 #include "Xml/File.h"
 #include "Xml/Node.h"
-#include "MainArea.Creator.inl"
 
 namespace Jam::Editor
 {
+    using namespace Tags;
 
     MainArea::MainArea(const String& layout, QWidget* parent) :
         QWidget(parent),
@@ -78,13 +79,12 @@ namespace Jam::Editor
     {
         try
         {
-            XmlFile parser(State::AreaLayoutTags,
-                           State::AreaLayoutTagsMax);
+            XmlFile parser(Tags::AreaLayoutTags, Tags::AreaLayoutTagsMax);
 
             StringStream ss;
             ss << layout;
             parser.read(ss);
-            if (const auto root = parser.root(State::TreeTag))
+            if (const auto root = parser.root(Tags::TreeTagId))
                 construct(root);
             else
                 handleBuildError("invalid root node");
@@ -128,7 +128,6 @@ namespace Jam::Editor
         setLayout(_layout);
     }
 
-
     void MainArea::clear()
     {
         delete _root;
@@ -151,8 +150,6 @@ namespace Jam::Editor
         ss << R"(</tree>)";
         construct(ss.str());
     }
-
-
 
     bool MainArea::event(QEvent* event)
     {
@@ -193,7 +190,7 @@ namespace Jam::Editor
             return ScopePtr(new XmlNode());
         }
 
-        const auto root = new XmlNode("tree", State::TreeTag);
+        const auto root = new XmlNode(TreeTag);
         serialize(_root, root);
         return ScopePtr(root);
     }
@@ -224,7 +221,7 @@ namespace Jam::Editor
             {
                 if (const Area* area = areaLeaf->contents())
                 {
-                    XmlNode* leafTag = new XmlNode("leaf", State::LeafTag);
+                    XmlNode* leafTag = new XmlNode(Tags::LeafTag);
                     leafTag->insert("type", area->type());
 
                     // <leaf type="x" />
@@ -240,7 +237,7 @@ namespace Jam::Editor
         {
             if (const AreaBranch* branch = (AreaBranch*)source->content())
             {
-                XmlNode* branchTag = new XmlNode("branch", State::BranchTag);
+                XmlNode* branchTag = new XmlNode(Tags::BranchTag);
 
                 branchTag->insert("ratio", branch->ratio());
 
@@ -292,7 +289,6 @@ namespace Jam::Editor
         Log::writeLine(data);
     }
 
-
     void MainArea::applyNode(XmlNode*        node,
                              const AreaNode* parent,
                              AreaNode*       current,
@@ -302,9 +298,9 @@ namespace Jam::Editor
         if (!node || !current)  // parent is the only node allowed to be null
             return;
 
-        if (node->isTypeOf(State::LeafTag))
+        if (node->isTypeOf(Tags::LeafTagId))
             applyLeaf(node, parent, current, type, ori);
-        else if (node->isTypeOf(State::BranchTag))
+        else if (node->isTypeOf(Tags::BranchTagId))
             applyBranch(node, current);
         else
         {

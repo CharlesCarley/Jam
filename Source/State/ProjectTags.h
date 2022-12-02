@@ -20,17 +20,10 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "State/FrameStack/FunctionLayer.h"
 #include "Xml/TypeFilter.h"
 
-namespace Jam
+namespace Jam::Editor::Tags
 {
-    class FrameStack;
-}
-
-namespace Jam::Editor::State
-{
-    class RuntimeProjectState;
     constexpr U32 Reserved = 0x3E5;
 
     constexpr size_t ReserveSpace(const size_t mul)
@@ -45,30 +38,30 @@ namespace Jam::Editor::State
         FrameStackOrder,
     };
 
-    enum ProjectFileTags
+    enum ProjectFileIds
     {
         ProjectFileStart = ReserveSpace(ProjectOrder),
-        JamProjectTag,
-        ProjectFileMax
+        JamTagId,
+        ProjectFileIdMax
     };
 
-    enum LayoutTreeTags
+    enum LayoutTreeIds
     {
         LayoutTreeStart = ReserveSpace(LayoutOrder),
-        TreeTag,
-        BranchTag,
-        LeafTag,
+        TreeTagId,
+        BranchTagId,
+        LeafTagId,
         LayoutTreeMax
     };
 
-    enum FrameStackTags
+    enum FrameStackIds
     {
         FrameStackStart = ReserveSpace(FrameStackOrder),
-        FrameStackTag,
-        GridTag,
-        FunctionTag,
-        VariableTag,
-        ExpressionTag,
+        FrameStackTagId,
+        GridTagId,
+        FunctionTagId,
+        VariableTagId,
+        ExpressionTagId,
         FrameStackMax
     };
 
@@ -76,32 +69,44 @@ namespace Jam::Editor::State
     constexpr size_t AreaLayoutTagsMax  = (LayoutTreeMax - LayoutTreeStart) - 1;
     constexpr size_t ProjectFileTagsMax = FrameStackTagsMax +
                                           AreaLayoutTagsMax +
-                                          (ProjectFileMax - ProjectFileStart) - 1;
+                                          (ProjectFileIdMax - ProjectFileStart) - 1;
+
+    constexpr TypeFilter FrameStackTag = {"stack", FrameStackTagId};
+    constexpr TypeFilter GridTag       = {"grid", GridTagId};
+    constexpr TypeFilter FunctionTag   = {"func", FunctionTagId};
+    constexpr TypeFilter VariableTag   = {"var", VariableTagId};
+    constexpr TypeFilter ExpressionTag = {"expr", ExpressionTagId};
 
     constexpr TypeFilter FrameStackTags[FrameStackTagsMax] = {
-        {     "stack", FrameStackTag}, // FrameStackTags
-        {      "grid",       GridTag},
-        {  "function",   FunctionTag},
-        {  "variable",   VariableTag},
-        {"expression", ExpressionTag},
+        FrameStackTag,
+        GridTag,
+        FunctionTag,
+        VariableTag,
+        ExpressionTag,
     };
+
+    constexpr TypeFilter TreeTag   = {"tree", TreeTagId};
+    constexpr TypeFilter LeafTag   = {"leaf", LeafTagId};
+    constexpr TypeFilter BranchTag = {"branch", BranchTagId};
 
     constexpr TypeFilter AreaLayoutTags[AreaLayoutTagsMax] = {
-        {  "tree",   TreeTag}, // AreaLayoutTags
-        {  "leaf",   LeafTag},
-        {"branch", BranchTag},
+        TreeTag,
+        LeafTag,
+        BranchTag,
     };
+
+    constexpr TypeFilter JamTag = {"jam", JamTagId};
 
     constexpr TypeFilter ProjectFileTags[ProjectFileTagsMax] = {
-        {       "jam", JamProjectTag}, // ProjectFileTags
-        {      "tree",       TreeTag}, // AreaLayoutTags
-        {      "leaf",       LeafTag},
-        {    "branch",     BranchTag},
-        {     "stack", FrameStackTag}, // FrameStackTags
-        {      "grid",       GridTag},
-        {  "function",   FunctionTag},
-        {  "variable",   VariableTag},
-        {"expression", ExpressionTag},
+        JamTag,
+        TreeTag,
+        LeafTag,
+        BranchTag,
+        FrameStackTag,
+        GridTag,
+        FunctionTag,
+        VariableTag,
+        ExpressionTag,
     };
 
-}  // namespace Jam::Editor::State
+}  // namespace Jam::Editor::Tags

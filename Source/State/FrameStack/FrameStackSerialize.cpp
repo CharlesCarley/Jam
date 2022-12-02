@@ -29,6 +29,8 @@
 
 namespace Jam::Editor::State
 {
+    using namespace Tags;
+
     using Xc = XmlConverter;
     using Sc = StringUtils;
 
@@ -44,8 +46,8 @@ namespace Jam::Editor::State
         grid->setMinorGrid(0x212121FF);
         grid->setOrigin(0x4B4B4BFF);
 
-        //grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
-        //grid->setAxis(Xc::toAxis("axis", root));
+        // grid->setOrigin(Xc::toVec2F("origin", root, {0.f, 0}));
+        // grid->setAxis(Xc::toAxis("axis", root));
         return grid;
     }
 
@@ -55,24 +57,20 @@ namespace Jam::Editor::State
 
         for (const auto& node : root->children())
         {
-            if (node->isTypeOf(ExpressionTag))
+            if (node->isTypeOf(ExpressionTagId))
             {
                 ExpressionStateObject* eso = fnc->createExpression();
+
                 eso->setText(node->attribute("text"));
             }
-            else if (node->isTypeOf(VariableTag))
+            else if (node->isTypeOf(VariableTagId))
             {
                 VariableStateObject* vso = fnc->createVariable();
-
 
                 vso->setName(node->attribute("name"));
                 vso->setRange(Xc::toVec2F("range", node, {-10.f, 10}));
                 vso->setRate(node->float32("rate", 1));
                 vso->setValue(node->float32("value", 1));
-            }
-            else
-            {
-                // quiet error
             }
         }
 
@@ -83,25 +81,24 @@ namespace Jam::Editor::State
     {
         try
         {
-            XmlFile fp(FrameStackTags,
-                       FrameStackTagsMax);
+            XmlFile fp(FrameStackTags, FrameStackTagsMax);
             fp.read(stream);
 
             GridLayer*     grid = nullptr;
             FunctionLayer* func = nullptr;
 
-            if (const auto root = fp.root(FrameStackTag))
+            if (const auto root = fp.root(FrameStackTagId))
             {
                 for (const auto node : root->children())
                 {
-                    if (node->isTypeOf(GridTag))
+                    if (node->isTypeOf(GridTagId))
                     {
                         if (grid)
                             throw Exception("multiple grid layers");
 
                         grid = loadGrid(node);
                     }
-                    else if (node->isTypeOf(FunctionTag))
+                    else if (node->isTypeOf(FunctionTagId))
                     {
                         if (func)
                             throw Exception("multiple function layers");
@@ -114,13 +111,14 @@ namespace Jam::Editor::State
             // order here is important
             // Grid = idx0
             // Func = idx1
-            if (!grid || !func)
-                throw Exception("missing grid or function layers");
+            if (!grid)
+                grid = new GridLayer();
+            if (!func)
+                func = new FunctionLayer();
 
             _stack->clear();
             _stack->addLayer(grid);
             _stack->addLayer(func);
-
             _stack->update();
         }
         catch (Exception& ex)
@@ -132,9 +130,9 @@ namespace Jam::Editor::State
     void FrameStackSerialize::saveGrid() const
     {
         const auto layer = _stack->cast<GridLayer>(0);
-        XmlNode* grid = new XmlNode("grid", GridTag);
+        XmlNode*   grid  = new XmlNode(GridTag);
 
-        // TODO: Save grid control properties, not viewport information... 
+        // TODO: Save grid control properties, not viewport information...
         _root->addChild(grid);
     }
 
@@ -142,7 +140,7 @@ namespace Jam::Editor::State
     {
         const auto layer = _stack->cast<FunctionLayer>(1);
 
-        XmlNode* func = new XmlNode("function", FunctionTag);
+        const auto func = new XmlNode(FunctionTag);
 
         for (const auto id : layer->objects())
         {
@@ -150,15 +148,18 @@ namespace Jam::Editor::State
             {
                 const ExpressionStateObject* eso = (ExpressionStateObject*)id;
 
-                XmlNode* expr = new XmlNode("expression", ExpressionTag);
+                const auto expr = new XmlNode(ExpressionTag);
+
                 expr->insert("text", eso->text());
                 func->addChild(expr);
             }
+
             else if (id->type() == FstVariable)
             {
                 const VariableStateObject* vso = (VariableStateObject*)id;
 
-                XmlNode* expr = new XmlNode("variable", VariableTag);
+                XmlNode* expr = new XmlNode(VariableTag);
+
                 expr->insert("name", vso->name());
                 expr->insert("range",
                              Sc::join(ValueSetF({vso->range().x, vso->range().y}, 0, 6)));
@@ -174,10 +175,13 @@ namespace Jam::Editor::State
 
     void FrameStackSerialize::save(OStream& out)
     {
-        _root = new XmlNode("stack", FrameStackTag);
+        _root = new XmlNode(FrameStackTag);
+
         saveGrid();
         saveFunction();
+
         Xc::toStream(out, _root, 4);
+
         delete _root;
         _root = nullptr;
     }
