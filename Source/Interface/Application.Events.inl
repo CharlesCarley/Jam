@@ -20,6 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#ifndef APPLICATION_INLINE_DEFINITION
+#error This file should not be included here.
+#endif
 #include <QApplication>
 #include "Interface/Application.h"
 #include "Interface/Events/EventTypes.h"
@@ -37,7 +40,10 @@ namespace Jam::Editor
     void Application::notifyProjectClosed() const
     {
         if (_mainArea)
-            QApplication::postEvent(_mainArea, new QEvent((QEvent::Type)ProjectClosed));
+        {
+            auto evt = QEvent((QEvent::Type)ProjectClosed);
+            _mainArea->notify(&evt);
+        }
     }
 
     bool Application::event(QEvent* event)

@@ -20,6 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "StackedPanel.h"
+#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 
 namespace Jam::Editor
@@ -38,38 +39,35 @@ namespace Jam::Editor
 
     void StackedPanel::addWidget(
         QWidget*  widget,
-        const int expand)
+        const int expand) const
     {
         _contentLayout->addWidget(widget, expand);
-        update();
     }
 
-    void StackedPanel::remove(QWidget* widget)
+    void StackedPanel::remove(QWidget* widget) const
     {
         _contentLayout->removeWidget(widget);
-        update();
     }
 
-    void StackedPanel::addLayout(QLayout* widget, int expand)
+    void StackedPanel::addLayout(QLayout* widget, int expand) const
     {
         _contentLayout->addLayout(widget, expand);
-        update();
     }
 
-    void StackedPanel::setLabel(const QString& label)
+    void StackedPanel::setLabel(const QString& label) const
     {
         _title->setText(label);
-        update();
     }
 
     QSize StackedPanel::sizeHint() const
     {
-        return _layout->sizeHint();
+        const int h = View::calcMaxHeight(_layout).height();
+        return View::calcMaxHeight(_contentLayout) + QSize{0, h};
     }
 
     void StackedPanel::construct()
     {
-        View::applyColorRoles(this);
+        View::applyColorRoles(this /*, QPalette::AlternateBase*/);
 
         _contentLayout = new QVBoxLayout();
         _layout        = new QVBoxLayout();
@@ -81,12 +79,6 @@ namespace Jam::Editor
         View::layoutDefaults(_layout,
                              StackedPanelMargin,
                              StackedPanelContentSpacing >> 1);
-
-        // +--------------------------------------------+
-        // |(V|>) .. Title |     click/drag             |
-        // |--------------------------------------------|
-        // |   Content Area                             |
-        // +--------------------------------------------+
 
         QWidget*     header       = new QWidget();
         QHBoxLayout* headerLayout = new QHBoxLayout();

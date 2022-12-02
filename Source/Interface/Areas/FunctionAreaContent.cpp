@@ -45,16 +45,17 @@ namespace Jam::Editor
     {
         View::applyColorRoles(this);
         _panel = new StackedPanel();
+
         _panel->setLabel("Functions");
-        loadState();
 
         addPanel(_panel);
-        update();
+        loadState();
     }
 
-    void FunctionAreaContent::loadState() const
+    void FunctionAreaContent::loadState()
     {
         const auto layer = State::functionLayer();
+        _delayEvent      = true;
 
         for (const auto object : layer->objects())
         {
@@ -63,6 +64,7 @@ namespace Jam::Editor
             if (object->type() == State::FstVariable)
                 addSlider((State::VariableStateObject*)object);
         }
+        _delayEvent = false;
     }
 
     void FunctionAreaContent::addSlider(State::VariableStateObject* obj) const
@@ -81,7 +83,9 @@ namespace Jam::Editor
                 { dropWidget((QWidget*)sender()); });
 
         _panel->addWidget(var);
-        notifyResize();
+
+        if (!_delayEvent)
+            emit contentChanged();
     }
 
     void FunctionAreaContent::addExpression(State::ExpressionStateObject* obj) const
@@ -100,25 +104,15 @@ namespace Jam::Editor
                 { dropWidget((QWidget*)sender()); });
 
         _panel->addWidget(exp);
-        notifyResize();
+
+        if (!_delayEvent)
+            emit contentChanged();
     }
 
     void FunctionAreaContent::addPoint() const
     {
-        const auto str = new StringWidget();
-        _panel->addWidget(str);
-        notifyResize();
-    }
-
-    void FunctionAreaContent::notifyResize() const
-    {
-        if (QWidget* parent = parentWidget())
-        {
-            const QSize sz = parent->size();
-            QApplication::postEvent(
-                parent,
-                new QResizeEvent(sz, _panel->size()));
-        }
+        // TODO addPoint
+        addExpression();
     }
 
     void FunctionAreaContent::dropWidget(QWidget* widget) const
@@ -127,9 +121,8 @@ namespace Jam::Editor
         {
             _panel->remove(widget);
             delete widget;
-            notifyResize();
+            emit contentChanged();
             State::layerStack()->notifyStateChange(this);
         }
     }
-
 }  // namespace Jam::Editor

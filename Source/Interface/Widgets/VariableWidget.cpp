@@ -42,6 +42,7 @@ namespace Jam::Editor
     {
         Q_ASSERT(_state);
         View::widgetDefaults(this);
+        View::buttonDefaults(this);
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
@@ -95,7 +96,7 @@ namespace Jam::Editor
         _state->setValue(data);
 
         State::layerStack()->notifyStateChange(this);
-     }
+    }
 
     void VariableWidget::onDelete()
     {

@@ -55,8 +55,6 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _area = new VerticalScrollArea();
-        _func = new FunctionAreaContent();
-        _area->setWidget(_func);
 
         const auto tools = toolbar();
         constructTools(tools);
@@ -78,6 +76,15 @@ namespace Jam::Editor
                 { displayOptions((QWidget*)sender()); });
     }
 
+    void FunctionArea::constructContent()
+    {
+        _func = new FunctionAreaContent();
+        _area->setWidget(_func);
+        connect(_func, &FunctionAreaContent::contentChanged, this, [=]
+                { _area->invalidate(); });
+        _area->invalidate();
+    }
+
     void FunctionArea::displayOptions(QWidget* widget)
     {
         QMenu ctx(this);
@@ -95,37 +102,41 @@ namespace Jam::Editor
     void FunctionArea::addSlider() const
     {
         if (_func)
+        {
             _func->addSlider();
+            _area->invalidate();
+        }
     }
 
     void FunctionArea::addExpression() const
     {
         if (_func)
+        {
             _func->addExpression();
+            _area->invalidate();
+        }
     }
 
     void FunctionArea::addPoint() const
     {
         if (_func)
+        {
             _func->addPoint();
+            _area->invalidate();
+        }
     }
 
     bool FunctionArea::event(QEvent* event)
     {
-        switch ((AreaEvents)event->type())
+        switch ((int)event->type())
         {
         case ProjectOpened:
-            _func = new FunctionAreaContent();
-            _area->setWidget(_func);
+            constructContent();
             break;
-        case ProjectClosed:
-        case LayerSelect:
-        case SplitEvent:
-        case MergeLeftEvent:
-        case MergeRightEvent:
-        case SwitchContentEvent:
+        default:
             break;
         }
+
         return Area::event(event);
     }
 

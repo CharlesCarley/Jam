@@ -21,6 +21,7 @@
 */
 #include "State/ProjectManager.h"
 #include <iostream>
+#include "Interface/Defaults/Builtin.h"
 #include "FrameStack/FrameStackSerialize.h"
 #include "FrameStackManager.h"
 #include "Interface/Areas/OutputArea.h"
@@ -105,11 +106,7 @@ namespace Jam::Editor::State
         _path   = {};
         _layout = {};
 
-        if (const auto stack = layerStack())
-        {
-            stack->clear();
-            loadDefaultStack();
-        }
+        loadDefaultStack();
     }
 
     void ProjectManager::unload()
@@ -154,12 +151,22 @@ namespace Jam::Editor::State
 
     void ProjectManager::loadDefaultStack()
     {
-        StringStream ss;
-        ss << R"(<stack>)";
-        ss << R"(<grid origin="0,0" axis="25,1,25,1"/>)";
-        ss << R"(<function/>)";
-        ss << R"(</stack>)";
-        if (const auto stack = layerStack())
-            stack->load(ss);
+        layerStack()->clear();
+
+        Builtin::ByteArray ba;
+        Builtin::Layouts::getStack(ba);
+
+        if (!ba.empty())
+        {
+            StringStream ss;
+            ss.write((char*)ba.data(), (std::streamsize)ba.size());
+            layerStack()->load(ss);
+        }
+        else
+        {
+            const auto stack = layerStack();
+            stack->addLayer(new GridLayer());
+            stack->addLayer(new FunctionLayer());
+        }
     }
 }  // namespace Jam::Editor::State

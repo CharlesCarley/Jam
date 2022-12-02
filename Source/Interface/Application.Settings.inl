@@ -20,6 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#ifndef APPLICATION_INLINE_DEFINITION
+    #error This file should not be included here.
+#endif
 
 namespace Jam::Editor
 {
@@ -28,7 +31,7 @@ namespace Jam::Editor
         if (_flags & NoSettings)
             return;
 
-        //Log::writeLine("Saving settings");
+        // Log::writeLine("Saving settings");
 
         const PersistentSettings settings;
 
@@ -61,7 +64,7 @@ namespace Jam::Editor
             return;
 
         Log::clear();
-        //Log::writeLine("Loading settings");
+        // Log::writeLine("Loading settings");
 
         const PersistentSettings settings;
 

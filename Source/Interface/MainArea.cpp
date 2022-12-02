@@ -22,6 +22,7 @@
 #include "Interface/MainArea.h"
 #include <QVBoxLayout>
 #include "Area/AreaCreator.h"
+#include "Defaults/Builtin.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaBranch.h"
 #include "Interface/Area/AreaContent.h"
@@ -132,23 +133,17 @@ namespace Jam::Editor
     {
         delete _root;
         delete _layout;
-        StringStream ss;
-        ss << R"(<tree>)";
-        ss << R"( <branch ratio="0.0">)";
-        ss << R"(  <leaf type="1"/>)";
-        ss << R"(  <branch ratio="0.8">)";
-        ss << R"(   <branch ratio="1" orientation="2">)";
-        ss << R"(    <leaf type="2"/>)";
-        ss << R"(    <leaf type="0"/>)";
-        ss << R"(   </branch>)";
-        ss << R"(   <branch ratio="0.25" orientation="2">)";
-        ss << R"(    <leaf type="4"/>)";
-        ss << R"(    <leaf type="3"/>)";
-        ss << R"(   </branch>)";
-        ss << R"(  </branch>)";
-        ss << R"( </branch>)";
-        ss << R"(</tree>)";
-        construct(ss.str());
+
+        Builtin::ByteArray ba;
+        Builtin::Layouts::getLayout(ba);
+        if (!ba.empty())
+        {
+            StringStream ss;
+            ss.write((char*)ba.data(), (std::streamsize)ba.size());
+            construct(ss.str());
+        }
+        else  // unlikely
+            construct();
     }
 
     bool MainArea::event(QEvent* event)

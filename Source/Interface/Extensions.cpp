@@ -155,6 +155,13 @@ namespace Jam::Editor::View
         applyBaseClassDefaults(widget);
     }
 
+    void buttonDefaults(QWidget* widget)
+    {
+        Q_ASSERT(widget);
+        widget->setMaximumHeight(Const::ButtonHeight);
+        widget->setMinimumHeight(Const::ButtonHeight);
+    }
+
     void layoutDefaults(QLayout*  dst,
                         const int margin,
                         const int spacing)
@@ -212,9 +219,9 @@ namespace Jam::Editor::View
         Q_ASSERT(dst);
         applyColorRoles(dst, background, foreground);
         dst->setContentsMargins(0, 0, 0, 0);
-        dst->setMaximumHeight(Const::ButtonHeight);
         dst->setClearButtonEnabled(false);
         dst->setReadOnly(false);
+        buttonDefaults(dst);
     }
 
     void pushButtonDefaults(QPushButton* dst)
@@ -264,4 +271,28 @@ namespace Jam::Editor::View
         }
     }
 
+    QSize calcMaxHeight(const QLayout* layout)
+    {
+        const QMargins m = layout->contentsMargins();
+        const int      s = layout->spacing();
+
+        int h = m.top() + m.bottom(), w = 0;
+        if (layout)
+        {
+            int i = 0;
+            while (i < layout->count())
+            {
+                const auto item = layout->itemAt(i++);
+                if (const auto panel = item->widget())
+                {
+                    QSize sh = panel->sizeHint();
+                    h += sh.height();
+                    w = Max(w, sh.width());
+                    if (i < layout->count())
+                        h += s;
+                }
+            }
+        }
+        return {w, h};
+    }
 }  // namespace Jam::Editor::View

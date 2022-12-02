@@ -17,6 +17,7 @@ option(Jam_AUTO_RUN_TEST "Automatically run the test program." OFF)
 option(Jam_Window_GL_REGENERATE "Regenerate the OpenGL API from the Extras/OpenGL.py dictionary." OFF)
 option(Jam_JUST_MY_CODE "Enable the /JMC flag" ON)
 option(Jam_USE_STATIC_RUNTIME  "Build with the MultiThreaded(Debug) runtime library." ON)
+option(Jam_UPDATE_BUILTIN  "Update internal XML resources." OFF)
 
 set(Jam_BIN_DIR ${CMAKE_SOURCE_DIR}/Bin CACHE PATH "")
 include(Bootstrap)

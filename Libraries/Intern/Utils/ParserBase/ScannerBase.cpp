@@ -38,6 +38,16 @@ namespace Jam
         _line   = 1;
     }
 
+    size_t ScannerBase::save(const String& str)
+    {
+        return _stringTable.insert(str);
+    }
+
+    size_t ScannerBase::save(const int& val)
+    {
+        return _intTable.insert(val);
+    }
+
     void ScannerBase::cleanup()
     {
         _intTable.clear();

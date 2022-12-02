@@ -42,18 +42,11 @@ namespace Jam
         PathUtil    _file;
         size_t      _line;
 
-        size_t save(const String& str)
-        {
-            return _stringTable.insert(str);
-        }
+        size_t save(const String& str);
 
-        size_t save(const int& val)
-        {
-            return _intTable.insert(val);
-        }
+        size_t save(const int& val);
 
         virtual void cleanup();
-
 
         template <typename... Args>
         [[noreturn]] void syntaxError(
@@ -92,7 +85,7 @@ namespace Jam
         bool containsString(size_t id) const;
     };
 
-    template <typename ... Args>
+    template <typename... Args>
     void ScannerBase::syntaxError(const String& what, Args&&... args)
     {
         OutputStringStream oss;

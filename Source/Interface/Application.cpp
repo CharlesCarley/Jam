@@ -107,6 +107,15 @@ namespace Jam::Editor
 
 }  // namespace Jam::Editor
 
+
+// This is probably not a good idea to have these,
+// fragmented like this. But, it separates methods
+// by context, which makes it easier to manage.
+//
+// This will guarantee that if they are accidentally
+// included elsewhere the compiler will issue an error.
+#define APPLICATION_INLINE_DEFINITION 1
+
 #include "Application.Dialogs.inl"
 #include "Application.Events.inl"
 #include "Application.Menu.inl"

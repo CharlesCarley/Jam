@@ -20,6 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#ifndef APPLICATION_INLINE_DEFINITION
+    #error This file should not be included here.
+#endif
 #include <QDir>
 #include <QFileDialog>
 #include "State/ProjectManager.h"
@@ -73,8 +76,7 @@ namespace Jam::Editor
 
     void Application::clearProjectState()
     {
-        if (State::ProjectManager* state = State::projectState())
-            state->unload();
+        State::projectState()->unload();
 
         _cachedProjectPath = {};
 

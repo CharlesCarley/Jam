@@ -41,8 +41,6 @@ namespace Jam::Editor::State
 
     void FunctionLayer::render(RenderContext& canvas)
     {
-        // TODO: remove _size, _axis, and use _screen instead
-
         const Vec2F ss = _screen.size() * Half;
         _origin.x      = ss.x + _screen.offset().x;
         _origin.y      = ss.y - _screen.offset().y;
@@ -96,6 +94,12 @@ namespace Jam::Editor::State
             p0.y = _screen.axis().y.pointBy(R32(oy));
             if (_x == JtNpos)
                 _x = _stmt.indexOf("x");
+
+            if (_y == JtNpos)
+                _stmt.set("y", oy);
+            else
+                _stmt.set(_y, oy);
+
         }
 
         p0.x += _origin.x;

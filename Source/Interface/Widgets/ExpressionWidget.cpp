@@ -41,6 +41,7 @@ namespace Jam::Editor
     void ExpressionWidget::construct()
     {
         View::widgetDefaults(this);
+        View::buttonDefaults(this);
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);

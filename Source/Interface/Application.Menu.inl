@@ -20,6 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#ifndef APPLICATION_INLINE_DEFINITION
+#error This file should not be included here.
+#endif
 #include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/WindowMenuBar.h"
 

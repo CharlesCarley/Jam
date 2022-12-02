@@ -23,6 +23,7 @@
 #include <QPalette>
 #include "Utils/Array.h"
 
+class QLayoutItem;
 class QLineEdit;
 class QWidget;
 class QBoxLayout;
@@ -53,6 +54,8 @@ namespace Jam::Editor::View
 
     extern void widgetDefaults(QWidget* widget, const QWidget* parent);
 
+    extern void buttonDefaults(QWidget* widget);
+
     extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
 
     extern void localDefaults(QWidget* widget, int margin = 0, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
@@ -75,5 +78,9 @@ namespace Jam::Editor::View
 
     extern bool isLeaf(const QWidget* widget);
 
-    extern void clearLayout(QLayout* layout, SimpleArray<QWidget*>& dangled);
+    extern void clearLayout(QLayout*               layout,
+                            SimpleArray<QWidget*>& dangled);
+
+    extern QSize calcMaxHeight(const QLayout * layout);
+
 }  // namespace Jam::Editor::View

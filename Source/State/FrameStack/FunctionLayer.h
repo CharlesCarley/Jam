@@ -36,7 +36,7 @@ namespace Jam::Editor::State
         FunctionObjectArray _array;
         FunctionObjectArray _expr;
         VInt                _x{JtNpos};
-        // Todo: allow y step. VInt _y{JtNpos};
+        VInt                _y{JtNpos};  // TODO: support y stepping.
 
     public:
         FunctionLayer();

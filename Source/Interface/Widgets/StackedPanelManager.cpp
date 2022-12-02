@@ -22,6 +22,7 @@
 #include "StackedPanelManager.h"
 #include <QLayout>
 #include <QLayoutItem>
+#include "Interface/Extensions.h"
 #include "StackedPanel.h"
 
 namespace Jam::Editor
@@ -78,39 +79,23 @@ namespace Jam::Editor
 
     void StackedPanelManager::setGeometry(const QRect& rect)
     {
-        int             x1, y1, x2, y2;
-        qsizetype       i = 0;
-        const qsizetype n = _items.count();
+        int x1, y1, x2, y2;
         rect.getCoords(&x1, &y1, &x2, &y2);
-
-        while (i < n)
+        int i = 0;
+        while (i < _items.count())
         {
-            const auto item  = _items.at(i);
-            const auto panel = (StackedPanel*)item->widget();
-
-            int h = panel->sizeHint().height();
-            panel->setGeometry({x1, y1, x2 - x1, h});
-
-            y1 += h;
-            ++i;
+            auto item = _items.at(i++);
+            if (auto panel = item->widget())
+            {
+                int h = panel->sizeHint().height();
+                panel->setGeometry({x1, y1 + h * (i - 1), x2 - x1, h});
+            }
         }
     }
 
     QSize StackedPanelManager::totalHeight() const
     {
-        qsizetype       i = 0;
-        const qsizetype n = _items.count();
-
-        int h = 0;
-        int w = 0;
-        while (i < n)
-        {
-            const auto panel = (StackedPanel*)_items.at(i)->widget();
-            h += panel->sizeHint().height();
-            w = Max(panel->sizeHint().width(), w);
-            ++i;
-        }
-        return {w, h};
+        return View::calcMaxHeight(this);
     }
 
 }  // namespace Jam::Editor

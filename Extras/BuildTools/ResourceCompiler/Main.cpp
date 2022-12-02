@@ -12,28 +12,35 @@ namespace Jam::ResourceCompiler
 {
     enum Option
     {
-        OptOutputFileName,
+        OptOutFile,
         OptNameSpace,
+        OptClassName,
         OptionsMax,
     };
 
     constexpr CommandLine::Switch Switches[OptionsMax] = {
         {
-            OptOutputFileName,
-            'o',
-            nullptr,
-            "Specify the output file name",
-            true,
-            1,
-        },
+         OptOutFile,
+         'o',
+         nullptr,
+         "Specify the output file name",
+         true,
+         1,
+         },
+        {OptNameSpace,
+         'n',
+         nullptr,
+         "Specify a namespace name. (Resources by default)",
+         true,
+         1},
         {
-            OptNameSpace,
-            'n',
-            nullptr,
-            "Specify a root namespace",
-            true,
-            1,
-        },
+         OptClassName,
+         'c',
+         nullptr,
+         "Specify a class name. (Resource by default)",
+         true,
+         1,
+         },
     };
 
     struct Resource
@@ -48,6 +55,7 @@ namespace Jam::ResourceCompiler
     {
     private:
         String      _namespace;
+        String      _class;
         String      _output;
         StringArray _input;
         ResourceMap _resources;
@@ -61,12 +69,29 @@ namespace Jam::ResourceCompiler
             if (p.parse(argc, argv, Switches, OptionsMax) < 0)
                 return false;
 
-            _output    = p.string(OptOutputFileName, 0, "Resources");
-            _namespace = p.string(OptNameSpace, 0, "");
+            _output    = p.string(OptOutFile, 0, "Resources");
+            _namespace = p.string(OptNameSpace, 0, "Resources");
+            _class     = p.string(OptClassName, 0, "Resource");
             _input     = p.arguments();
 
             if (_input.empty())
                 throw MessageException("No input files");
+
+            if (!p.isPresent(OptOutFile))
+            {
+                Con::println("No output file name supplied, via -o");
+                Con::println(" Resources.[cpp|h] will be used instead");
+            }
+            if (!p.isPresent(OptClassName))
+            {
+                Con::println("No class name supplied, via -c");
+                Con::println(" class Resource will be used instead");
+            }
+            if (!p.isPresent(OptNameSpace))
+            {
+                Con::println("No namespace name supplied, via -n");
+                Con::println(" namespace Resources will be used instead");
+            }
             return true;
         }
 
@@ -121,18 +146,11 @@ namespace Jam::ResourceCompiler
             WriteUtils::write(out, 0x00, "#pragma once");
             WriteUtils::write(out, 0x00, "#include <vector>");
 
-            String namespaceName;
-
-            if (!_namespace.empty())
-                Su::join(namespaceName, _namespace);
-            else
-                namespaceName = "Resources";
-
-            WriteUtils::write(out, 0x00, "namespace ", namespaceName);
+            WriteUtils::write(out, 0x00, "namespace ", _namespace);
             WriteUtils::write(out, 0x00, '{');
             WriteUtils::write(out, 0x04, "using ByteArray = std::vector<uint8_t>;");
             WriteUtils::write(out, 0x00, '\n');
-            WriteUtils::write(out, 0x04, "class Resource");
+            WriteUtils::write(out, 0x04, "class ", _class);
             WriteUtils::write(out, 0x04, '{');
             WriteUtils::write(out, 0x04, "public:");
 
@@ -151,7 +169,7 @@ namespace Jam::ResourceCompiler
             }
 
             WriteUtils::write(out, 0x04, "};");
-            WriteUtils::write(out, 0x00, "} // namespace ", namespaceName);
+            WriteUtils::write(out, 0x00, "} // namespace ", _namespace);
         }
 
         void writeSource(OStream& out)
@@ -160,7 +178,7 @@ namespace Jam::ResourceCompiler
             String namespaceName;
 
             if (!_namespace.empty())
-                Su::join(namespaceName, _namespace);
+                namespaceName = _namespace;
             else
                 namespaceName = "Resources";
 
@@ -178,7 +196,9 @@ namespace Jam::ResourceCompiler
                 String methodName = Su::join("get", StringUtils::toUpperFirst(name));
                 WriteUtils::write(out,
                                   0x04,
-                                  "void Resource::",
+                                  "void ",
+                                  _class,
+                                  "::",
                                   methodName,
                                   "(ByteArray &dest)");
                 WriteUtils::write(out, 0x04, '{');

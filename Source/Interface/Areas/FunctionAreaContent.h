@@ -28,35 +28,39 @@ namespace Jam::Editor
     {
         class ExpressionStateObject;
         class VariableStateObject;
-    }
+    }  // namespace State
 
     class StringWidget;
 
     class FunctionAreaContent final : public StackedPanelContent
     {
+    public:
         Q_OBJECT
+    signals:
+        void contentChanged() const;
+
     private:
         StackedPanel* _panel{nullptr};
+        bool          _delayEvent{false};
 
     public:
         explicit FunctionAreaContent();
         ~FunctionAreaContent() override;
 
-        void addSlider(State::VariableStateObject * obj = nullptr) const;
+        void addSlider(State::VariableStateObject* obj = nullptr) const;
 
-        void addExpression(State::ExpressionStateObject * obj = nullptr) const;
+        void addExpression(State::ExpressionStateObject* obj = nullptr) const;
 
         void addPoint() const;
 
     private:
         void construct();
 
-        void loadState() const;
+        void loadState();
 
-        void notifyResize() const;
+        // void notifyResize() const;
 
-        void dropWidget(QWidget * widget) const;
-
+        void dropWidget(QWidget* widget) const;
     };
 
 }  // namespace Jam::Editor

@@ -44,13 +44,13 @@ namespace Jam::Editor
         explicit StackedPanel(QWidget* parent = nullptr);
         ~StackedPanel() override;
 
-        void addWidget(QWidget* widget, int expand = 1);
+        void addWidget(QWidget* widget, int expand = 1) const;
 
-        void remove(QWidget* widget);
+        void remove(QWidget* widget) const;
 
-        void addLayout(QLayout* widget, int expand = 1);
+        void addLayout(QLayout* widget, int expand = 1) const;
 
-        void setLabel(const QString& label);
+        void setLabel(const QString& label) const;
 
         QSize sizeHint() const override;
 

@@ -41,6 +41,8 @@ namespace Jam::Editor
     private:
         void construct();
         void constructTools(const AreaToolBar* tools);
+        void constructContent();
+
         void displayOptions(QWidget* widget);
 
         void addSlider() const;

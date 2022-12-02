@@ -50,8 +50,6 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _area = new VerticalScrollArea();
-        _area->setWidget(new GridAreaContent());
-
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
         setLayout(layout);
@@ -59,17 +57,12 @@ namespace Jam::Editor
 
     bool GridArea::event(QEvent* event)
     {
-        switch ((AreaEvents)event->type())
+        switch ((int)event->type())
         {
         case ProjectOpened:
             _area->setWidget(new GridAreaContent());
+            _area->invalidate();
             break;
-        case ProjectClosed:
-        case LayerSelect:
-        case SplitEvent:
-        case MergeLeftEvent:
-        case MergeRightEvent:
-        case SwitchContentEvent:
         default:
             break;
         }

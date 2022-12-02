@@ -4,8 +4,6 @@ include(VsDependentUpon)
 include(Bootstrap)
 qt_standard_project_setup()
 
-
-
 set(TargetNameLib Editor.Source)
 set(TargetName    Editor)
 
@@ -18,6 +16,8 @@ set_property(GLOBAL PROPERTY
              AUTOGEN_SOURCE_GROUP  
              "${ContentFolder}/Generated")
 
+
+# -----------------------------------------------------------------------------
 set_group(TargetName_SRC
   ${SourceFolder}/Utils:Utils/*.cpp
 
@@ -35,6 +35,9 @@ set_group(TargetName_SRC
   ${SourceFolder}/Interface/Areas:Interface/Areas/*.cpp
   ${SourceFolder}/Interface/Style:Interface/Style/*.cpp
 
+  ${SourceFolder}/Interface/Defaults:Interface/Defaults/*.cpp
+  ${SourceFolder}/Interface/Defaults:Interface/Defaults/*.xml
+ 
   ${SourceFolder}/State:State/*.cpp
   ${SourceFolder}/State/FrameStack:State/FrameStack/*.cpp
   ${SourceFolder}/State/IO:State/IO/*.cpp
@@ -50,6 +53,7 @@ set_group(TargetName_SRC
   ${HeaderFolder}/Interface/Area:Interface/Area/*.h
 
   ${HeaderFolder}/Interface/Style:Interface/Style/*.h
+  ${HeaderFolder}/Interface/Defaults:Interface/Defaults/*.h
 
   ${HeaderFolder}/Interface/Dialogs:Interface/Dialogs/*.h
   ${HeaderFolder}/Interface/Widgets:Interface/Widgets/*.h
@@ -81,11 +85,25 @@ vs_dependent_upon(Interface/Area/AreaNode.cpp
 vs_dependent_upon(Interface/MainArea.cpp
     Interface/MainArea.Creator.inl
 )
-include_directories(. ${Jam_INCLUDE})
 
-add_library(${TargetNameLib} ${TargetName_SRC})
-set_target_properties(${TargetNameLib} 
-    PROPERTIES FOLDER "${TargetGroup}")
+set(XmlDefaults)
+if (Jam_UPDATE_BUILTIN)
+    set(Xml_RES
+        Interface/Defaults/Layout.xml
+        Interface/Defaults/Stack.xml
+    )
+    add_resources(XmlDefaults 
+        ${CMAKE_CURRENT_SOURCE_DIR}/Interface/Defaults 
+            Builtin "Jam::Builtin"  Layouts
+            ${Xml_RES}
+    )
+    source_group("${ContentFolder}" FILES  ${Xml_RES} )
+endif()
+
+include_directories(. ${Jam_INCLUDE})
+add_library(${TargetNameLib} ${TargetName_SRC} ${XmlDefaults})
+
+set_target_properties(${TargetNameLib} PROPERTIES FOLDER "${TargetGroup}")
 
 target_link_libraries(${TargetNameLib} 
     Qt6::Widgets 
@@ -93,6 +111,8 @@ target_link_libraries(${TargetNameLib}
     Qt6::Gui 
     Qt6::Svg 
     ${Jam_LIBRARY})
+
+
 
 # -----------------------------------------------------------------------------
 qt_add_resources(TargetName_RES Interface/Icons/icons.qrc)

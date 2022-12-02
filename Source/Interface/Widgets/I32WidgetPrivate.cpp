@@ -46,10 +46,8 @@ namespace Jam::Editor
 
     void I32WidgetPrivate::construct()
     {
-        View::applyColorRoles(this, QPalette::LinkVisited);
-        setContentsMargins(0, 0, 0, 0);
-        setAutoFillBackground(true);
-        setMinimumHeight(20);
+        View::localDefaults(this);
+        View::buttonDefaults(this);
         Const::copyStylePalette(_pal);
     }
 

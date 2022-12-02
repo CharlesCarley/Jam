@@ -42,8 +42,7 @@ namespace Jam::Editor
     void VariableStepWidget::construct()
     {
         View::emptyWidget(this);
-        setMinimumHeight(Const::ButtonHeight);
-        setMaximumHeight(Const::ButtonHeight);
+        View::buttonDefaults(this);
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout, 2, 1);
@@ -87,11 +86,11 @@ namespace Jam::Editor
     {
         dest.first = new QLabel(name);
         View::localDefaults(dest.first, 0);
+        View::buttonDefaults(dest.first);
         dest.first->setFocusPolicy(Qt::NoFocus);
 
         dest.second = new QLineEdit();
         View::lineEditDefaults(dest.second, QPalette::Base);
-        dest.second->setMinimumWidth(Const::ButtonHeight);
         dest.second->setFocusPolicy(Qt::StrongFocus);
 
         connect(dest.second,

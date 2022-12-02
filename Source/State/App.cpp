@@ -53,9 +53,9 @@ namespace Jam::Editor::State
 
     void App::setup()
     {
+        _output     = new OutputLogMonitor();
         _layerStack = new FrameStackManager();
         _project    = new ProjectManager();
-        _output     = new OutputLogMonitor();
     }
 
     void App::finalize()
@@ -78,16 +78,22 @@ namespace Jam::Editor::State
 
     ProjectManager* App::projectState() const
     {
+        if (!_project)
+            throw Exception("Invalid project instance.");
         return _project;
     }
 
     OutputLogMonitor* App::outputState() const
     {
+        if (!_output)
+            throw Exception("Invalid output instance.");
         return _output;
     }
 
     FrameStackManager* App::layerStack() const
     {
+        if (!_layerStack)
+            throw Exception("Invalid stack instance.");
         return _layerStack;
     }
 

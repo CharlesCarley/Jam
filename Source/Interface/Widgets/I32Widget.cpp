@@ -49,12 +49,15 @@ namespace Jam::Editor
     void I32Widget::construct()
     {
         View::applyColorRoles(this);
+        View::buttonDefaults(this);
 
         _layout = new QHBoxLayout();
         View::layoutDefaults(_layout, Const::AreaPadding);
 
         _i32  = new I32WidgetPrivate();
+
         _edit = new QLineEdit();
+        View::buttonDefaults(_edit);
         _edit->setVisible(false);
         View::applyColorRoles(_edit, QPalette::Base);
 

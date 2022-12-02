@@ -29,6 +29,8 @@ namespace Jam::Editor
     public:
         explicit VerticalScrollArea(QWidget* parent = nullptr);
 
+        void invalidate() const;
+
     private:
         void resizeEvent(QResizeEvent* event) override;
     };
