@@ -37,8 +37,9 @@
 namespace Jam::Editor
 {
     OutputArea::OutputArea(AreaCreator* creator,
+                           size_t       refId,
                            QWidget*     parent) :
-        Area(creator, AtOutput, parent)
+        Area(creator, AtOutput, refId, parent)
     {
         construct();
     }

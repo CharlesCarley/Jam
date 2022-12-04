@@ -24,7 +24,6 @@
 #include <QBoxLayout>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "R32WidgetPrivate.h"
 #include "VariableStepWidget.h"
@@ -65,12 +64,38 @@ namespace Jam::Editor
         connectSignals();
     }
 
+    
+    void R32Widget::connectSignals()
+    {
+        if (_step)
+        {
+            connect(_step,
+                    &VariableStepWidget::stepParamChange,
+                    this,
+                    &R32Widget::onStepParamChange);
+        }
+
+        if (_value)
+        {
+            connect(_value,
+                    &R32WidgetPrivate::doubleClicked,
+                    this,
+                    &R32Widget::onDoubleClicked);
+            connect(_value,
+                    &R32WidgetPrivate::valueChanged,
+                    this,
+                    &R32Widget::onValueChanged);
+        }
+    }
+
+
+
     void R32Widget::editingFinished() const
     {
         makeEditable(false);
     }
 
-    void R32Widget::doubleClicked() const
+    void R32Widget::onDoubleClicked() const
     {
         makeEditable(true);
     }
@@ -80,15 +105,18 @@ namespace Jam::Editor
         makeEditable(false);
     }
 
-    void R32Widget::onStepParamChange(const VariableStepData& data) const
+    void R32Widget::onStepParamChange(const VariableStepData& data)
     {
         makeEditable(false);
-        setLabel(data.name);
-        setRange(data.range.x, data.range.y);
-        setRate(data.rate);
-        setValue(data.value);
-
+        _data = data;
+        _value->setStepData(_data);
         emit stepDataChanged(data);
+    }
+
+    void R32Widget::onValueChanged(const R32& value)
+    {
+        _data.value = value;
+        emit stepDataChanged(_data);
     }
 
     void R32Widget::makeEditable(const bool edit) const
@@ -101,7 +129,7 @@ namespace Jam::Editor
 
         if (edit)
         {
-            _step->setValue(_value->value());
+            _step->setStepData(_data);
             _step->setFocus(Qt::MouseFocusReason);
             _value->setFocus(Qt::NoFocusReason);
         }
@@ -112,36 +140,11 @@ namespace Jam::Editor
         }
     }
 
-    void R32Widget::connectSignals()
-    {
-        if (_step)
-        {
-            connect(_step,
-                    &VariableStepWidget::finished,
-                    this,
-                    &R32Widget::onStepParamChange);
-        }
-
-        if (_value)
-        {
-            connect(_value,
-                    &R32WidgetPrivate::onDoubleClick,
-                    this,
-                    &R32Widget::doubleClicked);
-
-            connect(_value,
-                    &R32WidgetPrivate::valueChanged,
-                    this,
-                    [this](const R32 v)
-                    { emit valueChanged(v); });
-        }
-    }
-
     void R32Widget::mouseDoubleClickEvent(QMouseEvent* event)
     {
         if (!event)
             return;
-        doubleClicked();
+        onDoubleClicked();
         event->accept();
     }
 
@@ -159,37 +162,32 @@ namespace Jam::Editor
             QWidget::keyPressEvent(event);
     }
 
-    void R32Widget::setValue(const R32& value) const
+    void R32Widget::setValue(const R32& value)
     {
+        _data.value = value;
         if (_value)
-            _value->setValue(value);
-        if (_step)
-            _step->setValue(value);
+            _value->setValue(_data.value);
     }
 
-    void R32Widget::setRange(const R32& min, const R32& max) const
+    void R32Widget::setRange(const R32& min, const R32& max)
     {
+        _data.range = {min, max};
         if (_value)
-            _value->setRange({min, max});
-        if (_step)
-            _step->setRange({min, max});
+            _value->setRange(_data.range);
     }
 
-    void R32Widget::setRate(const R32& value) const
+    void R32Widget::setRate(const R32& rate)
     {
+        _data.rate = rate;
         if (_value)
-            _value->setRate(value);
-        if (_step)
-            _step->setRate(value);
+            _value->setRate(_data.value);
     }
 
-    void R32Widget::setLabel(const String& value) const
+    void R32Widget::setLabel(const String& label)
     {
+        _data.name = label;
         if (_value)
-            _value->setLabel(Su::join(value, " := "));
-
-        if (_step)
-            _step->setName(value);
+            _value->setLabel(_data.name);
     }
 
     R32 R32Widget::value() const

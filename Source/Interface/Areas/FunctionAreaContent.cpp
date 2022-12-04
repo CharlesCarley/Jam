@@ -26,7 +26,6 @@
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/ExpressionWidget.h"
 #include "Interface/Widgets/StackedPanel.h"
-#include "Interface/Widgets/StringWidget.h"
 #include "Interface/Widgets/VariableWidget.h"
 #include "State/App.h"
 #include "State/FrameStack/FunctionLayer.h"
@@ -45,84 +44,90 @@ namespace Jam::Editor
     {
         View::applyColorRoles(this);
         _panel = new StackedPanel();
-
         _panel->setLabel("Functions");
 
         addPanel(_panel);
-        loadState();
     }
 
-    void FunctionAreaContent::loadState()
+    VariableWidget* FunctionAreaContent::addSlider(
+        const State::VariableStateObject* obj) const
     {
-        const auto layer = State::functionLayer();
-        _delayEvent      = true;
-
-        for (const auto object : layer->objects())
-        {
-            if (object->type() == State::FstExpression)
-                addExpression((State::ExpressionStateObject*)object);
-            if (object->type() == State::FstVariable)
-                addSlider((State::VariableStateObject*)object);
-        }
-        _delayEvent = false;
-    }
-
-    void FunctionAreaContent::addSlider(State::VariableStateObject* obj) const
-    {
-        if (obj == nullptr)
-            obj = State::functionLayer()->createVariable();
-
-        if (obj == nullptr)  // unlikely
-            throw Exception("invalid state object");
-
-        const auto var = new VariableWidget(obj);
-        connect(var,
-                &VariableWidget::wantsToDelete,
-                this,
-                [=]
-                { dropWidget((QWidget*)sender()); });
-
+        const auto var = new VariableWidget();
         _panel->addWidget(var);
+        if (obj)
+        {
+            var->setRefId(obj->id());
+            var->setRange(obj->range());
+            var->setValue(obj->value());
+            var->setRate(obj->rate());
+            var->setName(obj->name());
+        }
 
-        if (!_delayEvent)
-            emit contentChanged();
+        connect(var,
+                &VariableWidget::deleteVariable,
+                this,
+                &FunctionAreaContent::onDeleteVariable);
+        connect(var,
+                &VariableWidget::variableChanged,
+                this,
+                &FunctionAreaContent::variableChanged);
+
+        return var;
     }
 
-    void FunctionAreaContent::addExpression(State::ExpressionStateObject* obj) const
+    ExpressionWidget* FunctionAreaContent::addExpression(
+        const State::Expression* obj) const
     {
-        if (obj == nullptr)
-            obj = State::functionLayer()->createExpression();
-
-        if (obj == nullptr)  // unlikely
-            throw Exception("invalid state object");
-
-        const auto exp = new ExpressionWidget(obj);
-        connect(exp,
-                &ExpressionWidget::wantsToDelete,
-                this,
-                [=]
-                { dropWidget((QWidget*)sender()); });
-
+        const auto exp = new ExpressionWidget();
         _panel->addWidget(exp);
+        if (obj)
+        {
+            exp->setRefId(obj->id());
+            exp->setText(obj->text());
+        }
 
-        if (!_delayEvent)
-            emit contentChanged();
+        connect(exp,
+                &ExpressionWidget::deleteExpression,
+                this,
+                &FunctionAreaContent::onDeleteExpression);
+        connect(exp,
+                &ExpressionWidget::expressionChanged,
+                this,
+                &FunctionAreaContent::expressionChanged);
+        return exp;
     }
 
     void FunctionAreaContent::addPoint() const
     {
         // TODO addPoint
-        addExpression();
+        //addExpression();
     }
 
-    void FunctionAreaContent::dropWidget(QWidget* widget) const
+    void FunctionAreaContent::onDeleteGeneral() const
     {
-        if (widget)
+        if (QObject* obj = sender();
+            obj && obj->isWidgetType())
         {
-            _panel->remove(widget);
-            delete widget;
-            emit contentChanged();
-            State::layerStack()->notifyStateChange(this);
+            QWidget* widget = (QWidget*)obj;
+            // remove it from the panel now, but delay delete it
+            widget->setParent(nullptr);  // detached from tree
+            _panel->remove(widget);      // widget not deleted
         }
+    }
+
+    void FunctionAreaContent::onDeleteVariable(const size_t refid)
+    {
+        // This must be linked back to
+        // FunctionArea::onDeleteVariable
+        onDeleteGeneral();
+        emit deleteVariable(refid, (VariableWidget*)sender());
+    }
+
+    void FunctionAreaContent::onDeleteExpression(const size_t refid)
+    {
+        // This must be linked back to
+        // FunctionArea::onDeleteExpression
+        onDeleteGeneral();
+        emit deleteExpression(refid, (ExpressionWidget*)sender());
     }
 }  // namespace Jam::Editor

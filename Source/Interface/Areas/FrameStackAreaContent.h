@@ -46,6 +46,7 @@ namespace Jam::Editor
 
     public:
         explicit FrameStackAreaContent(QWidget* parent = nullptr);
+
         ~FrameStackAreaContent() override;
 
         void resetAxis();

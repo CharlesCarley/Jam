@@ -35,16 +35,25 @@ foreach (file ${TestTarget_SRC})
     target_link_libraries(
         ${SubTargetName} 
         ${Jam_LIBRARY}
-        Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Svg Qt6::Test Qt6::Platform
+        Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Svg Qt6::Test
         Editor.Source
     )
 
     set_target_properties(${SubTargetName} 
         PROPERTIES FOLDER "${TargetGroup}/QT"
+        WIN32_EXECUTABLE   OFF
     )
 
     copy_target(${SubTargetName} ${Bootstrap_DIR})
     
+    if (Jam_AUTO_RUN_TEST)
+        add_custom_command(TARGET  ${SubTargetName} POST_BUILD
+            COMMENT  "Running ${SubTargetName}"
+            WORKING_DIRECTORY     ${Bootstrap_DIR}
+            COMMAND $<TARGET_FILE:${SubTargetName}>
+        )
+    endif()
+
 endforeach()
 
 

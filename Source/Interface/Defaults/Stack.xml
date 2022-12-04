@@ -1,8 +1,8 @@
 <stack>
   <grid/>
   <func>
-    <var name="a" value="1" range="-1, 1" rate="0.1"/>
-    <var name="b" value="0" range="-5, 5" rate="0.1"/>
-    <expr text="a*(x-b)^2"/>
+    <var name="a" value="1" range="-1, 1" rate="0.1" ref="1"/>
+    <var name="b" value="0" range="-5, 5" rate="0.1" ref="1"/>
+    <expr text="a*(x-b)^2" ref="2"/>
   </func>
 </stack>

@@ -33,8 +33,10 @@
 namespace Jam::Editor
 {
 
-    GridArea::GridArea(AreaCreator* creator, QWidget* parent) :
-        Area(creator, AtGrid, parent)
+    GridArea::GridArea(AreaCreator* creator,
+                       size_t       refId,
+                       QWidget*     parent) :
+        Area(creator, AtGrid, refId, parent)
     {
         construct();
     }

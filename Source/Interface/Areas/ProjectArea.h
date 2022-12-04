@@ -44,7 +44,9 @@ namespace Jam::Editor
         String       _fullFilePath;
 
     public:
-        explicit ProjectArea(AreaCreator* creator, QWidget* parent = nullptr);
+        explicit ProjectArea(AreaCreator* creator,
+                             size_t       refId  = JtNpos,
+                             QWidget*     parent = nullptr);
         ~ProjectArea() override;
 
     private:

@@ -20,6 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Area/Area.h"
+#include "AreaRefId.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Constants.h"
 #include "Interface/Events/BranchEvent.h"
@@ -29,10 +30,12 @@ namespace Jam::Editor
 {
     Area::Area(AreaCreator* creator,
                int32_t      type,
+               size_t       refId,
                QWidget*     parent) :
         QWidget(parent),
         _creator(creator),
-        _type(type)
+        _type(type),
+        _refId{AreaRefId::updateRef(refId)}
     {
         constructBase(type);
     }

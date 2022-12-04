@@ -28,41 +28,61 @@
 
 namespace Jam::Editor::State
 {
+    using FunctionObjectMap = HashTable<size_t, FunctionStateObject*>;
+
     class FunctionLayer final : public BaseLayer
     {
     private:
         Vec2F               _origin{0.f, 0.f};
         Eq::Statement       _stmt;
-        FunctionObjectArray _array;
+        FunctionObjectMap   _memory;
         FunctionObjectArray _expr;
+        FunctionObjectArray _vars;
         VInt                _x{JtNpos};
         VInt                _y{JtNpos};  // TODO: support y stepping.
+        size_t              _var{0x3E5};
 
     public:
         FunctionLayer();
         ~FunctionLayer() override;
 
-        VariableStateObject*   createVariable();
-        ExpressionStateObject* createExpression();
+        VariableStateObject*   createVariable(size_t loc = JtNpos);
+        ExpressionStateObject* createExpression(size_t loc = JtNpos);
 
-        void removeVariable(VariableStateObject* vso);
-        void removeExpression(ExpressionStateObject* eso);
+        ExpressionStateObject* findExpression(size_t refId);
+        VariableStateObject*   findVariable(size_t refId);
 
-        const FunctionObjectArray& objects() const;
+        void findStateObjects(size_t refId, FunctionObjectArray &dest) const;
+
+        void removeVariable(size_t refId);
+        void removeExpression(size_t refId);
+
+        const FunctionObjectArray& expressions() const;
+        const FunctionObjectArray& variables() const;
+        const FunctionObjectMap&   objects() const;
+
+        bool update() override;
 
     private:
         Vec2F eval(R32 i0, const Eq::SymbolArray& code);
 
         void render(RenderContext& canvas) override;
-
-        bool update() override;
-
         void renderExpression(RenderContext& canvas, I32 i0);
     };
 
-    inline const FunctionObjectArray& FunctionLayer::objects() const
+    inline const FunctionObjectArray& FunctionLayer::expressions() const
     {
-        return _array;
+        return _expr;
+    }
+
+    inline const FunctionObjectArray& FunctionLayer::variables() const
+    {
+        return _vars;
+    }
+
+    inline const FunctionObjectMap& FunctionLayer::objects() const
+    {
+        return _memory;
     }
 
 }  // namespace Jam::Editor::State

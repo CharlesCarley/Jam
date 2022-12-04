@@ -19,21 +19,17 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "ExpressionWidget.h"
-#include <qboxlayout.h>
-#include "IconButton.h"
-#include "Interface/Constants.h"
+#include "Interface/Widgets/ExpressionWidget.h"
+#include <QBoxLayout>
 #include "Interface/Extensions.h"
-#include "State/App.h"
-#include "StringWidget.h"
-#include "State/FrameStackManager.h"
+#include "Interface/Widgets/IconButton.h"
+#include "Interface/Widgets/StringWidget.h"
 
 namespace Jam::Editor
 {
 
-    ExpressionWidget::ExpressionWidget(State::ExpressionStateObject* eso, QWidget* parent) :
-        QWidget(parent),
-        _state(eso)
+    ExpressionWidget::ExpressionWidget(QWidget* parent) :
+        QWidget(parent)
     {
         construct();
     }
@@ -47,10 +43,7 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _line = new StringWidget();
-        if (_state)
-            _line->setText(_state->text());
-
-        _del = IconButton::create(Icons::Delete);
+        _del  = IconButton::create(Icons::Delete);
         View::copyColorRoles(_del, this);
 
         layout->addWidget(_line, 1);
@@ -62,37 +55,19 @@ namespace Jam::Editor
 
     void ExpressionWidget::connectSignals()
     {
-        connect(_line,
-                &StringWidget::editingFinished,
-                this,
-                &ExpressionWidget::textEntered);
-        connect(_del,
-                &QPushButton::clicked,
-                this,
-                [=]
-                { onDelete(); });
-    }
-
-    void ExpressionWidget::onDelete()
-    {
-        State::functionLayer()->removeExpression(_state);
-        _state = nullptr;
-        emit wantsToDelete();
-    }
-
-    void ExpressionWidget::textEntered(const String& text) const
-    {
-        if (_state)
-        {
-            _state->setText(text);
-            State::layerStack()->notifyStateChange(this);
-        }
+        connect(_line, &StringWidget::editingFinished, this, [=](const String& text)
+                { emit expressionChanged(_refId, text); });
+        connect(_del, &QPushButton::clicked, this, [=]
+                { emit deleteExpression(_refId); });
     }
 
     void ExpressionWidget::setText(const String& text) const
     {
         _line->setText(text);
-        textEntered(text);
     }
 
+    String ExpressionWidget::text() const
+    {
+        return _line->text();
+    }
 }  // namespace Jam::Editor

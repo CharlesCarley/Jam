@@ -91,6 +91,7 @@ namespace Jam::Editor
 
         dest.second = new QLineEdit();
         View::lineEditDefaults(dest.second, QPalette::Base);
+        dest.second->setMinimumWidth(Const::ButtonHeight);
         dest.second->setFocusPolicy(Qt::StrongFocus);
 
         connect(dest.second,
@@ -103,12 +104,27 @@ namespace Jam::Editor
                 [=]
                 {
                     onTextChanged();
-                    emit finished(_data);
+                    emit stepParamChange(_data);
                 });
+    }
+
+    void VariableStepWidget::setStepData(const VariableStepData& data)
+    {
+        _data = data;
+        _lock = true;
+        _name.second->setText(QString::fromStdString(_data.name));
+        _min.second->setText(QString::number((qreal)_data.range.x));
+        _max.second->setText(QString::number((qreal)_data.range.y));
+        _rate.second->setText(QString::number((qreal)_data.rate));
+        _value.second->setText(QString::number((qreal)_data.value));
+        _lock = false;
     }
 
     void VariableStepWidget::onTextChanged()
     {
+        if (_lock)
+            return;
+
         const String s = ((QLineEdit*)sender())->text().toStdString();
 
         if (sender() == _name.second)
@@ -154,7 +170,7 @@ namespace Jam::Editor
         if (event->lostFocus())
         {
             if (!anyFocused())
-                emit finished(_data);
+                emit stepParamChange(_data);
         }
     }
 
@@ -163,28 +179,4 @@ namespace Jam::Editor
         QWidget::focusInEvent(event);
     }
 
-    void VariableStepWidget::setName(const String& value)
-    {
-        _name.second->setText(QString::fromStdString(value));
-        _data.name = value;
-    }
-
-    void VariableStepWidget::setRange(const Vec2F& value)
-    {
-        _min.second->setText(QString::fromStdString(Char::toString(value.x)));
-        _max.second->setText(QString::fromStdString(Char::toString(value.y)));
-        _data.range = value;
-    }
-
-    void VariableStepWidget::setRate(const R32& value)
-    {
-        _rate.second->setText(QString::fromStdString(Char::toString(value)));
-        _data.rate = value;
-    }
-
-    void VariableStepWidget::setValue(const R32& value)
-    {
-        _value.second->setText(QString::fromStdString(Char::toString(value)));
-        _data.value = value;
-    }
 }  // namespace Jam::Editor

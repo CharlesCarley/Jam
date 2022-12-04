@@ -73,10 +73,6 @@ namespace Jam::Editor
             if ((int)event->type() == LayerUpdate)
             {
                 // Do not relay this any further.
-                // It's handled on the layer side when
-                // the app receives it, then unlocks it.
-                // It's allowed to propagate through the
-                // tree in-order to force an update..
                 _area->update();
                 return false;
             }

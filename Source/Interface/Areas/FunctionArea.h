@@ -21,34 +21,61 @@
 */
 #pragma once
 #include "Interface/Area/Area.h"
+#include "State/FrameStack/FunctionLayer.h"
 
 namespace Jam::Editor
 {
+    struct VariableStepData;
+    class VariableWidget;
+    class ExpressionWidget;
     class VerticalScrollArea;
     class FunctionAreaContent;
+
+    using ExpressionMap = HashTable<size_t, ExpressionWidget*>;
+    using VariableMap   = HashTable<size_t, VariableWidget*>;
 
     class FunctionArea final : public Area
     {
         Q_OBJECT
     private:
-        VerticalScrollArea*  _area{nullptr};
-        FunctionAreaContent* _func{nullptr};
+        VerticalScrollArea*   _area{nullptr};
+        FunctionAreaContent*  _func{nullptr};
+        State::FunctionLayer* _function{nullptr};
+
+        ExpressionMap _expressions;
+        VariableMap   _variables;
 
     public:
-        explicit FunctionArea(AreaCreator* creator, QWidget* parent = nullptr);
+        explicit FunctionArea(AreaCreator* creator,
+                              size_t       refId  = JtNpos,
+                              QWidget*     parent = nullptr);
         ~FunctionArea() override;
+
+        VariableWidget* addSlider();
+
+        ExpressionWidget* addExpression();
+
+        void addPoint() const;
 
     private:
         void construct();
+
+        void loadStack();
+
         void constructTools(const AreaToolBar* tools);
+
         void constructContent();
 
         void displayOptions(QWidget* widget);
 
-        void addSlider() const;
-        void addExpression() const;
-        void addPoint() const;
+        void onDeleteVariable(size_t refid, const VariableWidget* widget);
 
-        bool event(QEvent* event) override;
+        void onDeleteExpression(size_t refid, const ExpressionWidget* widget);
+
+        void onVariableChanged(size_t refid, const VariableStepData& data) const;
+
+        void onExpressionChanged(size_t refid, const String& text) const;
+
+        void onContentChanged() const;
     };
 }  // namespace Jam::Editor

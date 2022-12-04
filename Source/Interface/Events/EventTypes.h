@@ -21,6 +21,7 @@
 */
 #pragma once
 #include <QEvent>
+#include "State/FrameStack/FunctionStateObject.h"
 
 namespace Jam::Editor
 {
@@ -35,5 +36,7 @@ namespace Jam::Editor
         ProjectClosed,       // QEvent
         LayerSelect,         // LayerSelectEvent
         LayerUpdate,         // QEvent
+        UnitTestEventId,     // QEvent
     };
+
 }  // namespace Jam::Editor

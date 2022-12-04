@@ -33,8 +33,10 @@
 
 namespace Jam::Editor
 {
-    FrameStackArea::FrameStackArea(AreaCreator* creator, QWidget* parent) :
-        Area(creator, AtFrameStack, parent)
+    FrameStackArea::FrameStackArea(AreaCreator* creator,
+                                   size_t       refId,
+                                   QWidget*     parent) :
+        Area(creator, AtFrameStack, refId, parent)
     {
         construct();
     }

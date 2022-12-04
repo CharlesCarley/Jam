@@ -38,6 +38,7 @@ namespace Jam::Editor
 
     public:
         explicit OutputArea(AreaCreator* creator,
+                            size_t       refId = JtNpos,
                             QWidget*     parent = nullptr);
         ~OutputArea() override;
 

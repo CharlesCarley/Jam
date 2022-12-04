@@ -29,8 +29,11 @@
 
 namespace Jam::Editor
 {
-    TodoArea::TodoArea(AreaCreator* creator, int32_t type, QWidget* parent) :
-        Area(creator, type, parent),
+    TodoArea::TodoArea(AreaCreator* creator,
+                       int32_t      type,
+                       size_t       refId,
+                       QWidget*     parent) :
+        Area(creator, type, refId, parent),
         _todoType(type)
     {
         construct();

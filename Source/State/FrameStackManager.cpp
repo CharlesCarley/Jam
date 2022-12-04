@@ -47,7 +47,13 @@ namespace Jam::Editor::State
     void FrameStackManager::load(IStream& data) const
     {
         if (_stack)
-            _stack->serialize(data);
+            _stack->load(data);
+    }
+
+    void FrameStackManager::save(OStream& data) const
+    {
+        if (_stack)
+            _stack->save(data);
     }
 
     void FrameStackManager::addLayer(BaseLayer* layer) const
@@ -65,18 +71,11 @@ namespace Jam::Editor::State
         if (_lock || !widget)
             return;
 
-        // broadcast an event
         _lock = true;
+        // broadcast an event
         QGuiApplication::postEvent(
             widget->window(),
             new QEvent((QEvent::Type)(int)LayerUpdate));
-    }
-
-    void FrameStackManager::unlock()
-    {
-        if (_stack)
-            _stack->update();
-        _lock = false;
     }
 
     const LayerArray& FrameStackManager::layers() const

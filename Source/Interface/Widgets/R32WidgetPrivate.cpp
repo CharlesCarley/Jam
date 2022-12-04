@@ -64,8 +64,9 @@ namespace Jam::Editor
         if (!equals(val, _value))
         {
             _value = Clamp(val, _range.x, _range.y);
+            if (!_lock)
+                emit valueChanged(_value);
 
-            emit valueChanged(_value);
             update();
         }
     }
@@ -95,8 +96,18 @@ namespace Jam::Editor
 
     void R32WidgetPrivate::setLabel(const String& value)
     {
-        _label = value;
+        _label = Su::join(value, " := ");
         update();
+    }
+
+    void R32WidgetPrivate::setStepData(const VariableStepData& step)
+    {
+        _lock = true;
+        setLabel(step.name);
+        setRate(step.rate);
+        setRange(step.range);
+        setValue(step.value);
+        _lock = false;
     }
 
     String R32WidgetPrivate::text() const
@@ -139,7 +150,7 @@ namespace Jam::Editor
 
         if (const QPointF d = event->position();
             isInInnerRect(d))
-            emit onDoubleClick();
+            emit doubleClicked();
         else
             handleSingleTick(d);
     }

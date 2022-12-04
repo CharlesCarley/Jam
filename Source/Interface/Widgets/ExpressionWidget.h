@@ -22,6 +22,7 @@
 #pragma once
 #include <QWidget>
 #include "IconButton.h"
+#include "Utils/Definitions.h"
 #include "Utils/String.h"
 
 namespace Jam::Editor
@@ -37,27 +38,39 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void wantsToDelete();
+        void deleteExpression(size_t refid);
+        void expressionChanged(size_t refid, const String& text) const;
 
     private:
         StringWidget* _line{nullptr};
         IconButton*   _del{nullptr};
-
-        State::ExpressionStateObject* _state{nullptr};
+        size_t        _refId{JtNpos};
 
     public:
-        explicit ExpressionWidget(State::ExpressionStateObject* eso, QWidget* parent = nullptr);
+        explicit ExpressionWidget(QWidget* parent = nullptr);
 
         void setText(const String& text) const;
+
+        String text() const;
+
+        void setRefId(size_t id);
+
+        size_t refId() const;
 
     private:
         void construct();
 
         void connectSignals();
-
-        void textEntered(const String& text) const;
-
-        void onDelete();
     };
+
+    inline void ExpressionWidget::setRefId(const size_t id)
+    {
+        _refId = id;
+    }
+
+    inline size_t ExpressionWidget::refId() const
+    {
+        return _refId;
+    }
 
 }  // namespace Jam::Editor

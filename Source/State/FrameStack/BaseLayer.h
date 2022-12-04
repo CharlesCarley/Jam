@@ -37,8 +37,10 @@ namespace Jam::Editor::State
     {
     public:
         const LayerType type;
+
     protected:
         Screen _screen;
+
     public:
         explicit BaseLayer(LayerType type);
 

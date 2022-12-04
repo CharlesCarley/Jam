@@ -21,9 +21,14 @@
 */
 #pragma once
 #include "Interface/Widgets/StackedPanelContent.h"
+#include "State/FrameStack/FunctionStateObject.h"
 
 namespace Jam::Editor
 {
+    struct VariableStepData;
+    class VariableWidget;
+    class ExpressionWidget;
+
     namespace State
     {
         class ExpressionStateObject;
@@ -37,6 +42,12 @@ namespace Jam::Editor
     public:
         Q_OBJECT
     signals:
+        void deleteVariable(size_t refid, VariableWidget* widget);
+        void variableChanged(size_t refid, const VariableStepData& data);
+
+        void deleteExpression(size_t refid, ExpressionWidget* widget);
+        void expressionChanged(size_t refid, const String& text) const;
+
         void contentChanged() const;
 
     private:
@@ -47,20 +58,20 @@ namespace Jam::Editor
         explicit FunctionAreaContent();
         ~FunctionAreaContent() override;
 
-        void addSlider(State::VariableStateObject* obj = nullptr) const;
+        VariableWidget* addSlider(const State::VariableStateObject* obj = nullptr) const;
 
-        void addExpression(State::ExpressionStateObject* obj = nullptr) const;
+        ExpressionWidget* addExpression(const State::Expression* obj = nullptr) const;
 
         void addPoint() const;
 
     private:
         void construct();
 
-        void loadState();
+        void onDeleteGeneral() const;
 
-        // void notifyResize() const;
+        void onDeleteVariable(size_t refid);
 
-        void dropWidget(QWidget* widget) const;
+        void onDeleteExpression(size_t refid);
     };
 
 }  // namespace Jam::Editor

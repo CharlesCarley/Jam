@@ -59,13 +59,15 @@ namespace Jam::Editor::State
         {
             if (node->isTypeOf(ExpressionTagId))
             {
-                ExpressionStateObject* eso = fnc->createExpression();
+                ExpressionStateObject* eso = fnc->createExpression(
+                    node->integer("ref"));
 
                 eso->setText(node->attribute("text"));
             }
             else if (node->isTypeOf(VariableTagId))
             {
-                VariableStateObject* vso = fnc->createVariable();
+                VariableStateObject* vso = fnc->createVariable(
+                    node->integer("ref"));
 
                 vso->setName(node->attribute("name"));
                 vso->setRange(Xc::toVec2F("range", node, {-10.f, 10}));
@@ -142,21 +144,21 @@ namespace Jam::Editor::State
 
         const auto func = new XmlNode(FunctionTag);
 
-        for (const auto id : layer->objects())
+        for (const auto& id : layer->objects())
         {
-            if (id->type() == FstExpression)
+            if (id.second->type() == FstExpression)
             {
-                const ExpressionStateObject* eso = (ExpressionStateObject*)id;
-
+                const ExpressionStateObject* eso = (ExpressionStateObject*)id.second;
                 const auto expr = new XmlNode(ExpressionTag);
 
                 expr->insert("text", eso->text());
+                expr->insert("ref", (int)eso->location());
                 func->addChild(expr);
             }
 
-            else if (id->type() == FstVariable)
+            else if (id.second->type() == FstVariable)
             {
-                const VariableStateObject* vso = (VariableStateObject*)id;
+                const VariableStateObject* vso = (VariableStateObject*)id.second;
 
                 XmlNode* expr = new XmlNode(VariableTag);
 
@@ -167,6 +169,7 @@ namespace Jam::Editor::State
                              Sc::join(FloatPrint(vso->rate())));
                 expr->insert("value",
                              Sc::join(FloatPrint(vso->value())));
+                expr->insert("ref", (int)vso->location());
                 func->addChild(expr);
             }
         }

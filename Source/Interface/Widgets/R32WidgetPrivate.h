@@ -23,6 +23,7 @@
 #include <QWidget>
 #include "Math/Vec2F.h"
 #include "Math/Vec2I.h"
+#include "VariableStepWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
@@ -33,7 +34,7 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void onDoubleClick();
+        void doubleClicked();
         void valueChanged(R32 val);
 
     private:
@@ -44,6 +45,7 @@ namespace Jam::Editor
         Vec2F    _range{-R32(0x10000), R32(0x10000)};
         String   _label;
         QPalette _pal;
+        bool     _lock{false};
 
     public:
         explicit R32WidgetPrivate(QWidget* parent = nullptr);
@@ -57,6 +59,8 @@ namespace Jam::Editor
         void setRange(const Vec2F& val);
 
         void setLabel(const String& value);
+
+        void setStepData(const VariableStepData& step);
 
         R32 value() const;
 
@@ -86,7 +90,7 @@ namespace Jam::Editor
     {
         return _value;
     }
-    
+
     inline const String& R32WidgetPrivate::label() const
     {
         return _label;

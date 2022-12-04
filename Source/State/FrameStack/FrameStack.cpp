@@ -66,10 +66,16 @@ namespace Jam::Editor::State
         return nullptr;
     }
 
-    void FrameStack::serialize(IStream& data)
+    void FrameStack::load(IStream& data)
     {
         const FrameStackSerialize serialize(this);
         serialize.load(data);
+    }
+
+    void FrameStack::save(OStream& data)
+    {
+        FrameStackSerialize serialize(this);
+        serialize.save(data);
     }
 
     void FrameStack::clear()

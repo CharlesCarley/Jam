@@ -52,8 +52,6 @@ namespace Jam::Editor
         {
         case LayerUpdate:
         case LayerSelect:
-            //Log::writeLine("notify");
-            State::layerStack()->unlock();
             _mainArea->notify(event);
             return false;
         case ProjectClosed:

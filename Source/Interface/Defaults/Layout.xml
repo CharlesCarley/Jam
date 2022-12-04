@@ -7,9 +7,9 @@
         <leaf type="0"/>
       </branch>
       <branch ratio="0.25" orientation="2">
-        <leaf type="4"/>
+        <leaf type="3" ref="1"/>
         <branch ratio="0.5" orientation="2">
-          <leaf type="3"/>
+          <leaf type="3" ref="2"/>
           <leaf type="0"/>
         </branch>
       </branch>

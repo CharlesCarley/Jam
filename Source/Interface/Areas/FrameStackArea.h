@@ -33,7 +33,9 @@ namespace Jam::Editor
         FrameStackAreaContent* _private{nullptr};
 
     public:
-        explicit FrameStackArea(AreaCreator* creator, QWidget* parent = nullptr);
+        explicit FrameStackArea(AreaCreator* creator,
+                                size_t       refId  = JtNpos,
+                                QWidget*     parent = nullptr);
         ~FrameStackArea() override;
 
     private:

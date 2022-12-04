@@ -20,57 +20,30 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "Interface/Area/AreaContextSwitch.h"
-#include "Utils/Definitions.h"
+#include <QtTest/QtTest>
+#include "Interface/Application.h"
 
-class QHBoxLayout;
-
-namespace Jam::Editor
+namespace Jam
 {
-    class AreaToolBar;
+    namespace Editor
+    {
+        class FunctionAreaContent;
+    }
+}  // namespace Jam
 
-    class Area : public QWidget
+namespace Jam::Editor::Testing
+{
+    class AreaStateTest : public QObject
     {
         Q_OBJECT
-    signals:
-        void wantsContextSwitch(int to);
-        void propagateEvent(QEvent* to);
-
-    protected:
-        AreaCreator* _creator;
-        int32_t      _type{NoAreaType};
-        AreaToolBar* _toolbar{nullptr};
-        const size_t _refId{JtNpos};
-
-    public:
-        ~Area() override;
-
-        const int32_t& type() const;
-
-        AreaToolBar* toolbar() const;
-
-        bool propagate(QEvent* evt);
-
-        size_t refId() const { return _refId; }
-
     private:
-        void constructBase(int32_t type);
+        MainArea* _test{nullptr};
 
-    protected:
-        explicit Area(AreaCreator* creator,
-                      int32_t      type,
-                      size_t       refId  = JtNpos,
-                      QWidget*     parent = nullptr);
+    private slots:
+        void initTestCase();
+        void functionState();
+        void cleanup();
+        void cleanupTestCase();
     };
 
-    inline const int32_t& Area::type() const
-    {
-        return _type;
-    }
-
-    inline AreaToolBar* Area::toolbar() const
-    {
-        return _toolbar;
-    }
-
-}  // namespace Jam::Editor
+}  // namespace Jam::Editor::Testing

@@ -32,6 +32,7 @@
 #include "Interface/Events/BranchEvent.h"
 #include "Interface/Extensions.h"
 #include "MainArea.Creator.inl"
+#include "State/FrameStackManager.h"
 #include "State/ProjectManager.h"
 #include "State/ProjectTags.h"
 #include "Utils/XmlConverter.h"
@@ -80,12 +81,12 @@ namespace Jam::Editor
     {
         try
         {
-            XmlFile parser(Tags::AreaLayoutTags, Tags::AreaLayoutTagsMax);
+            XmlFile parser(AreaLayoutTags, AreaLayoutTagsMax);
 
             StringStream ss;
             ss << layout;
             parser.read(ss);
-            if (const auto root = parser.root(Tags::TreeTagId))
+            if (const auto root = parser.root(TreeTagId))
                 construct(root);
             else
                 handleBuildError("invalid root node");
@@ -96,10 +97,9 @@ namespace Jam::Editor
         }
     }
 
+    // Note: used only as an extension of construct(const QString& layout)
     void MainArea::construct(const XmlNode* node)
     {
-        // Note: used only as an extension of construct(const QString& layout)
-
         _layout = new QVBoxLayout();
         View::layoutDefaults(_layout);
 
@@ -109,20 +109,21 @@ namespace Jam::Editor
         {
             if (!node->children().empty())
             {
-                applyNode(
-                    node->children().front(),  // current
-                    nullptr,                   // no parent
-                    _root,                     // dest
-                    2,                         // type
-                    0                          // ori
+                applyNode(node->children().front(),  // root xml
+                          nullptr,                   // parent area-node
+                          _root,                     // root area-node
+                          2,                         // type
+                          0                          // ori
                 );
             }
             else
+            {
+                // Just create a single leaf node from the
+                // default type. (referred to as (0).)
                 _root->setArea(_creator->fromType(0));
+            }
         }
-
         _layout->addWidget(_root);
-
         if (_root->hasContent())
             _root->content()->updateMask();
 
@@ -153,10 +154,12 @@ namespace Jam::Editor
         {
             switch ((int)event->type())
             {
+            case LayerUpdate:
+                State::layerStack()->unlock();
+                [[fallthrough]];
             case ProjectOpened:
             case ProjectClosed:
             case LayerSelect:
-            case LayerUpdate:
                 if (_root)
                     _root->propagate(event);
                 return false;
@@ -216,8 +219,9 @@ namespace Jam::Editor
             {
                 if (const Area* area = areaLeaf->contents())
                 {
-                    XmlNode* leafTag = new XmlNode(Tags::LeafTag);
+                    XmlNode* leafTag = new XmlNode(LeafTag);
                     leafTag->insert("type", area->type());
+                    leafTag->insert("ref",  (int)area->refId());
 
                     // <leaf type="x" />
                     destination->addChild(leafTag);
@@ -232,7 +236,7 @@ namespace Jam::Editor
         {
             if (const AreaBranch* branch = (AreaBranch*)source->content())
             {
-                XmlNode* branchTag = new XmlNode(Tags::BranchTag);
+                XmlNode* branchTag = new XmlNode(BranchTag);
 
                 branchTag->insert("ratio", branch->ratio());
 
@@ -261,7 +265,7 @@ namespace Jam::Editor
         dest = 0;
         if (fromNode && fromNode->contains("type"))
         {
-            if (auto value = fromNode->integer("type");
+            if (auto value = fromNode->integer("type");  // TODO: needs updated via creator
                 value >= 0 && value < AtMax)
             {
                 dest = (AreaType)value;
@@ -293,9 +297,9 @@ namespace Jam::Editor
         if (!node || !current)  // parent is the only node allowed to be null
             return;
 
-        if (node->isTypeOf(Tags::LeafTagId))
+        if (node->isTypeOf(LeafTagId))
             applyLeaf(node, parent, current, type, ori);
-        else if (node->isTypeOf(Tags::BranchTagId))
+        else if (node->isTypeOf(BranchTagId))
             applyBranch(node, current);
         else
         {
@@ -313,7 +317,9 @@ namespace Jam::Editor
     {
         if (int areaType; validateType(areaType, node))
         {
-            current->setArea(_creator->fromType(areaType),
+            size_t refId = (size_t)node->integer("ref", -1);
+
+            current->setArea(_creator->fromType(areaType, refId),
                              AreaEdgeRect::computeMask(parent, current, type, ori));
         }
         else

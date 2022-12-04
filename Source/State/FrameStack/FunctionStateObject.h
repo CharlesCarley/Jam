@@ -21,6 +21,7 @@
 */
 #pragma once
 #include "Equation/StmtParser.h"
+#include "Interface/Events/EventTypes.h"
 #include "State/FrameStack/GridLayer.h"
 
 namespace Jam::Editor::State
@@ -35,14 +36,18 @@ namespace Jam::Editor::State
     class FunctionStateObject
     {
     private:
-        const I32 _type{FstNone};
+        const I32    _type{FstNone};
+        const size_t _id{JtNpos};
+        const size_t _loc{JtNpos};
 
     public:
-        explicit FunctionStateObject(const I32 type) :
-            _type(type) {}
+        explicit FunctionStateObject(const I32 type, const size_t id, const size_t loc) :
+            _type(type), _id(id), _loc(loc) {}
         ~FunctionStateObject() = default;
 
-        const I32& type() const { return _type; }
+        const I32&    type() const { return _type; }
+        const size_t& id() const { return _id; }
+        const size_t& location() const { return _loc; }
     };
 
     using FunctionObjectArray = SimpleArray<FunctionStateObject*>;
@@ -56,8 +61,8 @@ namespace Jam::Editor::State
         R32    _value{1.f};
 
     public:
-        explicit VariableStateObject() :
-            FunctionStateObject(FstVariable) {}
+        explicit VariableStateObject(const size_t id, const size_t loc) :
+            FunctionStateObject(FstVariable, id, loc) {}
 
         ~VariableStateObject() = default;
 
@@ -79,8 +84,8 @@ namespace Jam::Editor::State
         Eq::StmtParser _parser;
 
     public:
-        explicit ExpressionStateObject() :
-            FunctionStateObject(FstExpression) {}
+        explicit ExpressionStateObject(const size_t id, const size_t loc) :
+            FunctionStateObject(FstExpression, id, loc) {}
         ~ExpressionStateObject() = default;
 
         const String& text() const { return _text; }
@@ -89,5 +94,6 @@ namespace Jam::Editor::State
 
         void setText(const String& text);
     };
+    using Expression = ExpressionStateObject;
 
 }  // namespace Jam::Editor::State

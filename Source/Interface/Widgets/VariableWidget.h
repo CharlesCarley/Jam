@@ -22,8 +22,10 @@
 #pragma once
 #include <QWidget>
 #include "IconButton.h"
+#include "Interface/Events/EventTypes.h"
 #include "Math/Vec2F.h"
 #include "Utils/String.h"
+#include "VariableStepWidget.h"
 
 namespace Jam::Editor
 {
@@ -41,33 +43,53 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void textEntered(const String& text);
-        void wantsToDelete();
+        void deleteVariable(size_t refid);
+        void variableChanged(size_t refid, const VariableStepData& data);
+
+        // void stepDataChanged(const VariableStepData& data) const;
+        //  void onValueChange(const R32& data) const;
 
     private:
         R32Widget*          _line{nullptr};
         IconButton*         _del{nullptr};
         VariableStepWidget* _edit{nullptr};
-
-        State::VariableStateObject* _state{nullptr};
+        size_t              _refId{JtNpos};
+        VariableStepData    _stepData;
 
     public:
-        explicit VariableWidget(State::VariableStateObject* obj, QWidget* parent = nullptr);
+        explicit VariableWidget(QWidget* parent = nullptr);
 
-        void setName(const String& name) const;
+        void setName(const String& name);
 
-        void setRange(const Vec2F& range) const;
+        void setRange(const Vec2F& range);
+
+        void setRate(const R32& rate);
+
+        void setValue(const R32& value);
+
+        void setRefId(size_t id);
+
+        size_t refId() const;
+
+        const VariableStepData& data() { return _stepData; }
 
     private:
         void construct();
 
         void connectSignals();
 
-        void stepDataChanged(const VariableStepData& data) const;
+        void onStepDataChanged(const VariableStepData& data);
 
-        void onValueChange(const R32& data) const;
-
-        void onDelete();
+        void onValueChanged(const R32& data);
     };
 
+    inline void VariableWidget::setRefId(const size_t id)
+    {
+        _refId = id;
+    }
+
+    inline size_t VariableWidget::refId() const
+    {
+        return _refId;
+    }
 }  // namespace Jam::Editor

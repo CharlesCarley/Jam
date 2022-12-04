@@ -36,23 +36,23 @@ namespace Jam::Editor
     class MainAreaCreator final : public AreaCreator
     {
     public:
-        Area* fromType(int32_t type, QWidget* parent) override
+        Area* fromType(int32_t type, size_t refId, QWidget* parent) override
         {
             switch (type)
             {
             case AtOutput:
-                return new OutputArea(this, parent);
+                return new OutputArea(this, refId, parent);
             case AtProject:
-                return new ProjectArea(this, parent);
+                return new ProjectArea(this, refId, parent);
             case AtFrameStack:
-                return new FrameStackArea(this, parent);
+                return new FrameStackArea(this, refId, parent);
             case AtFunction:
-                return new FunctionArea(this, parent);
+                return new FunctionArea(this, refId, parent);
             case AtGrid:
-                return new GridArea(this, parent);
+                return new GridArea(this, refId, parent);
             case AtMax:
             default:
-                return new TodoArea(this, type, parent);
+                return new TodoArea(this, type, refId, parent);
             }
         }
 
@@ -94,7 +94,7 @@ namespace Jam::Editor
 
         Area* clone(Area* inp) override
         {
-            return fromType(inp->type(), nullptr);
+            return fromType(inp->type(), JtNpos, nullptr);
         }
 
         int32_t getNumberOfTypes() override

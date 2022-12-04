@@ -54,7 +54,8 @@ namespace Jam::Editor::State
         template <typename T>
         T* cast(U32 idx);
 
-        void serialize(IStream& data);
+        void load(IStream& data);
+        void save(OStream& data);
 
         void clear();
     };

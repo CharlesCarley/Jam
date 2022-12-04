@@ -19,58 +19,31 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#pragma once
-#include "Interface/Area/AreaContextSwitch.h"
+#include "Interface/Area/AreaRefId.h"
 #include "Utils/Definitions.h"
-
-class QHBoxLayout;
 
 namespace Jam::Editor
 {
-    class AreaToolBar;
+    size_t AreaRefId::_ref = 0;
+    size_t AreaRefId::_min = 0;
+    size_t AreaRefId::_max = 0;
 
-    class Area : public QWidget
+    size_t AreaRefId::newRef()
     {
-        Q_OBJECT
-    signals:
-        void wantsContextSwitch(int to);
-        void propagateEvent(QEvent* to);
-
-    protected:
-        AreaCreator* _creator;
-        int32_t      _type{NoAreaType};
-        AreaToolBar* _toolbar{nullptr};
-        const size_t _refId{JtNpos};
-
-    public:
-        ~Area() override;
-
-        const int32_t& type() const;
-
-        AreaToolBar* toolbar() const;
-
-        bool propagate(QEvent* evt);
-
-        size_t refId() const { return _refId; }
-
-    private:
-        void constructBase(int32_t type);
-
-    protected:
-        explicit Area(AreaCreator* creator,
-                      int32_t      type,
-                      size_t       refId  = JtNpos,
-                      QWidget*     parent = nullptr);
-    };
-
-    inline const int32_t& Area::type() const
-    {
-        return _type;
+        return ++_ref;
     }
 
-    inline AreaToolBar* Area::toolbar() const
+    size_t AreaRefId::updateRef(size_t size)
     {
-        return _toolbar;
+        size_t rv;
+        if (size == JtNpos)  // new type from ui
+            rv = newRef();
+        else
+            rv = size;  // type from load
+
+        _min = Min(_min, rv);
+        _max = Max(_max, rv);
+        return rv;
     }
 
 }  // namespace Jam::Editor

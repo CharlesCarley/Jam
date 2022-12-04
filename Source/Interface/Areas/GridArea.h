@@ -33,7 +33,9 @@ namespace Jam::Editor
         VerticalScrollArea* _area{nullptr};
 
     public:
-        explicit GridArea(AreaCreator* creator, QWidget* parent = nullptr);
+        explicit GridArea(AreaCreator* creator,
+                          size_t       refId  = JtNpos,
+                          QWidget*     parent = nullptr);
         ~GridArea() override;
 
     private:

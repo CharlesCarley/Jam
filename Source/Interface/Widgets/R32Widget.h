@@ -22,6 +22,7 @@
 #pragma once
 #include <QWidget>
 #include "Math/Real.h"
+#include "VariableStepWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
@@ -43,26 +44,25 @@ namespace Jam::Editor
         QHBoxLayout*        _layout{nullptr};
         VariableStepWidget* _step{nullptr};
         R32WidgetPrivate*   _value{nullptr};
+        VariableStepData    _data;
 
     public:
         explicit R32Widget(QWidget* parent = nullptr);
         ~R32Widget() override;
 
-        void setValue(const R32& value) const;
+        void setValue(const R32& value);
 
-        void setRange(const R32& min, const R32& max) const;
+        void setRange(const R32& min, const R32& max);
 
-        void setRate(const R32& value) const;
+        void setRate(const R32& rate);
 
-        void setLabel(const String& value) const;
+        void setLabel(const String& label);
 
         R32 value() const;
 
         String string() const;
 
         String label() const;
-
-        //void setHeight(int hgt) const;
 
     private:
         void connectSignals();
@@ -71,11 +71,13 @@ namespace Jam::Editor
 
         void editingFinished() const;
 
-        void doubleClicked() const;
-
         void returnPressed() const;
 
-        void onStepParamChange(const VariableStepData& data) const;
+        void onDoubleClicked() const;
+
+        void onStepParamChange(const VariableStepData& data);
+
+        void onValueChanged(const R32& value);
 
         void makeEditable(bool edit) const;
 

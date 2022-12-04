@@ -42,7 +42,7 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void finished(const VariableStepData& data);
+        void stepParamChange(const VariableStepData& data);
 
     private:
         LabelLineEditPair _name{nullptr, nullptr};
@@ -50,18 +50,13 @@ namespace Jam::Editor
         LabelLineEditPair _max{nullptr, nullptr};
         LabelLineEditPair _rate{nullptr, nullptr};
         LabelLineEditPair _value{nullptr, nullptr};
-        VariableStepData _data;
+        VariableStepData  _data;
+        bool              _lock{false};
 
     public:
         explicit VariableStepWidget(QWidget* parent = nullptr);
 
-        void setName(const String& value);
-
-        void setRange(const Vec2F& value);
-
-        void setRate(const R32& value);
-
-        void setValue(const R32& value);
+        void setStepData(const VariableStepData& data);
 
     private:
         void construct();

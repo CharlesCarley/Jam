@@ -35,8 +35,9 @@ namespace Jam::Editor::State
 
     FunctionLayer::~FunctionLayer()
     {
-        for (const auto obj : _array)
-            delete obj;
+        for (const auto& obj : _memory)
+            delete obj.second;
+        _memory.clear();
     }
 
     void FunctionLayer::render(RenderContext& canvas)
@@ -99,7 +100,6 @@ namespace Jam::Editor::State
                 _stmt.set("y", oy);
             else
                 _stmt.set(_y, oy);
-
         }
 
         p0.x += _origin.x;
@@ -110,45 +110,85 @@ namespace Jam::Editor::State
 
     bool FunctionLayer::update()
     {
-        for (const auto obj : _array)
+        for (const auto obj : _vars)
         {
-            if (obj->type() == FstVariable)
-            {
-                const VariableStateObject* vso = (VariableStateObject*)obj;
+            const VariableStateObject* vso = (VariableStateObject*)obj;
+            if (!vso->name().empty())
                 _stmt.set(vso->name(), R64(vso->value()));
-            }
         }
         return true;
     }
 
-    VariableStateObject* FunctionLayer::createVariable()
+    VariableStateObject* FunctionLayer::createVariable(const size_t loc)
     {
-        VariableStateObject* vso = new VariableStateObject();
-        _array.push_back(vso);
+        VariableStateObject* vso = new VariableStateObject(_var++, loc);
+        _memory.insert(vso->id(), vso);
+        _vars.push_back(vso);
         return vso;
     }
 
-    ExpressionStateObject* FunctionLayer::createExpression()
+    ExpressionStateObject* FunctionLayer::createExpression(const size_t loc)
     {
-        ExpressionStateObject* eso = new ExpressionStateObject();
+        ExpressionStateObject* eso = new ExpressionStateObject(_var++, loc);
+        _memory.insert(eso->id(), eso);
         _expr.push_back(eso);
-        _array.push_back(eso);
         return eso;
     }
 
-    void FunctionLayer::removeVariable(VariableStateObject* vso)
+    ExpressionStateObject* FunctionLayer::findExpression(const size_t refId)
     {
-        if (const U32 idx = _array.find(vso); idx != JtNpos32)
-            _array.remove(idx);
-        delete vso;
+        if (const size_t n = _memory.find(refId);
+            n != JtNpos)
+        {
+            if (FunctionStateObject* fso = _memory.at(n);
+                fso->type() == FstExpression)
+                return (ExpressionStateObject*)fso;
+        }
+        return nullptr;
     }
 
-    void FunctionLayer::removeExpression(ExpressionStateObject* eso)
+    VariableStateObject* FunctionLayer::findVariable(const size_t refId)
     {
-        if (const U32 idx = _expr.find(eso); idx != JtNpos32)
-            _expr.remove(idx);
-        if (const U32 idx = _array.find(eso); idx != JtNpos32)
-            _array.remove(idx);
-        delete eso;
+        if (const size_t n = _memory.find(refId);
+            n != JtNpos)
+        {
+            if (FunctionStateObject* fso = _memory.at(n);
+                fso->type() == FstVariable)
+                return (VariableStateObject*)fso;
+        }
+        return nullptr;
+    }
+
+    void FunctionLayer::findStateObjects(const size_t refId, FunctionObjectArray& dest) const
+    {
+        for (const auto& obj : _memory)
+        {
+            if (FunctionStateObject* fso = obj.second;
+                fso->location() == refId)
+                dest.push_back(fso);
+        }
+    }
+
+    void FunctionLayer::removeVariable(const size_t refId)
+    {
+        if (VariableStateObject* vso = findVariable(refId))
+        {
+            if (const U32 idx = _vars.find(vso); idx != JtNpos32)
+                _vars.remove(idx);
+
+            _memory.remove(refId);
+            delete vso;
+        }
+    }
+
+    void FunctionLayer::removeExpression(const size_t refId)
+    {
+        if (ExpressionStateObject* eso = findExpression(refId))
+        {
+            if (const U32 idx = _expr.find(eso); idx != JtNpos32)
+                _expr.remove(idx);
+            _memory.remove(refId);
+            delete eso;
+        }
     }
 }  // namespace Jam::Editor::State

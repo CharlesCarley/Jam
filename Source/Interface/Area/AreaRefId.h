@@ -20,57 +20,19 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "Interface/Area/AreaContextSwitch.h"
-#include "Utils/Definitions.h"
-
-class QHBoxLayout;
 
 namespace Jam::Editor
 {
-    class AreaToolBar;
-
-    class Area : public QWidget
+    class AreaRefId
     {
-        Q_OBJECT
-    signals:
-        void wantsContextSwitch(int to);
-        void propagateEvent(QEvent* to);
-
-    protected:
-        AreaCreator* _creator;
-        int32_t      _type{NoAreaType};
-        AreaToolBar* _toolbar{nullptr};
-        const size_t _refId{JtNpos};
+    private:
+        static size_t _ref;
+        static size_t _min;
+        static size_t _max;
 
     public:
-        ~Area() override;
-
-        const int32_t& type() const;
-
-        AreaToolBar* toolbar() const;
-
-        bool propagate(QEvent* evt);
-
-        size_t refId() const { return _refId; }
-
-    private:
-        void constructBase(int32_t type);
-
-    protected:
-        explicit Area(AreaCreator* creator,
-                      int32_t      type,
-                      size_t       refId  = JtNpos,
-                      QWidget*     parent = nullptr);
+        static size_t newRef();
+        static size_t updateRef(size_t size);
     };
-
-    inline const int32_t& Area::type() const
-    {
-        return _type;
-    }
-
-    inline AreaToolBar* Area::toolbar() const
-    {
-        return _toolbar;
-    }
 
 }  // namespace Jam::Editor

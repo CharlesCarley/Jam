@@ -19,28 +19,23 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "VariableWidget.h"
-#include <qboxlayout.h>
+#include "Interface/Widgets/VariableWidget.h"
+#include <QBoxLayout>
 #include "IconButton.h"
 #include "Interface/Extensions.h"
-#include "R32Widget.h"
-#include "State/App.h"
-#include "State/FrameStackManager.h"
-#include "VariableStepWidget.h"
+#include "Interface/Widgets/R32Widget.h"
 
 namespace Jam::Editor
 {
 
-    VariableWidget::VariableWidget(State::VariableStateObject* obj, QWidget* parent) :
-        QWidget(parent),
-        _state{obj}
+    VariableWidget::VariableWidget(QWidget* parent) :
+        QWidget(parent)
     {
         construct();
     }
 
     void VariableWidget::construct()
     {
-        Q_ASSERT(_state);
         View::widgetDefaults(this);
         View::buttonDefaults(this);
 
@@ -48,12 +43,7 @@ namespace Jam::Editor
         View::layoutDefaults(layout);
 
         _line = new R32Widget();
-        _line->setRange(_state->range().x, _state->range().y);
-        _line->setRate(_state->rate());
-        _line->setValue(_state->value());
-        _line->setLabel(_state->name());
-
-        _del = IconButton::create(Icons::Delete);
+        _del  = IconButton::create(Icons::Delete);
         View::copyColorRoles(_del, this);
 
         layout->addWidget(_line, 1);
@@ -69,51 +59,58 @@ namespace Jam::Editor
                 &QPushButton::clicked,
                 this,
                 [=]
-                { onDelete(); });
+                {
+                    emit deleteVariable(_refId);
+                });
         connect(_line,
                 &R32Widget::stepDataChanged,
                 this,
-                &VariableWidget::stepDataChanged);
+                &VariableWidget::onStepDataChanged);
         connect(_line,
                 &R32Widget::valueChanged,
                 this,
-                &VariableWidget::onValueChange);
+                &VariableWidget::onValueChanged);
     }
 
-    void VariableWidget::stepDataChanged(const VariableStepData& data) const
+    void VariableWidget::onStepDataChanged(const VariableStepData& data)
     {
-        if (_state)
-        {
-            _state->setRange(data.range);
-            _state->setName(data.name);
-            _state->setRate(data.rate);
-            _state->setValue(data.value);
-        }
+        _stepData = data;
+        _line->setValue(_stepData.value);
+        emit variableChanged(_refId, _stepData);
     }
 
-    void VariableWidget::onValueChange(const R32& data) const
+    void VariableWidget::onValueChanged(const R32& data)
     {
-        _state->setValue(data);
-
-        State::layerStack()->notifyStateChange(this);
+        _stepData.value = data;
+        emit variableChanged(_refId, _stepData);
     }
 
-    void VariableWidget::onDelete()
+    void VariableWidget::setName(const String& name)
     {
-        State::functionLayer()->removeVariable(_state);
-        _state = nullptr;
-        State::layerStack()->notifyStateChange(this);
-        emit wantsToDelete();
-    }
-
-    void VariableWidget::setName(const String& name) const
-    {
+        _stepData.name = name;
         _line->setLabel(name);
+        emit variableChanged(_refId, _stepData);
     }
 
-    void VariableWidget::setRange(const Vec2F& range) const
+    void VariableWidget::setRange(const Vec2F& range)
     {
+        _stepData.range = range;
         _line->setRange(range.x, range.y);
+        emit variableChanged(_refId, _stepData);
+    }
+
+    void VariableWidget::setRate(const R32& rate)
+    {
+        _stepData.rate = rate;
+        _line->setRate(rate);
+        emit variableChanged(_refId, _stepData);
+    }
+
+    void VariableWidget::setValue(const R32& value)
+    {
+        _stepData.value= value;
+        _line->setValue(value);
+        emit variableChanged(_refId, _stepData);
     }
 
 }  // namespace Jam::Editor

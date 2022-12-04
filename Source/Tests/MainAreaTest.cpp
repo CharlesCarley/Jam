@@ -8,6 +8,7 @@
 
 namespace Jam::Editor::Testing
 {
+
     void MainAreaTest::initTestCase()
     {
         QCOMPARE(_test, nullptr);
@@ -64,7 +65,6 @@ namespace Jam::Editor::Testing
 
         QVERIFY(rightLeaf->contents());
         QVERIFY(rightLeaf->contents()->type() == 1);
-
         _test->dumpObjectTree();
     }
 
