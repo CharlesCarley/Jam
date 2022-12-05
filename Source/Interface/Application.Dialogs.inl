@@ -21,10 +21,10 @@
 */
 #pragma once
 #ifndef APPLICATION_INLINE_DEFINITION
-#error This file should not be included here.
+    #error This file should not be included here.
 #endif
 
-
+#include "Dialogs/PaletteDialog.h"
 #include "Interface/Dialogs/AboutDialog.h"
 #include "Interface/Dialogs/SettingsDialog.h"
 
@@ -39,6 +39,12 @@ namespace Jam::Editor
     {
         // Log::writeLine("Launching about");
         AboutDialog dia(this);
+        dia.exec();
+    }
+
+    void Application::viewPalette()
+    {
+        PaletteDialog dia(this);
         dia.exec();
     }
 

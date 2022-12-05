@@ -22,6 +22,7 @@
 #include "Interface/Widgets/ExpressionWidget.h"
 #include <QBoxLayout>
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/StringWidget.h"
 
@@ -36,20 +37,14 @@ namespace Jam::Editor
 
     void ExpressionWidget::construct()
     {
-        View::widgetDefaults(this);
-        View::buttonDefaults(this);
+        _line   = new StringWidget();
+        _delete = Style::toolButton(Icons::Delete);
 
-        const auto layout = new QHBoxLayout();
-        View::layoutDefaults(layout);
-
-        _line = new StringWidget();
-        _del  = IconButton::create(Icons::Delete);
-        View::copyColorRoles(_del, this);
-
+        const auto layout = Style::horizontalLayout();
         layout->addWidget(_line, 1);
-        layout->addWidget(_del);
-
+        layout->addWidget(_delete);
         setLayout(layout);
+
         connectSignals();
     }
 
@@ -57,7 +52,7 @@ namespace Jam::Editor
     {
         connect(_line, &StringWidget::editingFinished, this, [=](const String& text)
                 { emit expressionChanged(_refId, text); });
-        connect(_del, &QPushButton::clicked, this, [=]
+        connect(_delete, &QPushButton::clicked, this, [=]
                 { emit deleteExpression(_refId); });
     }
 
@@ -70,4 +65,5 @@ namespace Jam::Editor
     {
         return _line->text();
     }
+
 }  // namespace Jam::Editor

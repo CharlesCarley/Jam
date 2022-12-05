@@ -33,7 +33,7 @@ namespace Jam::Editor
     MainStyle::MainStyle() :
         QProxyStyle()
     {
-        Const::initializePalette();
+        Palette::applyInternal();
         _cache = new PaletteCache();
     }
 

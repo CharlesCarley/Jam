@@ -45,13 +45,10 @@ namespace Jam::Editor
 
     void GridArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::SplitterRole);
-
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
+        Style::apply(this, AreaGridStyle);
 
         _area = new VerticalScrollArea();
+        const auto layout = Style::verticalLayout();
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
         setLayout(layout);

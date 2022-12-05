@@ -23,6 +23,7 @@
 
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor
@@ -37,8 +38,7 @@ namespace Jam::Editor
 
     void WindowMenuBar::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::MenuBarRole, View::QRole::ButtonText);
+        Style::apply(this, MenuBarStyle);
 
         const auto appIcons = new WindowTitlebar();
 

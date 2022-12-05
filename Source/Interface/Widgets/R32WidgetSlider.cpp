@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "R32WidgetPrivate.h"
+#include "R32WidgetSlider.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include "Interface/Constants.h"
@@ -38,28 +38,28 @@ namespace Jam::Editor
     constexpr QLineF Hl = MidLines[0];
     constexpr QLineF Vl = MidLines[1];
 
-    R32WidgetPrivate::R32WidgetPrivate(QWidget* parent) :
+    R32WidgetSlider::R32WidgetSlider(QWidget* parent) :
         QWidget(parent)
     {
         construct();
     }
 
-    void R32WidgetPrivate::construct()
+    void R32WidgetSlider::construct()
     {
-        View::emptyWidget(this);
-        Const::copyStylePalette(_pal);
+        Style::apply(this, TransparentStyle);
+        Palette::getSliderPalette(_pal);
 
-        setMinimumHeight(Const::ButtonHeight);
-        setMaximumHeight(Const::ButtonHeight);
+        setMinimumHeight(Style::hint(ButtonHeight));
+        setMaximumHeight(Style::hint(ButtonHeight));
     }
 
-    bool R32WidgetPrivate::isInInnerRect(const QPointF& d) const
+    bool R32WidgetSlider::isInInnerRect(const QPointF& d) const
     {
         const QRectF p = geometry();
         return d.x() > p.x() + Sr && d.x() < p.width() - Sr;
     }
 
-    void R32WidgetPrivate::setValue(const R32& val)
+    void R32WidgetSlider::setValue(const R32& val)
     {
         if (!equals(val, _value))
         {
@@ -71,7 +71,7 @@ namespace Jam::Editor
         }
     }
 
-    void R32WidgetPrivate::setValue(const QString& val)
+    void R32WidgetSlider::setValue(const QString& val)
     {
         String       str;
         const String raw = val.toStdString();
@@ -79,7 +79,7 @@ namespace Jam::Editor
             setValue(Char::toFloat(str));
     }
 
-    void R32WidgetPrivate::setRate(const R32& val)
+    void R32WidgetSlider::setRate(const R32& val)
     {
         if (!equals(val, _rate))
         {
@@ -88,19 +88,19 @@ namespace Jam::Editor
         }
     }
 
-    void R32WidgetPrivate::setRange(const Vec2F& val)
+    void R32WidgetSlider::setRange(const Vec2F& val)
     {
         _range = val;
         setValue(Clamp(_value, _range.x, _range.y));
     }
 
-    void R32WidgetPrivate::setLabel(const String& value)
+    void R32WidgetSlider::setLabel(const String& value)
     {
         _label = Su::join(value, " := ");
         update();
     }
 
-    void R32WidgetPrivate::setStepData(const VariableStepData& step)
+    void R32WidgetSlider::setStepData(const VariableStepData& step)
     {
         _lock = true;
         setLabel(step.name);
@@ -108,14 +108,15 @@ namespace Jam::Editor
         setRange(step.range);
         setValue(step.value);
         _lock = false;
+        setFocus();
     }
 
-    String R32WidgetPrivate::text() const
+    String R32WidgetSlider::text() const
     {
         return Char::toString(_value);
     }
 
-    void R32WidgetPrivate::handleSingleTick(const QPointF& d)
+    void R32WidgetSlider::handleSingleTick(const QPointF& d)
     {
         if (d.x() < Sr)
             setValue(_value - _rate);
@@ -123,7 +124,7 @@ namespace Jam::Editor
             setValue(_value + _rate);
     }
 
-    void R32WidgetPrivate::mousePressEvent(QMouseEvent* event)
+    void R32WidgetSlider::mousePressEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -140,7 +141,7 @@ namespace Jam::Editor
             QWidget::mousePressEvent(event);
     }
 
-    void R32WidgetPrivate::mouseDoubleClickEvent(QMouseEvent* event)
+    void R32WidgetSlider::mouseDoubleClickEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -155,7 +156,7 @@ namespace Jam::Editor
             handleSingleTick(d);
     }
 
-    void R32WidgetPrivate::mouseReleaseEvent(QMouseEvent* event)
+    void R32WidgetSlider::mouseReleaseEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -169,7 +170,7 @@ namespace Jam::Editor
             QWidget::mouseReleaseEvent(event);
     }
 
-    void R32WidgetPrivate::mouseMoveEvent(QMouseEvent* event)
+    void R32WidgetSlider::mouseMoveEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -191,7 +192,7 @@ namespace Jam::Editor
             QWidget::mouseMoveEvent(event);
     }
 
-    void R32WidgetPrivate::paintEvent(QPaintEvent* event)
+    void R32WidgetSlider::paintEvent(QPaintEvent* event)
     {
         QPainter           paint(this);
         const QFontMetrics metrics = paint.fontMetrics();
@@ -201,14 +202,13 @@ namespace Jam::Editor
         const I32 r0 = w - Sr;
         const I32 r1 = (h >> 1) - (Sr >> 1);
 
-        paint.fillRect(0, 0, w, h, _pal.base());
-
-        paint.setPen(_pal.color(QPalette::Shadow));
+        paint.fillRect(0, 0, w, h, _pal.shadow());
+        paint.setPen(_pal.window().color());
         paint.drawRect(1, 1, w - 1, h - 1);
 
         const R32 ws = (fabs(_range.x) + R32(_value)) / _range.dmm() * R32(w);
-        paint.fillRect(0, 0, I32(ws), h, _pal.dark());
-        paint.setPen(_pal.color(QPalette::Text));
+        paint.fillRect(0, 0, I32(ws), h, _pal.mid());
+        paint.setPen(_pal.text().color());
 
         paint.drawText(
             w >> 1,
@@ -218,6 +218,7 @@ namespace Jam::Editor
                 Char::toString(_value))
                 .c_str());
 
+        paint.setPen(_pal.brightText().color());
         paint.drawLine(
             I32(Hl.x1()),
             r1 + I32(Hl.y1()),

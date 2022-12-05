@@ -35,7 +35,6 @@
 #include "Interface/Widgets/IconButton.h"
 #include "State/App.h"
 #include "State/FrameStackManager.h"
-#include "State/ProjectTags.h"
 
 namespace Jam::Editor
 {
@@ -53,43 +52,27 @@ namespace Jam::Editor
 
     void ProjectArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::AreaRole);
-
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
-
-        _tree = new QTreeWidget(this);
-        View::treeWidgetDefaults(_tree, this);
-
-        // add some extra space around the widget ?
-        const auto margin = new QHBoxLayout();
-        View::layoutDefaults(margin, Const::AreaPadding);
-
-        margin->addWidget(_tree, 1);
-
+        Style::apply(this, AreaStyle);
+        _tree = Style::treeWidget(AreaProjectTreeStyle, this);
         constructToolbar();
-        layout->addWidget(toolbar());
-        layout->addLayout(margin, 1);
 
-        // set via project
-        setState();
+        const auto layout = Style::verticalLayout();
+        layout->addWidget(toolbar());
+        layout->addLayout(Style::paddedArea(_tree), 1);
         setLayout(layout);
+
+        setState();
     }
 
     void ProjectArea::constructToolbar()
     {
         const auto tool = toolbar();
-
-        const auto iconSet =
-            IconButton::createToolButton(Icons::Settings, this);
-
-        connect(iconSet,
+        const auto set = Style::toolButton(Icons::Settings);
+        connect(set,
                 &QPushButton::clicked,
                 this,
                 &ProjectArea::showProjectSettings);
-
-        tool->addWidget(iconSet);
+        tool->addWidget(set);
     }
 
     void ProjectArea::setState() const
@@ -97,7 +80,7 @@ namespace Jam::Editor
         if (!_tree) return;
 
         // Reconstruct the tree from the project state...
-        if (const auto state = State::layerStack())
+        if (const auto state = layerStack())
         {
             _tree->clear();
             (void)_tree->disconnect(this);

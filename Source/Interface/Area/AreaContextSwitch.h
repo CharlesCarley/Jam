@@ -20,31 +20,32 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QPushButton>
+#include <QWidget>
+
+class QPushButton;
+class QLabel;
 
 namespace Jam::Editor
 {
     class AreaCreator;
     constexpr int32_t NoAreaType = -1;
 
-    class AreaContextSwitch final : public QPushButton
+    class AreaContextSwitch final : public QWidget
     {
         Q_OBJECT
     signals:
         void wantsContextSwitch(int type);
 
-    protected:
-        void mousePressEvent(QMouseEvent* e) override;
-
     private:
         AreaCreator* _creator{nullptr};
         int32_t      _type{NoAreaType};
-
-        void construct();
-
     public:
         explicit AreaContextSwitch(AreaCreator* creator,
                                    int32_t      type,
                                    QWidget*     parent = nullptr);
+
+    private:
+        void construct();
+        void onMousePressEvent();
     };
 }  // namespace Jam::Editor

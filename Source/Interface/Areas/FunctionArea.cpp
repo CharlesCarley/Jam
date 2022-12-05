@@ -51,12 +51,9 @@ namespace Jam::Editor
 
     void FunctionArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::WindowRole);
+        Style::apply(this, AreaStyle);
 
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
-
+        const auto layout = Style::verticalLayout();
         _area = new VerticalScrollArea();
         constructContent();
 
@@ -94,11 +91,9 @@ namespace Jam::Editor
 
     void FunctionArea::constructTools(const AreaToolBar* tools)
     {
-        const auto add = IconButton::createToolButton(Icons::Menu);
-        tools->addWidget(
-            add,
-            0,
-            Qt::AlignRight);
+        const auto add = Style::toolButton(Icons::Menu);
+
+        tools->addWidget(add, 0, Qt::AlignRight);
 
         connect(add, &QPushButton::clicked, this, [=]
                 { displayOptions((QWidget*)sender()); });
@@ -139,6 +134,8 @@ namespace Jam::Editor
     void FunctionArea::displayOptions(QWidget* widget)
     {
         QMenu ctx(this);
+        Style::apply(&ctx, AreaToolMenuItemStyle);
+
         ctx.addAction(get(Icons::Function), "Expression", [=]
                       { addExpression(); });
         ctx.addAction(get(Icons::Slider), "Slider", [=]
@@ -195,6 +192,7 @@ namespace Jam::Editor
         _function->removeVariable(refid);
         GenericRemove(_variables, refid, widget);
         _area->invalidate();
+        State::layerStack()->notifyStateChange(this);
     }
 
     void FunctionArea::onDeleteExpression(const size_t refid, const ExpressionWidget* widget)
@@ -203,6 +201,7 @@ namespace Jam::Editor
         _function->removeExpression(refid);
         GenericRemove(_expressions, refid, widget);
         _area->invalidate();
+        State::layerStack()->notifyStateChange(this);
     }
 
     void FunctionArea::onVariableChanged(const size_t refid, const VariableStepData& data) const

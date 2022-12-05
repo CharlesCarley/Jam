@@ -25,7 +25,6 @@
 #include "Interface/Constants.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
-
 class QVBoxLayout;
 
 namespace Jam::Editor
@@ -65,7 +64,22 @@ namespace Jam::Editor
         Const::QRole      _borderRole{Const::BorderRole};
         QString           _title{};
 
-        void constructDialog(int options);
+    public:
+        explicit Dialog(QString  title,
+                        int      options = Default,
+                        QWidget* parent  = nullptr);
+
+        explicit Dialog(int      options = Default,
+                        QWidget* parent  = nullptr);
+
+        ~Dialog() override;
+
+        int border() const;
+
+        void setBorder(int border);
+
+    private:
+        void construct(int options);
 
         void bindSignals(
             int                   opts,
@@ -96,15 +110,6 @@ namespace Jam::Editor
 
     protected:
         void applyLayout(QLayout* layout);
-
-    public:
-        explicit Dialog(QString title, int options = Default, QWidget* parent = nullptr);
-        explicit Dialog(int options = Default, QWidget* parent = nullptr);
-        ~Dialog() override;
-
-        int border() const;
-
-        void setBorder(int border);
     };
 
     inline int Dialog::border() const

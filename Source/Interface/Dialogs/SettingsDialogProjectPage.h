@@ -23,6 +23,8 @@
 #include <QWidget>
 #include "Interface/PersistentSettings.h"
 
+class QCheckBox;
+
 namespace Jam::Editor
 {
     class SettingsDialogProjectPage final : public QWidget
@@ -30,10 +32,13 @@ namespace Jam::Editor
         Q_OBJECT
     private:
         SettingsDataState* _state{nullptr};
-
-        void construct();
     public:
         explicit SettingsDialogProjectPage(SettingsDataState *state, QWidget* parent = nullptr);
         ~SettingsDialogProjectPage() override;
+    public:
+        
+        void construct();
+
+        static QCheckBox* applyCheckBox(const QString& label, bool state);
     };
 }  // namespace Jam::Editor

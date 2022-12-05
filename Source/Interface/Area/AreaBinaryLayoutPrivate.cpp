@@ -26,14 +26,14 @@
 #include "Interface/Area/AreaBinaryLayout.h"
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
     AreaBinaryLayoutPrivate::AreaBinaryLayoutPrivate(AreaBinaryLayout* par) :
         _parent(par)
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::SplitterRole);
+        Style::apply(this, AreaEdgeRectStyle);
     }
 
     QSize AreaBinaryLayoutPrivate::appSize()

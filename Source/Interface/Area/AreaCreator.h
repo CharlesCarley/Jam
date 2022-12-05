@@ -21,7 +21,7 @@
 */
 #pragma once
 #include <QWidget>
-
+#include "Interface/Style/Icons.h"
 #include "Utils/Definitions.h"
 
 class QLayoutItem;
@@ -41,7 +41,7 @@ namespace Jam::Editor
 
         virtual QString nameFromType(int32_t type) = 0;
 
-        virtual QIcon iconFromType(int32_t type) = 0;
+        virtual Icons::Icon iconFromType(int32_t type) = 0;
 
         virtual int32_t getNumberOfTypes() = 0;
 

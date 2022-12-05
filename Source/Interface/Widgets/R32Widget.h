@@ -31,7 +31,7 @@ namespace Jam::Editor
 {
     struct VariableStepData;
     class VariableStepWidget;
-    class R32WidgetPrivate;
+    class R32WidgetSlider;
 
     class R32Widget final : public QWidget
     {
@@ -43,7 +43,7 @@ namespace Jam::Editor
     private:
         QHBoxLayout*        _layout{nullptr};
         VariableStepWidget* _step{nullptr};
-        R32WidgetPrivate*   _value{nullptr};
+        R32WidgetSlider*   _value{nullptr};
         VariableStepData    _data;
 
     public:

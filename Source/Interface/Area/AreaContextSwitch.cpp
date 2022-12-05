@@ -20,10 +20,14 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Area/AreaContextSwitch.h"
+#include <QBoxLayout>
+#include <QLabel>
 #include <QMenu>
 #include <QMouseEvent>
+#include <QPushButton>
 #include "AreaCreator.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -31,30 +35,46 @@ namespace Jam::Editor
         AreaCreator*  creator,
         const int32_t type,
         QWidget*      parent) :
-        QPushButton(parent),
+        QWidget(parent),
         _creator(creator),
         _type(type)
-
     {
         construct();
     }
 
     void AreaContextSwitch::construct()
     {
-        setIcon(_creator->iconFromType(_type));
-        View::emptyWidget(this);
+        Style::apply(this, TransparentStyle);
+        const auto layout = Style::horizontalLayout();
+
+        QPushButton* button = Style::toolButton(
+            _creator->iconFromType(_type));
+
+        connect(button,
+                &QPushButton::clicked,
+                this,
+                &AreaContextSwitch::onMousePressEvent);
+
+        QLabel* title = new QLabel(_creator->nameFromType(_type));
+        Style::apply(title, AreaToolLabelStyle);
+
+        layout->addWidget(button);
+        layout->addWidget(title);
+
+        setLayout(layout);
     }
 
-    void AreaContextSwitch::mousePressEvent(QMouseEvent* e)
+    void AreaContextSwitch::onMousePressEvent()
     {
         QMenu menu(this);
+        Style::apply(&menu, AreaToolMenuItemStyle);
 
         const int32_t nr = _creator->getNumberOfTypes();
         for (int32_t i = 0; i < nr; ++i)
         {
             QString name = _creator->nameFromType(i);
 
-            menu.addAction(_creator->iconFromType(i), name, [=]
+            menu.addAction(get(_creator->iconFromType(i)), name, [=]
                            { emit wantsContextSwitch(i); });
         }
 

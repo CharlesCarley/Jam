@@ -36,7 +36,6 @@ namespace Jam::Editor
     void ContentContainer::construct()
     {
         _layout = new QVBoxLayout();
-        View::widgetDefaults(this);
         View::applyColorRoles(this, QPalette::Window);
 
         setLayout(_layout);

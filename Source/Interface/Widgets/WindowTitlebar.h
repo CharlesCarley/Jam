@@ -65,7 +65,7 @@ namespace Jam::Editor
     private:
         void construct();
 
-        void appendButton(int icon, const std::function<void()>& function);
+        void appendButton(int icon, int type, const std::function<void()>& function);
 
         void mousePressEvent(QMouseEvent* event) override;
 

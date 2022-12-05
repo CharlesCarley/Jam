@@ -21,12 +21,12 @@
 */
 #include "Interface/Area/AreaToolbar.h"
 #include <QLabel>
-
 #include "AreaBinaryLayout.h"
 #include "AreaCreator.h"
 #include "Interface/Area/AreaContextSwitch.h"
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 
 namespace Jam::Editor
 {
@@ -66,25 +66,18 @@ namespace Jam::Editor
 
     void AreaToolBar::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::ToolRole);
+        Style::apply(this, AreaToolBarStyle);
 
-        _toolbar = new QHBoxLayout();
-        View::layoutDefaults(_toolbar);
+        _toolbar = Style::horizontalLayout();
 
-        const auto button = new AreaContextSwitch(_creator,
-                                                  _type,
-                                                  this);
-
+        const auto button = new AreaContextSwitch(_creator, _type, this);
         _toolbar->addWidget(button, 0, Qt::AlignLeft);
-        _toolbar->addWidget(
-            new QLabel(_creator->nameFromType(_type)), 1, Qt::AlignLeft);
 
         connect(button,
                 &AreaContextSwitch::wantsContextSwitch,
                 this,
-                [=](const int switchTo)
-                { emit wantsAreaSwitch(switchTo); });
+                &AreaToolBar::wantsAreaSwitch);
+
         setLayout(_toolbar);
     }
 }  // namespace Jam::Editor

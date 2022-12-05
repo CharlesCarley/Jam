@@ -26,13 +26,11 @@
 #include <QLineEdit>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Utils/Char.h"
 
 namespace Jam::Editor
 {
-
     VariableStepWidget::VariableStepWidget(QWidget* parent) :
         QWidget(parent)
     {
@@ -41,12 +39,7 @@ namespace Jam::Editor
 
     void VariableStepWidget::construct()
     {
-        View::emptyWidget(this);
-        View::buttonDefaults(this);
-
-        const auto layout = new QHBoxLayout();
-        View::layoutDefaults(layout, 2, 1);
-
+        const auto layout = Style::horizontalLayout(2,1);
         makePair(_name, "id");
         makePair(_value, ":=");
         makePair(_min, ">=");
@@ -91,7 +84,6 @@ namespace Jam::Editor
 
         dest.second = new QLineEdit();
         View::lineEditDefaults(dest.second, QPalette::Base);
-        dest.second->setMinimumWidth(Const::ButtonHeight);
         dest.second->setFocusPolicy(Qt::StrongFocus);
 
         connect(dest.second,
@@ -130,7 +122,7 @@ namespace Jam::Editor
         if (sender() == _name.second)
         {
             Su::filterRange(_data.name, s, 'a', 'z');
-            setFocus();
+            //setFocus();
         }
         else if (sender() == _min.second)
         {

@@ -172,7 +172,7 @@ namespace Jam::Editor
 
     void AreaBinaryLayout::construct(AreaNode* left, AreaNode* right)
     {
-        View::layoutDefaults(this);
+        Style::layoutDefaults(this);
 
         if (left)
         {

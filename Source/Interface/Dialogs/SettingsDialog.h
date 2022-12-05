@@ -40,25 +40,28 @@ namespace Jam::Editor
         {
             SettingRoot = 1,
             SettingProject,
-            SettingRun,
         };
-
     private:
         QTreeWidget*      _settingTree{nullptr};
         QHBoxLayout*      _settingsLayout{nullptr};
         SettingsDataState _state;
 
+    public:
+        explicit SettingsDialog(QWidget* parent = nullptr);
+        ~SettingsDialog() override;
+
+        void selectOption(Option opt);
+
+    private:
         void construct();
 
         QTreeWidgetItem* findItem(Option item) const;
 
         void updateTree(QWidget* widget) const;
 
-        QWidget* createPanel() const;
+        static QWidget* createPanel();
 
         void showProject();
-
-        void showRun();
 
         void showRoot();
 
@@ -71,11 +74,5 @@ namespace Jam::Editor
         static QTreeWidgetItem* constructTree();
 
         static bool isTypeOf(const QTreeWidgetItem* item, Option opt);
-
-    public:
-        explicit SettingsDialog(QWidget* parent = nullptr);
-        ~SettingsDialog() override;
-
-        void selectOption(Option opt);
     };
 }  // namespace Jam::Editor

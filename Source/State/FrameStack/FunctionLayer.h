@@ -33,14 +33,16 @@ namespace Jam::Editor::State
     class FunctionLayer final : public BaseLayer
     {
     private:
-        Vec2F               _origin{0.f, 0.f};
-        Eq::Statement       _stmt;
-        FunctionObjectMap   _memory;
-        FunctionObjectArray _expr;
-        FunctionObjectArray _vars;
-        VInt                _x{JtNpos};
-        VInt                _y{JtNpos};  // TODO: support y stepping.
-        size_t              _var{0x3E5};
+        Vec2F             _origin{0.f, 0.f};
+        Eq::Statement     _stmt;
+        FunctionObjectMap _memory;
+        ExpressionArray   _expr;
+        VariableArray     _vars;
+        VInt              _x{JtNpos};
+        VInt              _y{JtNpos};  // TODO: support y stepping.
+
+        size_t _ref{0x3E5};
+        size_t newRef();
 
     public:
         FunctionLayer();
@@ -52,14 +54,14 @@ namespace Jam::Editor::State
         ExpressionStateObject* findExpression(size_t refId);
         VariableStateObject*   findVariable(size_t refId);
 
-        void findStateObjects(size_t refId, FunctionObjectArray &dest) const;
+        void findStateObjects(size_t refId, FunctionObjectArray& dest) const;
 
         void removeVariable(size_t refId);
         void removeExpression(size_t refId);
 
-        const FunctionObjectArray& expressions() const;
-        const FunctionObjectArray& variables() const;
-        const FunctionObjectMap&   objects() const;
+        const ExpressionArray&   expressions() const;
+        const VariableArray&     variables() const;
+        const FunctionObjectMap& objects() const;
 
         bool update() override;
 
@@ -70,12 +72,12 @@ namespace Jam::Editor::State
         void renderExpression(RenderContext& canvas, I32 i0);
     };
 
-    inline const FunctionObjectArray& FunctionLayer::expressions() const
+    inline const ExpressionArray& FunctionLayer::expressions() const
     {
         return _expr;
     }
 
-    inline const FunctionObjectArray& FunctionLayer::variables() const
+    inline const VariableArray& FunctionLayer::variables() const
     {
         return _vars;
     }

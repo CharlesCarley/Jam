@@ -22,14 +22,10 @@
 #include "Interface/Areas/OutputArea.h"
 #include <QBoxLayout>
 #include <QCoreApplication>
-#include <QDir>
 #include <QPlainTextEdit>
-#include "AreaType.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
-#include "Interface/Constants.h"
-#include "Interface/Events/EventTypes.h"
-#include "Interface/Extensions.h"
+#include "Interface/Areas/AreaType.h"
 #include "Interface/Widgets/IconButton.h"
 #include "State/App.h"
 #include "State/OutputLogMonitor.h"
@@ -37,7 +33,7 @@
 namespace Jam::Editor
 {
     OutputArea::OutputArea(AreaCreator* creator,
-                           size_t       refId,
+                           const size_t refId,
                            QWidget*     parent) :
         Area(creator, AtOutput, refId, parent)
     {
@@ -46,19 +42,23 @@ namespace Jam::Editor
 
     OutputArea::~OutputArea()
     {
+        disconnect(State::outputState(),
+                   &State::OutputLogMonitor::fileChanged,
+                   this,
+                   &OutputArea::refreshOutput);
+
         delete _edit;
         _edit = nullptr;
     }
 
     void OutputArea::construct()
     {
-        if (const auto out = State::outputState())
-        {
-            connect(out,
-                    &State::OutputLogMonitor::fileChanged,
-                    this,
-                    &OutputArea::refreshOutput);
-        }
+        Style::apply(this, AreaStyle);
+
+        connect(State::outputState(),
+                &State::OutputLogMonitor::fileChanged,
+                this,
+                &OutputArea::refreshOutput);
 
         constructToolbar();
         setLayout(constructContent());
@@ -67,7 +67,8 @@ namespace Jam::Editor
 
     void OutputArea::constructToolbar()
     {
-        const auto clear = IconButton::createToolButton(Icons::Clear);
+        const auto clear = Style::toolButton(Icons::Clear);
+
         connect(clear,
                 &QPushButton::clicked,
                 this,
@@ -79,52 +80,29 @@ namespace Jam::Editor
 
     QLayout* OutputArea::constructContent()
     {
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
-
-        _edit = new QPlainTextEdit();
-        View::widgetDefaults(_edit, this);
+        _edit             = Style::plainText();
+        const auto layout = Style::verticalLayout();
 
         layout->addWidget(toolbar());
-        View::addLayoutMargin(layout,
-                              _edit,
-                              Const::AreaPadding);
+        layout->addWidget(_edit, 1);
         return layout;
-    }
-
-    bool OutputArea::event(QEvent* event)
-    {
-        if (event)
-        {
-            switch ((int)event->type())
-            {
-            case ProjectOpened:  // handle?
-            case ProjectClosed:
-            default:
-                break;
-            }
-        }
-        return Area::event(event);
     }
 
     void OutputArea::refreshOutput() const
     {
-        if (const auto out = State::outputState())
+        if (_edit)
         {
-            if (_edit)
+            if (const auto text = State::outputState()->text())
             {
-                if (const auto text = out->text())
-                {
-                    _edit->setPlainText(*text);
-                    _edit->moveCursor(QTextCursor::End);
-                }
+                _edit->setPlainText(*text);
+                _edit->moveCursor(QTextCursor::End);
             }
         }
     }
 
     void OutputArea::clearOutput()
     {
-        if (const auto out = State::outputState())
-            out->clear();
+        State::outputState()->clear();
     }
+
 }  // namespace Jam::Editor

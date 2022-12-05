@@ -24,6 +24,8 @@
 
 namespace Jam::Editor::Const
 {
+    // TODO: move to Style/Palette.h
+
     using QRole             = QPalette::ColorRole;
     constexpr QColor Base   = QColor(0x1D, 0x1D, 0x1E);
     constexpr QColor NoRole = QColor(0xFF, 0x00, 0xFF, 0x00);
@@ -32,12 +34,13 @@ namespace Jam::Editor::Const
     constexpr int SplitterSize   = 4;
     constexpr int ToolbarSpacing = 10;
     constexpr int IconPadding    = 3;
-    constexpr int IconSize       = 12;
-    constexpr int ButtonHeight   = 24;
+    //constexpr int IconSize       = 12;
+    //constexpr int ButtonHeight   = 24;
     constexpr int NormalFactor   = 125;
     constexpr int SubtleFactor   = 105;
-    constexpr int AreaPadding    = 2;
+    // constexpr int AreaPadding    = 2;
 
+    // TODO: remove
     constexpr QRole SplitterRole  = QRole::Shadow;
     constexpr QRole ToolRole      = QRole::Midlight;
     constexpr QRole AreaRole      = QRole::Dark;

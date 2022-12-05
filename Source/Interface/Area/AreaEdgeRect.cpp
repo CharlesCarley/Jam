@@ -45,14 +45,10 @@ namespace Jam::Editor
 
     void AreaEdgeRect::construct(Area* root)
     {
-        View::widgetDefaults(this);
-        View::emptyWidget(this);
+        Style::apply(this, AreaEdgeRectStyle);
 
-        _vLayout = new QVBoxLayout();
-        View::layoutDefaults(_vLayout);
-
-        _hLayout = new QHBoxLayout();
-        View::layoutDefaults(_hLayout);
+        _vLayout = Style::verticalLayout();
+        _hLayout = Style::horizontalLayout();
 
         if (_mask & AreaEdgeLeft)
         {

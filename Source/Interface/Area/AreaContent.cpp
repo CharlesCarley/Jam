@@ -28,7 +28,7 @@ namespace Jam::Editor
     AreaContent::AreaContent(const bool type) :
         _type{type}
     {
-        View::emptyWidget(this);
+        Style::apply(this, TransparentStyle);
         setFocus();
     }
 

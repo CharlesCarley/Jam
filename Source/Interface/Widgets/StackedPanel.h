@@ -27,10 +27,8 @@
 
 namespace Jam::Editor
 {
-    constexpr I32 StackedPanelMargin         = 8;
-    constexpr I32 StackedPanelSpacing        = 0;
     constexpr I32 StackedPanelContentMargin  = 4;
-    constexpr I32 StackedPanelContentSpacing = 2;
+    constexpr I32 StackedPanelContentSpacing = 4;
 
     class StackedPanel final : public QWidget
     {
@@ -38,7 +36,6 @@ namespace Jam::Editor
     private:
         QLabel*      _title{nullptr};
         QVBoxLayout* _layout{nullptr};
-        QVBoxLayout* _contentLayout{nullptr};
 
     public:
         explicit StackedPanel(QWidget* parent = nullptr);
@@ -49,8 +46,6 @@ namespace Jam::Editor
         void remove(QWidget* widget) const;
 
         void addLayout(QLayout* widget, int expand = 1) const;
-
-        void setLabel(const QString& label) const;
 
         QSize sizeHint() const override;
 

@@ -76,19 +76,19 @@ namespace Jam::Editor
             }
         }
 
-        QIcon iconFromType(int32_t type) override
+        Icons::Icon iconFromType(int32_t type) override
         {
             switch (type)
             {
             case AtOutput:
-                return get(Icons::Output);
+                return Icons::Output;
             case AtProject:
-                return get(Icons::File);
+                return Icons::File;
             case AtFrameStack:
-                return get(Icons::GraphArea);
+                return Icons::GraphArea;
             case AtMax:
             default:
-                return get(Icons::Settings);
+                return Icons::Settings;
             }
         }
 

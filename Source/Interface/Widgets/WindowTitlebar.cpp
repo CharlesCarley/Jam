@@ -19,13 +19,13 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-
 #include "Interface/Widgets/WindowTitlebar.h"
 #include <QBoxLayout>
 #include <QLabel>
 #include <QMouseEvent>
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 #include "Interface/Widgets/IconButton.h"
 
 namespace Jam::Editor
@@ -51,41 +51,41 @@ namespace Jam::Editor
 
     void WindowTitlebar::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::MenuBarRole, QPalette::BrightText);
+        Style::apply(this, MenuBarStyle);
 
-        _toolbar = new QHBoxLayout();
-        View::layoutDefaults(_toolbar, 0, Const::ToolbarSpacing);
-
+        _toolbar = Style::horizontalLayout(0, Const::ToolbarSpacing);
         _toolbar->setContentsMargins((_titleBarBit & Title) != 0 ? 6 : 1, 1, 0, 1);
+
         if (_titleBarBit & Title)
         {
             const auto title = new QLabel(_title);
-            View::applyColorRoles(title, Const::MenuBarRole, QPalette::BrightText);
+            Style::apply(title, TransparentStyle);
             _toolbar->addWidget(title, 1);
-
         }
         else
             _toolbar->addStretch();
 
         if (_titleBarBit & Minimize)
-            appendButton(Icons::Minimize, [=]
+            appendButton(Icons::Minimize, -1, [=]
                          { emit minimize(); });
         if (_titleBarBit & Maximize)
-            appendButton(Icons::Maximize, [=]
+            appendButton(Icons::Maximize, -1, [=]
                          { emit maximize(); });
         if (_titleBarBit & Close)
-            appendButton(Icons::XIcon, [=]
+            appendButton(Icons::XIcon, 2, [=]
                          { emit exit(); });
 
         setLayout(_toolbar);
     }
 
-    void WindowTitlebar::appendButton(int icon, const std::function<void()>& function)
+    void WindowTitlebar::appendButton(int icon, int type, const std::function<void()>& function)
     {
-        IconButton* btn = IconButton::createTitleButton((Icons::Icon)icon);
-        _toolbar->addWidget(btn);
+        const auto btn = Style::toolButton((Icons::Icon)icon);
+        Style::apply(btn, TransparentStyle);
+        if (type == 2)
+            Palette::setAccentRole(btn, QPalette::AlternateBase, Const::R03);
 
+        _toolbar->addWidget(btn);
         connect(btn, &QPushButton::clicked, this, function);
     }
 

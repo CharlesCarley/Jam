@@ -42,10 +42,10 @@ namespace Jam::Editor
 
     void FunctionAreaContent::construct()
     {
-        View::applyColorRoles(this);
-        _panel = new StackedPanel();
-        _panel->setLabel("Functions");
+        Style::apply(this, TransparentStyle);
 
+        _panel = new StackedPanel();
+        // _panel->setLabel("Functions");
         addPanel(_panel);
     }
 
@@ -76,7 +76,7 @@ namespace Jam::Editor
     }
 
     ExpressionWidget* FunctionAreaContent::addExpression(
-        const State::Expression* obj) const
+        const State::ExpressionStateObject* obj) const
     {
         const auto exp = new ExpressionWidget();
         _panel->addWidget(exp);
@@ -100,7 +100,7 @@ namespace Jam::Editor
     void FunctionAreaContent::addPoint() const
     {
         // TODO addPoint
-        //addExpression();
+        // addExpression();
     }
 
     void FunctionAreaContent::onDeleteGeneral() const
@@ -130,4 +130,5 @@ namespace Jam::Editor
         onDeleteGeneral();
         emit deleteExpression(refid, (ExpressionWidget*)sender());
     }
+
 }  // namespace Jam::Editor

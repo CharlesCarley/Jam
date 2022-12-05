@@ -25,6 +25,7 @@
 #include <QMouseEvent>
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 
 namespace Jam::Editor
 {
@@ -32,8 +33,7 @@ namespace Jam::Editor
         QWidget(parent),
         _orientation(ori)
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::SplitterRole, QPalette::NoRole);
+        Style::apply(this, AreaEdgeRectStyle);
     }
 
     void AreaEdge::contextMenuEvent(QContextMenuEvent* event)
@@ -43,7 +43,9 @@ namespace Jam::Editor
 
     void AreaEdge::enterEvent(QEnterEvent* event)
     {
-        setCursor(_orientation == Qt::Horizontal ? Qt::SplitVCursor : Qt::SplitHCursor);
+        setCursor(_orientation == Qt::Horizontal
+                      ? Qt::SplitVCursor
+                      : Qt::SplitHCursor);
     }
 
     void AreaEdge::leaveEvent(QEvent* event)
@@ -54,8 +56,8 @@ namespace Jam::Editor
     QSize AreaEdge::sizeHint() const
     {
         if (_orientation == Qt::Vertical)
-            return {Const::SplitterSize, -1};
-        return {-1, Const::SplitterSize};
+            return {Style::hint(SplitterSizeHint), -1};
+        return {-1, Style::hint(SplitterSizeHint)};
     }
 
 }  // namespace Jam::Editor

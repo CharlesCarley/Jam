@@ -20,35 +20,66 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "PaletteCache.h"
+#include "Interface/Style/Style.h"
 
-namespace Jam::Editor::Const
+namespace Jam::Editor
 {
-    extern void initializePalette();
-    extern void copyStylePalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
+    namespace Const
+    {
+        constexpr QPalette::ColorRole B00 = QPalette::Shadow;
+        constexpr QPalette::ColorRole B01 = QPalette::Dark;
+        constexpr QPalette::ColorRole B02 = QPalette::Base;
+        constexpr QPalette::ColorRole B03 = QPalette::Mid;
+        constexpr QPalette::ColorRole B04 = QPalette::Midlight;
+        constexpr QPalette::ColorRole G00 = QPalette::Light;
+        constexpr QPalette::ColorRole G01 = QPalette::Highlight;
+        constexpr QPalette::ColorRole G02 = QPalette::Window;
+        constexpr QPalette::ColorRole G03 = QPalette::WindowText;
+        constexpr QPalette::ColorRole G04 = QPalette::Button;
+        constexpr QPalette::ColorRole R00 = QPalette::ButtonText;
+        constexpr QPalette::ColorRole R01 = QPalette::ToolTipBase;
+        constexpr QPalette::ColorRole R02 = QPalette::ToolTipText;
+        constexpr QPalette::ColorRole R03 = QPalette::Text;
+        constexpr QPalette::ColorRole R04 = QPalette::BrightText;
+        constexpr QPalette::ColorRole Y00 = QPalette::HighlightedText;
+        constexpr QPalette::ColorRole Y01 = QPalette::Link;
+        constexpr QPalette::ColorRole Y02 = QPalette::LinkVisited;
+        constexpr QPalette::ColorRole Y03 = QPalette::AlternateBase;
+        constexpr QPalette::ColorRole Y04 = QPalette::PlaceholderText;
 
-    extern QColor ModColor(const QColor& color, int hue, qreal saturation = 1, qreal value = 1);
+        [[deprecated("Use Editor::Palette instead")]] extern void accentPalette(QPalette& palette);
 
-    constexpr QColor Blue = QColor(0x34, 0x43, 0x82);
-    const QColor Red    = ModColor(Blue, 345, 1, 1);
-    const QColor Green  = ModColor(Blue, 70, 1, 1);
-    const QColor Yellow = ModColor(Blue, 45, .75, 1);
+        constexpr QColor MakeGrey(const int o)
+        {
+            return {0x19 + 11 * o, 0x19 + 11 * o, 0x1A + 11 * o};
+        }
 
-    const QColor Blue00 = ModColor(Blue, 190, 1, 0.6);
-    const QColor Blue01 = ModColor(Blue, 190, 1, 0.7);
-    const QColor Blue02 = ModColor(Blue, 190, 1, 0.8);
-    const QColor Blue03 = ModColor(Blue, 190, 1, 0.9);
-    const QColor Blue04 = ModColor(Blue, 190, 1, 1.0);
+        [[deprecated("Use Editor::Palette instead")]] extern void initializePalette();
 
-    const QColor Green00 = ModColor(Blue, 70, 1, 0.6);
-    const QColor Green01 = ModColor(Blue, 70, 1, 0.7);
-    const QColor Green02 = ModColor(Blue, 70, 1, 0.8);
-    const QColor Green03 = ModColor(Blue, 70, 1, 0.9);
-    const QColor Green04 = ModColor(Blue, 70, 1, 1.0);
+        [[deprecated("Use Editor::Palette instead")]] extern void copyStylePalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
+    }  // namespace Const
 
-    const QColor Red00 = ModColor(Blue, 345, 1, 0.6);
-    const QColor Red01 = ModColor(Blue, 345, 1, 0.7);
-    const QColor Red02 = ModColor(Blue, 345, 1, 0.8);
-    const QColor Red03 = ModColor(Blue, 345, 1, 0.9);
-    const QColor Red04 = ModColor(Blue, 345, 1, 1.0);
-}  // namespace Jam::Editor::Const
+
+    class Palette
+    {
+    public:
+        static void applyInternal();
+
+        [[deprecated("TODO: reorganize the palette order")]]
+        static void getApplicationPalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
+
+        [[deprecated("TODO: reorganize the palette order")]]
+        static void getAccentPalette(QPalette& palette);
+
+        static void getSliderPalette(QPalette& palette);
+
+        static void swapColorRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b);
+
+        static void swapAccentRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b);
+
+        static void setAccentRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b);
+
+        static void setColorRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b);
+    };
+
+}  // namespace Jam::Editor

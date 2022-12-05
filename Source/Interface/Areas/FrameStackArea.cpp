@@ -26,7 +26,6 @@
 #include "FrameStackAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
-#include "Interface/Constants.h"
 #include "Interface/Events/EventTypes.h"
 #include "Interface/Extensions.h"
 #include "Interface/Widgets/IconButton.h"
@@ -45,45 +44,25 @@ namespace Jam::Editor
 
     void FrameStackArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::AreaRole);
+        Style::apply(this, AreaStyle);
 
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
+        const auto layout = Style::verticalLayout();
+
         AreaToolBar* tools = toolbar();
 
-        const auto home = IconButton::createToolButton(Icons::Home);
-        tools->addWidget(
-            home,
-            0,
-            Qt::AlignRight);
+        const auto home = Style::toolButton(Icons::Home);
+        tools->addWidget(home, 0, Qt::AlignRight);
+        connect(home, &QPushButton::clicked, this, [=]
+                { _private->resetAxis(); });
 
         _private = new FrameStackAreaContent();
         layout->addWidget(tools);
         layout->addWidget(_private, 1);
 
-        connect(home, &QPushButton::clicked, this, [=]
-                { _private->resetAxis(); });
+        _private->resetAxis();
 
         setLayout(layout);
     }
 
-    bool FrameStackArea::event(QEvent* event)
-    {
-        switch ((AreaEvents)event->type())
-        {
-        case ProjectOpened:
-            _private->resetAxis();
-            break;
-        case ProjectClosed:
-        case LayerSelect:
-        case SplitEvent:
-        case MergeLeftEvent:
-        case MergeRightEvent:
-        case SwitchContentEvent:
-            break;
-        }
-        return Area::event(event);
-    }
 
 }  // namespace Jam::Editor

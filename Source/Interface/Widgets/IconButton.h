@@ -20,78 +20,17 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
+#include <QCheckBox>
 #include <QIcon>
 #include <QPushButton>
 #include "OkCancelWidget.h"
+#include "Interface/Style/Icons.h"
 
 class QWidget;
 class QPushButton;
 
 namespace Jam::Editor
 {
-    namespace Icons
-    {
-        enum Icon
-        {
-            Add,
-            ArrowBack,
-            ArrowDownward,
-            ArrowDropDown,
-            ArrowDropUp,
-            ArrowForward,
-            ArrowUpward,
-            BugReport,
-            Check,
-            CheckBox,
-            CheckOff,
-            CheckOn,
-            Clear,
-            Close,
-            Create,
-            Cube,
-            Delete,
-            Drop,
-            EditSettings,
-            File,
-            Folder,
-            FolderOpen,
-            Fullscreen,
-            FullscreenExit,
-            Function,
-            Gamepad,
-            Graph,
-            GraphArea,
-            GraphBar,
-            GraphLine,
-            Help,
-            Home,
-            Link,
-            Maximize,
-            Menu,
-            Minimize,
-            MoreHorizontal,
-            MoreVertical,
-            Output,
-            Point,
-            Quit,
-            Refresh,
-            Save,
-            SelectAll,
-            Settings,
-            Share,
-            Slider,
-            Sync,
-            TrendingFlat,
-            Undo,
-            Update,
-            Visibility,
-            VisibilityOff,
-            Window,
-            XIcon,
-        };
-        extern QIcon get(Icon icon);
-    }  // namespace Icons
-
     class IconButton final : public QPushButton
     {
         Q_OBJECT
@@ -110,10 +49,28 @@ namespace Jam::Editor
             const Icons::Icon& icon,
             QWidget*           parent = nullptr);
 
+        [[deprecated("Remove: use Buttons::createAreaToolButton instead")]]
         static IconButton* createTitleButton(
             const Icons::Icon& icon,
             QWidget*           parent = nullptr);
         static IconButton* create(
+            const Icons::Icon& icon,
+            QWidget*           parent = nullptr);
+    };
+
+    class Buttons
+    {
+        // TODO: Move and rename methods in IconButton here.
+        // TODO: Keep usage to types that need created
+        // with common settings and style properties
+    public:
+        static QCheckBox* createCheckBox(const QString& label, bool initialState);
+
+        static IconButton* createTitleButton(
+            const Icons::Icon& icon,
+            QWidget*           parent = nullptr);
+
+        static IconButton* createAreaToolButton(
             const Icons::Icon& icon,
             QWidget*           parent = nullptr);
     };

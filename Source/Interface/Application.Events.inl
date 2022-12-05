@@ -59,7 +59,7 @@ namespace Jam::Editor
         default:
             break;
         }
-        return QMainWindow::event(event);
+        return QWidget::event(event);
     }
 
 }  // namespace Jam::Editor

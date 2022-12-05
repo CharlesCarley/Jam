@@ -20,22 +20,17 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Area/AreaNode.h"
-#include "Interface/Extensions.h"
 
 namespace Jam::Editor
 {
-
     AreaNode::AreaNode(AreaCreator* creator, QWidget* parent) :
         QWidget(parent),
         _creator(creator)
     {
-        View::emptyWidget(this);
+        Style::apply(this, TransparentStyle);
     }
 
-    AreaNode::~AreaNode()
-    {
-        (void)disconnect(this);
-    }
+    AreaNode::~AreaNode() = default;
 
 }  // namespace Jam::Editor
 

@@ -38,13 +38,11 @@ namespace Jam::Editor
 
     public:
         explicit OutputArea(AreaCreator* creator,
-                            size_t       refId = JtNpos,
+                            size_t       refId  = JtNpos,
                             QWidget*     parent = nullptr);
         ~OutputArea() override;
 
     private:
-        bool event(QEvent* event) override;
-
         void construct();
 
         void constructToolbar();

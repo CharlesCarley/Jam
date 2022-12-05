@@ -21,7 +21,6 @@
 */
 #include "Interface/Areas/GridAreaContent.h"
 #include <QWidget>
-#include "Interface/Extensions.h"
 #include "Interface/Widgets/I32Widget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "State/App.h"
@@ -40,10 +39,10 @@ namespace Jam::Editor
 
     void GridAreaContent::construct()
     {
-        View::applyColorRoles(this);
+        Style::apply(this, TransparentStyle);
+
 
         const auto panel = new StackedPanel();
-        panel->setLabel("Axis");
 
         _x = new I32Widget();
         _x->setLabel("x := ");

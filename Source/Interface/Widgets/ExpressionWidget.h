@@ -43,7 +43,7 @@ namespace Jam::Editor
 
     private:
         StringWidget* _line{nullptr};
-        IconButton*   _del{nullptr};
+        QPushButton*  _delete{nullptr};
         size_t        _refId{JtNpos};
 
     public:

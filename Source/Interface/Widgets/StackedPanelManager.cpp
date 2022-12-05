@@ -84,8 +84,8 @@ namespace Jam::Editor
         int i = 0;
         while (i < _items.count())
         {
-            auto item = _items.at(i++);
-            if (auto panel = item->widget())
+            const auto item = _items.at(i++);
+            if (const auto panel = item->widget())
             {
                 int h = panel->sizeHint().height();
                 panel->setGeometry({x1, y1 + h * (i - 1), x2 - x1, h});

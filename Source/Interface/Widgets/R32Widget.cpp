@@ -25,7 +25,7 @@
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Extensions.h"
-#include "R32WidgetPrivate.h"
+#include "R32WidgetSlider.h"
 #include "VariableStepWidget.h"
 
 namespace Jam::Editor
@@ -46,12 +46,12 @@ namespace Jam::Editor
 
     void R32Widget::construct()
     {
-        View::applyColorRoles(this);
+        Style::apply(this, AreaSliderStyle);
 
         _layout = new QHBoxLayout();
         View::layoutDefaults(_layout);
 
-        _value = new R32WidgetPrivate();
+        _value = new R32WidgetSlider();
 
         _step = new VariableStepWidget();
         _step->setVisible(false);
@@ -78,11 +78,11 @@ namespace Jam::Editor
         if (_value)
         {
             connect(_value,
-                    &R32WidgetPrivate::doubleClicked,
+                    &R32WidgetSlider::doubleClicked,
                     this,
                     &R32Widget::onDoubleClicked);
             connect(_value,
-                    &R32WidgetPrivate::valueChanged,
+                    &R32WidgetSlider::valueChanged,
                     this,
                     &R32Widget::onValueChanged);
         }

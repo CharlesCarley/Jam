@@ -20,22 +20,22 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QWidget>
-#include "Interface/PersistentSettings.h"
-
+#include <QFileDialog>
+#include "Interface/Dialogs/Dialog.h"
+#include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor
 {
-    class SettingsDialogRunPage final : public QWidget
+    class PaletteDialog final : public Dialog
     {
         Q_OBJECT
     private:
-        SettingsDataState* _state{nullptr};
-
         void construct();
+
     public:
-        explicit SettingsDialogRunPage(SettingsDataState* state, QWidget* parent = nullptr);
-        ~SettingsDialogRunPage() override;
+        explicit PaletteDialog(QWidget* parent = nullptr);
+
+        ~PaletteDialog() override;
     };
 
 }  // namespace Jam::Editor

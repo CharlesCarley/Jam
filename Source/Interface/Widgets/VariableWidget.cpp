@@ -36,15 +36,12 @@ namespace Jam::Editor
 
     void VariableWidget::construct()
     {
-        View::widgetDefaults(this);
         View::buttonDefaults(this);
 
-        const auto layout = new QHBoxLayout();
-        View::layoutDefaults(layout);
+        const auto layout = Style::horizontalLayout();
 
         _line = new R32Widget();
-        _del  = IconButton::create(Icons::Delete);
-        View::copyColorRoles(_del, this);
+        _del  = Style::toolButton(Icons::Delete);
 
         layout->addWidget(_line, 1);
         layout->addWidget(_del);

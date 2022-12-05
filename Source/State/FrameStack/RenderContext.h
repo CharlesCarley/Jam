@@ -21,6 +21,7 @@
 */
 #pragma once
 #include <QPainter>
+#include "Interface/Style/Palette.h"
 #include "Math/Axis.h"
 #include "Math/Color.h"
 #include "Math/Screen.h"
@@ -38,6 +39,7 @@ namespace Jam::Editor::State
         Screen    _screen;
         QPainter* _painter;
         QPen      _pen{};
+        QPalette  _palette;
 
         mutable QString _text;
 
@@ -51,6 +53,8 @@ namespace Jam::Editor::State
         const Vec2I& size() const;
 
         void axisValue(int x0, int y0, const R32& v, bool hor = true) const;
+
+        void selectColor(const QPalette::ColorRole& col, U8 width = 1);
 
         void selectColor(const U32& col, U8 width = 1);
 

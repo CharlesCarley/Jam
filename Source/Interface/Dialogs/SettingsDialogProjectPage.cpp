@@ -20,9 +20,10 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Dialogs/SettingsDialogProjectPage.h"
-#include <QCheckBox>
 #include <QVBoxLayout>
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
+#include "Interface/Widgets/IconButton.h"
 
 namespace Jam::Editor
 {
@@ -40,29 +41,28 @@ namespace Jam::Editor
 
     void SettingsDialogProjectPage::construct()
     {
-        const auto projectLayout = new QVBoxLayout();
-        View::layoutDefaults(projectLayout);
+        const auto projectLayout = Style::verticalLayout();
 
-        const auto minify = new QCheckBox("Write compressed XML files");
-        minify->setChecked(_state? _state->minify : false);
+        const auto minify = Buttons::createCheckBox(
+            "Write compressed XML files",
+            _state ? _state->minify : false);
 
-        const auto reloadLast = new QCheckBox("Reload last project on startup");
-        reloadLast->setChecked(_state? _state->reload : false);
+        const auto reload = Buttons::createCheckBox(
+            "Reload last project on startup",
+            _state ? _state->reload : false);
 
         projectLayout->addWidget(minify, 0, Qt::AlignTop);
-        projectLayout->addWidget(reloadLast, 1, Qt::AlignTop);
+        projectLayout->addWidget(reload, 1, Qt::AlignTop);
 
         connect(minify, &QCheckBox::toggled, this, [=]
-        {
+                {
             if (_state)
-                _state->minify = !_state->minify;
-        });
+                _state->minify = !_state->minify; });
 
-        connect(reloadLast, &QCheckBox::toggled, this, [=]
-        {
+        connect(reload, &QCheckBox::toggled, this, [=]
+                {
             if (_state)
-                _state->reload = !_state->reload;
-        });
+                _state->reload = !_state->reload; });
 
         setLayout(projectLayout);
     }

@@ -51,7 +51,7 @@ namespace Jam::Editor
 
     private:
         R32Widget*          _line{nullptr};
-        IconButton*         _del{nullptr};
+        QPushButton*        _del{nullptr};
         VariableStepWidget* _edit{nullptr};
         size_t              _refId{JtNpos};
         VariableStepData    _stepData;

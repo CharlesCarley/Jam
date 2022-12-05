@@ -40,6 +40,8 @@ namespace Jam::Editor
 
     void FrameStackAreaContent::construct()
     {
+        Style::apply(this, TransparentStyle);
+
         setMinimumSize(I32(ScreenMin), I32(ScreenMin));
         setMaximumSize(I32(ScreenMax), I32(ScreenMax));
 

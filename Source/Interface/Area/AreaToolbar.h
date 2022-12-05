@@ -33,12 +33,9 @@ namespace Jam::Editor
         void wantsAreaSwitch(int to);
 
     private:
-        void construct();
-
         QHBoxLayout* _toolbar{nullptr};
         int32_t      _type{NoAreaType};
         AreaCreator* _creator;
-                             
 
     public:
         explicit AreaToolBar(AreaCreator* creator,
@@ -46,9 +43,12 @@ namespace Jam::Editor
                              QWidget*     parent = nullptr);
         ~AreaToolBar() override;
 
-        void addWidget(QWidget* widget, int stretch = 0, Qt::Alignment al={}) const;
+        void addWidget(QWidget* widget, int stretch = 0, Qt::Alignment al = {}) const;
 
         void addStretch() const;
+
+    private:
+        void construct();
     };
 
 }  // namespace Jam::Editor

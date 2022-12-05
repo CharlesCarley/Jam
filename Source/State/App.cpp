@@ -23,7 +23,6 @@
 #include "FrameStackManager.h"
 #include "State/OutputLogMonitor.h"
 #include "State/ProjectManager.h"
-#include "Utils/Definitions.h"
 
 namespace Jam::Editor::State
 {

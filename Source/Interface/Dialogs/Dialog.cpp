@@ -30,27 +30,31 @@
 
 namespace Jam::Editor
 {
+    constexpr Qt::WindowFlags WindowFlags = Qt::FramelessWindowHint |
+                                            Qt::WindowStaysOnTopHint;
+
+
     Dialog::Dialog(const int options, QWidget* parent) :
-        QDialog(parent, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
+        QDialog(parent, WindowFlags)
     {
-        constructDialog(options & ~Minimize);
+        construct(options & ~Minimize);
     }
 
+
     Dialog::Dialog(QString title, const int options, QWidget* parent) :
-        QDialog(parent, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint),
+        QDialog(parent, WindowFlags),
         _title(std::move(title))
     {
-        constructDialog(options & ~Minimize);
+        construct(options & ~Minimize);
     }
 
     Dialog::~Dialog() = default;
 
-    void Dialog::constructDialog(const int options)
+    void Dialog::construct(const int options)
     {
-        View::dialogDefaults(this);
         setModal(true);
+        View::constrainToScreen(this);
 
-        // construct the surrounding widgets for the frame
         _layout = new QVBoxLayout();
         View::layoutDefaults(_layout, _border << 1);
 
@@ -73,12 +77,12 @@ namespace Jam::Editor
         ContentContainer* cent = new ContentContainer();
         cent->setContentLayout(_content);
         cent->setBorder(1);
-        View::applyColorRoles(cent, _borderRole);
 
+        View::applyColorRoles(cent, _borderRole);
         connect(cent, &ContentContainer::mouseEntered, this, &Dialog::resetCursor);
         setMouseTracking(true);
-        _layout->addWidget(cent, 1);
 
+        _layout->addWidget(cent, 1);
         View::applyColorRoles(this, _borderRole);
         setLayout(_layout);
     }
@@ -93,23 +97,37 @@ namespace Jam::Editor
             connect(applyAndExitOrExit,
                     &OkCancelWidget::okClicked,
                     this,
-                    [=]
-                    { emit okClicked(); });
-
+                    &Dialog::okClicked);
             connect(applyAndExitOrExit,
                     &OkCancelWidget::cancelClicked,
                     this,
-                    [=]
-                    { emit cancelClicked(); });
+                    &Dialog::cancelClicked);
         }
 
         if (opts & Close)
-            connect(title, &WindowTitlebar::exit, this, [=]
+        {
+            connect(title,
+                    &WindowTitlebar::exit,
+                    this,
+                    [=]
                     { close(); });
+        }
+
         if (opts & Maximize)
-            connect(title, &WindowTitlebar::maximize, this, &Dialog::maximize);
+        {
+            connect(title,
+                    &WindowTitlebar::maximize,
+                    this,
+                    &Dialog::maximize);
+        }
+
         if (!(opts & Locked))
-            connect(title, &WindowTitlebar::dragDialog, this, &Dialog::drag);
+        {
+            connect(title,
+                    &WindowTitlebar::dragDialog,
+                    this,
+                    &Dialog::drag);
+        }
     }
 
     void Dialog::applyLayout(QLayout* layout)
@@ -156,7 +174,8 @@ namespace Jam::Editor
     {
         if (!isMaximized())
         {
-            if (event->button() == Qt::LeftButton && _scaleEdge != None)
+            if (event->button() == Qt::LeftButton &&
+                _scaleEdge != None)
             {
                 _last = event->globalPosition();
                 _drag = true;
@@ -302,9 +321,8 @@ namespace Jam::Editor
         int x1, y1, x2, y2;
         geom.getCoords(&x1, &y1, &x2, &y2);
 
-        const auto loc = offset;
-        const int  x0  = int(loc.x());
-        const int  y0  = int(loc.y());
+        const int x0 = int(offset.x());
+        const int y0 = int(offset.y());
 
         const int cornerTest = 12 * _border;
         const int edgeTest   = 2 * _border;

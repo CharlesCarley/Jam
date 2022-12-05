@@ -40,37 +40,30 @@ namespace Jam::Editor::View
 
     extern void windowRect(QRect& winRect, const QWidget* widget);
 
-    extern void dialogDefaults(QWidget* widget);
+    extern void constrainToScreen(QWidget* widget);
 
     extern void contractRect(QRect& winRect, int scale);
 
-    extern void applyColorRoles(QWidget* widget, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
+    [[deprecated("Move to Style/Pallete.h")]] void applyColorRoles(
+        QWidget*    widget,
+        const QRole background = QPalette::NoRole,
+        const QRole foreground = QPalette::NoRole);
 
-    extern void copyColorRoles(QWidget* dst, const QWidget* src);
+    [[deprecated("Move to Style/Pallete.h")]] extern void clearTextRole(QWidget* widget, QRole foreground = QRole::Text);
 
-    extern void clearTextRole(QWidget* widget, QRole foreground = QRole::Text);
+    [[deprecated("move to style")]] extern void buttonDefaults(QWidget* widget);
 
-    extern void widgetDefaults(QWidget* widget, int margin = 0, const QWidget* parent = nullptr);
+    [[deprecated("Use Style instead")]] extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
 
-    extern void widgetDefaults(QWidget* widget, const QWidget* parent);
+    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void localDefaults(QWidget* widget, int margin = 0, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
 
-    extern void buttonDefaults(QWidget* widget);
+    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void treeWidgetDefaults(QTreeWidget* dst);
 
-    extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
-
-    extern void localDefaults(QWidget* widget, int margin = 0, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
-
-    extern void emptyWidget(QWidget* dst);
-
-    extern void menuRole(QWidget* dst);
-
-    extern void treeWidgetDefaults(QTreeWidget* dst);
-
-    extern void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent);
+    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent);
 
     extern void lineEditDefaults(QLineEdit* dst, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
 
-    extern void pushButtonDefaults(QPushButton* dst);
+    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void pushButtonDefaults(QPushButton* dst);
 
     extern void addLayoutMargin(QBoxLayout* dst, QWidget* content, int margin);
 
@@ -81,6 +74,6 @@ namespace Jam::Editor::View
     extern void clearLayout(QLayout*               layout,
                             SimpleArray<QWidget*>& dangled);
 
-    extern QSize calcMaxHeight(const QLayout * layout);
+    extern QSize calcMaxHeight(const QLayout* layout);
 
 }  // namespace Jam::Editor::View

@@ -48,7 +48,7 @@ namespace Jam::Editor
     {
         View::localDefaults(this);
         View::buttonDefaults(this);
-        Const::copyStylePalette(_pal);
+        Palette::getApplicationPalette(_pal);
     }
 
     bool I32WidgetPrivate::isInInnerRect(const QPointF& d) const

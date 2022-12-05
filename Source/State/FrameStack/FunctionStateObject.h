@@ -50,8 +50,6 @@ namespace Jam::Editor::State
         const size_t& location() const { return _loc; }
     };
 
-    using FunctionObjectArray = SimpleArray<FunctionStateObject*>;
-
     class VariableStateObject : public FunctionStateObject
     {
     private:
@@ -94,6 +92,9 @@ namespace Jam::Editor::State
 
         void setText(const String& text);
     };
-    using Expression = ExpressionStateObject;
+
+    using FunctionObjectArray = SimpleArray<FunctionStateObject*>;
+    using ExpressionArray     = SimpleArray<ExpressionStateObject*>;
+    using VariableArray       = SimpleArray<VariableStateObject*>;
 
 }  // namespace Jam::Editor::State

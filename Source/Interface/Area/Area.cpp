@@ -22,16 +22,14 @@
 #include "Interface/Area/Area.h"
 #include "AreaRefId.h"
 #include "Interface/Area/AreaToolbar.h"
-#include "Interface/Constants.h"
 #include "Interface/Events/BranchEvent.h"
-#include "Interface/Extensions.h"
 
 namespace Jam::Editor
 {
-    Area::Area(AreaCreator* creator,
-               int32_t      type,
-               size_t       refId,
-               QWidget*     parent) :
+    Area::Area(AreaCreator*  creator,
+               const int32_t type,
+               const size_t  refId,
+               QWidget*      parent) :
         QWidget(parent),
         _creator(creator),
         _type(type),
@@ -60,16 +58,13 @@ namespace Jam::Editor
     // The rest of it's definition is left up to the derived class.
     void Area::constructBase(const int32_t type)
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, Const::AreaRole);
+        Style::apply(this, AreaStyle);
 
         _toolbar = new AreaToolBar(_creator, type, this);
-
         connect(_toolbar,
                 &AreaToolBar::wantsAreaSwitch,
                 this,
-                [=](const int swapTo)
-                { emit wantsContextSwitch(swapTo); });
+                &Area::wantsContextSwitch);
     }
 
 }  // namespace Jam::Editor

@@ -23,11 +23,8 @@
 #include <QBoxLayout>
 #include <QTreeWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
 #include "Interface/Dialogs/SettingsDialogProjectPage.h"
 #include "Interface/Dialogs/SettingsDialogRootPage.h"
-#include "Interface/Dialogs/SettingsDialogRunPage.h"
-#include "Interface/Extensions.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor
@@ -42,21 +39,16 @@ namespace Jam::Editor
 
     void SettingsDialog::construct()
     {
+        Style::apply(this, AreaDialogStyle);
+
         _state = PersistentSettings().copy();
-        View::applyColorRoles(this, Const::AreaRole);
 
-        _settingTree = new QTreeWidget();
-
-        // copies down the color roles from this to to the tree.
-        View::treeWidgetDefaults(_settingTree, this);
-
+        _settingTree = Style::treeWidget(AreaSettingsTreeStyle);
         _settingTree->setMaximumWidth(120);
         _settingTree->setMinimumWidth(120);
         _settingTree->addTopLevelItem(constructTree());
 
-        _settingsLayout = new QHBoxLayout();
-        View::layoutDefaults(_settingsLayout, 7, 7);
-
+        _settingsLayout = Style::horizontalLayout(7,7);
         _settingsLayout->addWidget(_settingTree, 0);
         showProject();
 
@@ -82,9 +74,9 @@ namespace Jam::Editor
                 &Dialog::cancelClicked,
                 this,
                 &SettingsDialog::onCancelClicked);
-        _settingTree->expandAll();
 
-        show();
+        _settingTree->expandAll();
+        setFixedSize(sizeHint());
     }
 
     void SettingsDialog::selectOption(const Option opt)
@@ -134,9 +126,6 @@ namespace Jam::Editor
             case SettingProject:
                 showProject();
                 break;
-            case SettingRun:
-                showRun();
-                break;
             default:
             case SettingRoot:
                 showRoot();
@@ -165,12 +154,7 @@ namespace Jam::Editor
         projectItem->setText(0, "Project");
         projectItem->setData(0, Qt::UserRole, SettingProject);
 
-        auto* runItem = new QTreeWidgetItem();
-        runItem->setText(0, "Run");
-        runItem->setData(0, Qt::UserRole, SettingRun);
-
         rootItem->addChild(projectItem);
-        rootItem->addChild(runItem);
 
         rootItem->setExpanded(true);
         projectItem->setSelected(true);
@@ -193,22 +177,16 @@ namespace Jam::Editor
         }
     }
 
-    QWidget* SettingsDialog::createPanel() const
+    QWidget* SettingsDialog::createPanel()
     {
         const auto panel = new QWidget();
         panel->setMinimumSize(200, 200);
-        View::widgetDefaults(panel);
         return panel;
     }
 
     void SettingsDialog::showProject()
     {
         updateTree(new SettingsDialogProjectPage(&_state, this));
-    }
-
-    void SettingsDialog::showRun()
-    {
-        updateTree(new SettingsDialogRunPage(&_state, this));
     }
 
     void SettingsDialog::showRoot()

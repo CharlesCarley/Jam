@@ -51,18 +51,16 @@ namespace Jam::Editor::State
             renderExpression(canvas, i0);
     }
 
-    void FunctionLayer::renderExpression(RenderContext& canvas, I32 i0)
+    void FunctionLayer::renderExpression(RenderContext& canvas, const I32 i0)
     {
-        for (const auto obj : _expr)
+        for (const auto vso : _expr)
         {
-            const ExpressionStateObject* vso = (ExpressionStateObject*)obj;
-
             const Vec2F a = eval(R32(i0 - 1), vso->symbols());
             const Vec2F b = eval(R32(i0), vso->symbols());
 
             if (abs(a.y - b.y) <= _screen.h())
             {
-                canvas.selectColor(Blue04, 2);
+                canvas.selectColor((QPalette::ColorRole)B03, 2);
                 canvas.drawLine(a.x, a.y, b.x, b.y);
             }
             else
@@ -71,7 +69,7 @@ namespace Jam::Editor::State
 
                 if (isnan(c.y) && !isnan(b.y))
                 {
-                    canvas.selectColor(Green04, 2);
+                    canvas.selectColor((QPalette::ColorRole)R04, 2);
                     const R32 yV = sign(a.x) * (_screen.h() + 3);
                     canvas.drawLine(a.x, yV, b.x, b.y);
                 }
@@ -110,9 +108,8 @@ namespace Jam::Editor::State
 
     bool FunctionLayer::update()
     {
-        for (const auto obj : _vars)
+        for (const auto vso : _vars)
         {
-            const VariableStateObject* vso = (VariableStateObject*)obj;
             if (!vso->name().empty())
                 _stmt.set(vso->name(), R64(vso->value()));
         }
@@ -121,7 +118,7 @@ namespace Jam::Editor::State
 
     VariableStateObject* FunctionLayer::createVariable(const size_t loc)
     {
-        VariableStateObject* vso = new VariableStateObject(_var++, loc);
+        VariableStateObject* vso = new VariableStateObject(newRef(), loc);
         _memory.insert(vso->id(), vso);
         _vars.push_back(vso);
         return vso;
@@ -129,7 +126,7 @@ namespace Jam::Editor::State
 
     ExpressionStateObject* FunctionLayer::createExpression(const size_t loc)
     {
-        ExpressionStateObject* eso = new ExpressionStateObject(_var++, loc);
+        ExpressionStateObject* eso = new ExpressionStateObject(newRef(), loc);
         _memory.insert(eso->id(), eso);
         _expr.push_back(eso);
         return eso;
@@ -174,7 +171,10 @@ namespace Jam::Editor::State
         if (VariableStateObject* vso = findVariable(refId))
         {
             if (const U32 idx = _vars.find(vso); idx != JtNpos32)
+            {
+                _stmt.set(vso->name(), 0);
                 _vars.remove(idx);
+            }
 
             _memory.remove(refId);
             delete vso;
@@ -191,4 +191,10 @@ namespace Jam::Editor::State
             delete eso;
         }
     }
+
+    size_t FunctionLayer::newRef()
+    {
+        return ++_ref;
+    }
+
 }  // namespace Jam::Editor::State

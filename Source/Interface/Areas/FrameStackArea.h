@@ -40,7 +40,6 @@ namespace Jam::Editor
 
     private:
         void construct();
-        bool event(QEvent* event) override;
     };
 
 }  // namespace Jam::Editor

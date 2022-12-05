@@ -38,8 +38,10 @@ namespace Jam::Editor
 
     void StringWidget::construct()
     {
-        View::applyColorRoles(this, QPalette::Base);
+        Style::apply(this, QLineEditStyle);
+
         View::buttonDefaults(this);
+        setMinimumWidth(Style::hint(ButtonWidth));
 
         const auto layout = new QHBoxLayout();
         View::layoutDefaults(layout);
@@ -47,7 +49,6 @@ namespace Jam::Editor
         _line = new QLineEdit();
         View::lineEditDefaults(_line);
         View::buttonDefaults(_line);
-
 
         layout->addWidget(_line);
         setLayout(layout);

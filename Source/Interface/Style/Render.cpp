@@ -30,6 +30,256 @@
 
 namespace Jam::Editor::Const
 {
+    Renderer::Renderer(PaletteCache*       cache,
+                       const QStyle*       parent,
+                       const QStyleOption* option,
+                       QPainter*           painter,
+                       const QWidget*      widget) :
+        _cache(cache),
+        _style(parent),
+        _option(option),
+        _painter(painter),
+        _widget(widget)
+    {
+        Q_ASSERT(option && widget && painter);
+        _cache->setCacheContext(option, widget);
+        _painter->save();
+    }
+
+    Renderer::~Renderer()
+    {
+        _painter->restore();
+    }
+
+    void Renderer::horizontalRule(const QColor& color) const
+    {
+        int x1, y1, x2, y2;
+        _option->rect.getCoords(&x1, &y1, &x2, &y2);
+        const int cy = y1 + ((y2 - y1) >> 1);
+
+        _painter->setPen(color);
+        _painter->drawLine(x1, cy, x2, cy);
+    }
+
+    void Renderer::stroke() const
+    {
+        _painter->setPen(background().lighter());
+        _painter->drawRect(_option->rect);
+    }
+
+    void Renderer::fill() const
+    {
+        if (_option->state & QStyle::State_ReadOnly)
+            _painter->fillRect(_option->rect, background().lighter());
+        else
+            _painter->fillRect(_option->rect, background());
+    }
+
+    void Renderer::fillRect(const QRect& rect, const QColor& color) const
+    {
+        _painter->fillRect(rect, color);
+    }
+
+    void Renderer::strokeRect(const QRect& rect, const QColor& color) const
+    {
+        _painter->save();
+        _painter->setPen(color);
+        _painter->drawRect(rect);
+        _painter->restore();
+    }
+
+    void Renderer::pushButton() const
+    {
+        buttonImpl(background(),
+                   foreground(),
+                   alternateBase());
+    }
+
+    void Renderer::menuBarItem() const
+    {
+        if (const QStyleOptionMenuItem* item = menuOption())
+        {
+            fillRect(item->rect, background());
+
+            if (!item->text.isEmpty())
+            {
+                _margin.setX(5);
+
+                if (item->state & QStyle::State_Selected)
+                    alignedText(item->text, item->rect, Qt::AlignVCenter, highlight());
+                else
+                    alignedText(item->text, item->rect, Qt::AlignVCenter, foreground());
+            }
+        }
+    }
+
+    void Renderer::menuItem() const
+    {
+        if (const QStyleOptionMenuItem* item = menuOption())
+        {
+            if (item->state & QStyle::State_Selected)
+                fillSelection(item->rect);
+            else
+                fill();
+
+            if (!item->icon.isNull())
+            {
+                alignedIcon(item->icon,
+                            item->rect,
+                            Qt::AlignVCenter,
+                            Empty);
+            }
+            _margin.setX(24);
+
+            if (item->menuItemType == QStyleOptionMenuItem::Separator)
+                horizontalRule(background().lighter(SubtleFactor));
+            else
+            {
+                if (QStringList sl = item->text.split(QChar('\t'), Qt::SkipEmptyParts);
+                    sl.size() > 1)
+                {
+                    alignedText(
+                        sl[0],
+                        item->rect.adjusted(0, 0, -item->reservedShortcutWidth, 0),
+                        Qt::AlignLeft | Qt::AlignVCenter,
+                        foreground());
+
+                    _margin.setX(0);
+                    alignedText(
+                        sl[1],
+                        item->rect,
+                        Qt::AlignRight | Qt::AlignVCenter,
+                        foreground());
+                }
+                else
+                {
+                    alignedText(
+                        item->text,
+                        item->rect,
+                        Qt::AlignLeft | Qt::AlignVCenter,
+                        foreground());
+                }
+            }
+        }
+    }
+
+    void Renderer::scrollBar() const
+    {
+        if (const QStyleOptionSlider* item = sliderOption())
+        {
+            QRect slider = _style->subControlRect(QStyle::CC_ScrollBar, item, QStyle::SC_ScrollBarSlider, _widget);
+
+            if (item->orientation == Qt::Vertical)
+                slider.adjust(3, 1, -3, 1);
+            else
+                slider.adjust(1, 3, -1, -3);
+
+            _painter->fillRect(item->rect, _cache->scrollBarGutter());
+            _painter->fillRect(slider, _cache->scrollbarSlider());
+        }
+    }
+
+    void Renderer::panel() const
+    {
+        if (const QStyleOptionViewItem* item = viewItemOption())
+        {
+            const int x1 = item->rect.left();
+            const int x2 = item->rect.right();
+            const int y1 = item->rect.top();
+            const int y2 = item->rect.bottom();
+
+            if (item->state & QStyle::State_Selected)
+                fillSelection({0, y1, x1 + x2, y2 - y1});
+
+            if (!item->icon.isNull())
+            {
+                alignedIcon(item->icon, item->rect, Qt::AlignVCenter, Empty);
+                _margin.setX(18);
+            }
+
+            if (!item->text.isEmpty())
+                alignedText(item->text, item->rect, Qt::AlignVCenter, foreground());
+        }
+    }
+
+    void Renderer::checkBox() const
+    {
+        if (const QStyleOptionButton* item = buttonOption())
+        {
+            if (const QCheckBox* check = checkBoxWidget())
+            {
+                const QRect checkRect =
+                    _style->subElementRect(
+                        QStyle::SE_CheckBoxIndicator,
+                        _option,
+                        _widget);
+
+                if (check->isChecked())
+                    _painter->fillRect(checkRect, link());
+                else
+                    _painter->fillRect(checkRect, alternateBase());
+
+                const QRect textRect =
+                    _style->subElementRect(
+                        QStyle::SE_CheckBoxContents,
+                        _option,
+                        _widget);
+
+                alignedText(item->text,
+                            textRect,
+                            Qt::AlignVCenter,
+                            foreground());
+            }
+        }
+    }
+
+    void Renderer::slider() const
+    {
+        if (const auto slider = sliderOption())
+        {
+            const QRect handle = _style->subControlRect(
+                QStyle::CC_Slider,
+                slider,
+                QStyle::SC_SliderHandle,
+                _widget);
+
+            const QRect groove = _style->subControlRect(
+                                           QStyle::CC_Slider,
+                                           slider,
+                                           QStyle::SC_SliderGroove,
+                                           _widget)
+                                     .adjusted(0, 5, 0, -5);
+
+            _painter->fillRect(_option->rect, _option->palette.base());
+            _painter->fillRect(groove, _option->palette.shadow());
+            _painter->fillRect(handle, _option->palette.mid());
+        }
+    }
+
+    void Renderer::fillLineEdit() const
+    {
+        _painter->setPen(_option->palette.shadow().color());
+
+        if (_option->state & QStyle::State_ReadOnly)
+            _painter->fillRect(_option->rect, background().lighter());
+        else
+            _painter->fillRect(_option->rect, background());
+
+        _painter->drawRect(_option->rect /*.adjusted(1, 1, -1, -1)*/);
+    }
+
+    void Renderer::spinBox() const
+    {
+        _painter->fillRect(_option->rect, _option->palette.alternateBase());
+        _painter->setPen(_option->palette.midlight().color());
+        _painter->drawRect(_option->rect.adjusted(1, 0, 0, 0));
+    }
+
+    void Renderer::fillSelection(const QRect& rect) const
+    {
+        _painter->fillRect(rect, _option->palette.alternateBase());
+    }
+
     inline const QStyleOptionButton* Renderer::buttonOption() const
     {
         return qstyleoption_cast<const QStyleOptionButton*>(_option);
@@ -62,14 +312,109 @@ namespace Jam::Editor::Const
         return nullptr;
     }
 
-    inline QColor Renderer::foreground(QPalette::ColorGroup fromGroup) const
+    inline const QColor& Renderer::foreground(QPalette::ColorGroup fromGroup) const
     {
         return _option->palette.color(fromGroup, _widget->foregroundRole());
     }
 
-    inline QColor Renderer::background(QPalette::ColorGroup fromGroup) const
+    const QColor& Renderer::highlight(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Highlight);
+    }
+
+    inline const QColor& Renderer::background(QPalette::ColorGroup fromGroup) const
     {
         return _option->palette.color(fromGroup, _widget->backgroundRole());
+    }
+
+    const QColor& Renderer::shadow(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Shadow);
+    }
+
+    const QColor& Renderer::dark(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Dark);
+    }
+
+    const QColor& Renderer::base(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Base);
+    }
+
+    const QColor& Renderer::mid(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Mid);
+    }
+
+    const QColor& Renderer::midLight(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Midlight);
+    }
+
+    const QColor& Renderer::light(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Light);
+    }
+
+    const QColor& Renderer::window(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Window);
+    }
+
+    const QColor& Renderer::windowText(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::WindowText);
+    }
+
+    const QColor& Renderer::button(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Button);
+    }
+
+    const QColor& Renderer::buttonText(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::BrightText);
+    }
+
+    const QColor& Renderer::tooltipBase(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::ToolTipBase);
+    }
+
+    const QColor& Renderer::tooltipText(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::ToolTipText);
+    }
+
+    const QColor& Renderer::text(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Text);
+    }
+
+    const QColor& Renderer::brightText(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::BrightText);
+    }
+
+    const QColor& Renderer::highLightedText(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::HighlightedText);
+    }
+
+    const QColor& Renderer::link(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::Link);
+    }
+
+    const QColor& Renderer::linkVisited(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::LinkVisited);
+    }
+
+    const QColor& Renderer::alternateBase(QPalette::ColorGroup fromGroup) const
+    {
+        return _option->palette.color(fromGroup, QPalette::AlternateBase);
     }
 
     QPoint Renderer::calculateAlignment(
@@ -170,12 +515,7 @@ namespace Jam::Editor::Const
         if (const QStyleOptionButton* item = buttonOption())
         {
             if (_option->state & QStyle::State_MouseOver)
-            {
                 fillRect(item->rect, hv);
-                strokeRect(item->rect, hv.lighter(SubtleFactor));
-            }
-            else if (_option->state & QStyle::State_HasFocus)
-                strokeRect(item->rect, _option->palette.color(QPalette::Active, QPalette::ColorRole::AlternateBase));
             else
             {
                 if (bg.alpha() > 0)
@@ -189,296 +529,8 @@ namespace Jam::Editor::Const
             if (!item->icon.isNull())
                 alignedIcon(item->icon, item->rect, Qt::AlignCenter, Empty);
             else if (!item->text.isEmpty())
-            {
-                if (_option->state & QStyle::State_MouseOver)
-                    alignedText(item->text, button, Qt::AlignCenter, fg.lighter());
-                else
-                    alignedText(item->text, button, Qt::AlignCenter, fg);
-            }
+                alignedText(item->text, button, Qt::AlignCenter, fg);
         }
-    }
-
-    void Renderer::titlebarIconButtonImpl() const
-    {
-        buttonImpl(_cache->titleButtonBackground(),
-                   _cache->titleButtonForeground(),
-                   _cache->titleButtonHover());
-    }
-
-    void Renderer::toolbarIconButtonImpl() const
-    {
-        buttonImpl(_cache->iconButtonBackground(),
-                   _cache->iconButtonForeground(),
-                   _cache->iconButtonHover());
-    }
-
-    void Renderer::pushButtonImpl() const
-    {
-        buttonImpl(_cache->pushButtonBackground(),
-                   _cache->pushButtonForeground(),
-                   _cache->pushButtonHover());
-    }
-
-    Renderer::Renderer(PaletteCache*       cache,
-                       const QStyle*       parent,
-                       const QStyleOption* option,
-                       QPainter*           painter,
-                       const QWidget*      widget) :
-        _cache(cache),
-        _style(parent),
-        _option(option),
-        _painter(painter),
-        _widget(widget)
-    {
-        Q_ASSERT(option && widget && painter);
-        _cache->setCacheContext(option, widget);
-        _painter->save();
-    }
-
-    Renderer::~Renderer()
-    {
-        _painter->restore();
-    }
-
-    void Renderer::horizontalRule(const QColor& color) const
-    {
-        int x1, y1, x2, y2;
-        _option->rect.getCoords(&x1, &y1, &x2, &y2);
-        const int cy = y1 + ((y2 - y1) >> 1);
-
-        _painter->setPen(color);
-        _painter->drawLine(x1, cy, x2, cy);
-    }
-
-    void Renderer::stroke() const
-    {
-        _painter->setPen(background().lighter());
-        _painter->drawRect(_option->rect);
-    }
-
-    void Renderer::fill() const
-    {
-        if (_option->state & QStyle::State_ReadOnly)
-            _painter->fillRect(_option->rect, background().lighter());
-        else
-            _painter->fillRect(_option->rect, background());
-    }
-
-    void Renderer::fillRect(const QRect& rect, const QColor& color) const
-    {
-        _painter->fillRect(rect, color);
-    }
-
-    void Renderer::strokeRect(const QRect& rect, const QColor& color) const
-    {
-        _painter->save();
-        _painter->setPen(color);
-        _painter->drawRect(rect.adjusted(1, 1, -1, -1));
-        _painter->restore();
-    }
-
-    void Renderer::pushButton() const
-    {
-        if (const QVariant type = _widget->property("iconType");
-            type.isValid())
-        {
-            switch (type.toInt())
-            {
-            case 1:
-                toolbarIconButtonImpl();
-                break;
-            case 3:  // TODO: case 3: needs to be transparent, or the window role
-            case 2:
-                titlebarIconButtonImpl();
-                break;
-            default:
-            case 0:
-                pushButtonImpl();
-                break;
-            }
-        }
-        else
-            pushButtonImpl();
-    }
-
-    void Renderer::menuBarItem() const
-    {
-        if (const QStyleOptionMenuItem* item = menuOption())
-        {
-            fillRect(item->rect, _cache->menuBarBackground());
-
-            if (!item->text.isEmpty())
-            {
-                _margin.setX(5);
-
-                if (item->state & QStyle::State_Selected)
-                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menuBarHighlight());
-                else
-                    alignedText(item->text, item->rect, Qt::AlignVCenter, _cache->menuBarForeground());
-            }
-        }
-    }
-
-    void Renderer::menuItem() const
-    {
-        if (const QStyleOptionMenuItem* item = menuOption())
-        {
-            if (item->state & QStyle::State_Selected)
-                fillSelection(item->rect);
-            else
-                fill();
-
-            if (!item->icon.isNull())
-                alignedIcon(item->icon, item->rect, Qt::AlignVCenter, Empty);
-
-            _margin.setX(24);
-            if (item->menuItemType == QStyleOptionMenuItem::Separator)
-                horizontalRule(background().lighter(SubtleFactor));
-            else
-            {
-                if (QStringList sl = item->text.split(QChar('\t'), Qt::SkipEmptyParts);
-                    sl.size() > 1)
-                {
-                    alignedText(
-                        sl[0],
-                        item->rect.adjusted(0, 0, -item->reservedShortcutWidth, 0),
-                        Qt::AlignLeft | Qt::AlignVCenter,
-                        foreground());
-
-                    _margin.setX(0);
-                    alignedText(
-                        sl[1],
-                        item->rect,
-                        Qt::AlignRight | Qt::AlignVCenter,
-                        foreground());
-                }
-                else
-                {
-                    alignedText(
-                        item->text,
-                        item->rect,
-                        Qt::AlignLeft | Qt::AlignVCenter,
-                        foreground());
-                }
-            }
-        }
-    }
-
-    void Renderer::scrollBar() const
-    {
-        if (const QStyleOptionSlider* item = sliderOption())
-        {
-            QRect slider = _style->subControlRect(QStyle::CC_ScrollBar, item, QStyle::SC_ScrollBarSlider, _widget);
-
-            if (item->orientation == Qt::Vertical)
-                slider.adjust(3, 1, -3, 1);
-            else
-                slider.adjust(1, 3, -1, -3);
-
-            _painter->fillRect(item->rect, _cache->scrollBarGutter());
-            _painter->fillRect(slider, _cache->scrollbarSlider());
-        }
-    }
-
-    void Renderer::panel() const
-    {
-        if (const QStyleOptionViewItem* item = viewItemOption())
-        {
-            const int x1 = item->rect.left();
-            const int x2 = item->rect.right();
-            const int y1 = item->rect.top();
-            const int y2 = item->rect.bottom();
-
-            if (item->state & QStyle::State_Selected)
-                fillSelection({0, y1, x1 + x2, y2 - y1});
-
-            if (!item->icon.isNull())
-            {
-                alignedIcon(item->icon, item->rect, Qt::AlignVCenter, Empty);
-                _margin.setX(18);
-            }
-
-            if (!item->text.isEmpty())
-                alignedText(item->text, item->rect, Qt::AlignVCenter, foreground());
-        }
-    }
-
-    void Renderer::checkBox() const
-    {
-        if (const QStyleOptionButton* item = buttonOption())
-        {
-            if (const QCheckBox* check = checkBoxWidget())
-            {
-                const QRect checkRect =
-                    _style->subElementRect(
-                        QStyle::SE_CheckBoxIndicator,
-                        _option,
-                        _widget);
-
-                if (check->isChecked())
-                    _painter->fillRect(checkRect, _option->palette.linkVisited());
-                else
-                    _painter->fillRect(checkRect, _option->palette.link());
-
-                const QRect textRect =
-                    _style->subElementRect(
-                        QStyle::SE_CheckBoxContents,
-                        _option,
-                        _widget);
-
-                alignedText(item->text,
-                            textRect,
-                            Qt::AlignVCenter,
-                            foreground());
-            }
-        }
-    }
-
-    void Renderer::slider() const
-    {
-        if (const auto slider = sliderOption())
-        {
-            const QRect handle = _style->subControlRect(
-                QStyle::CC_Slider,
-                slider,
-                QStyle::SC_SliderHandle,
-                _widget);
-
-            const QRect groove = _style->subControlRect(
-                                           QStyle::CC_Slider,
-                                           slider,
-                                           QStyle::SC_SliderGroove,
-                                           _widget)
-                                     .adjusted(0, 5, 0, -5);
-
-            _painter->fillRect(_option->rect, _option->palette.base());
-            _painter->fillRect(groove, _option->palette.shadow());
-            _painter->fillRect(handle, _option->palette.mid());
-        }
-    }
-
-    void Renderer::fillLineEdit() const
-    {
-        _painter->setPen(_option->palette.shadow().color());
-
-        if (_option->state & QStyle::State_ReadOnly)
-            _painter->fillRect(_option->rect, background().lighter());
-        else
-            _painter->fillRect(_option->rect, background().lighter(200));
-
-        _painter->drawRect(_option->rect /*.adjusted(1, 1, -1, -1)*/);
-    }
-
-    void Renderer::spinBox() const
-    {
-        _painter->fillRect(_option->rect, _option->palette.alternateBase());
-        _painter->setPen(_option->palette.midlight().color());
-        _painter->drawRect(_option->rect.adjusted(1, 0, 0, 0));
-    }
-
-    void Renderer::fillSelection(const QRect& rect) const
-    {
-        _painter->fillRect(rect, _cache->selection());
     }
 
 }  // namespace Jam::Editor::Const

@@ -52,15 +52,16 @@ namespace Jam::Editor
 
     private:
         StackedPanel* _panel{nullptr};
-        bool          _delayEvent{false};
 
     public:
         explicit FunctionAreaContent();
         ~FunctionAreaContent() override;
 
-        VariableWidget* addSlider(const State::VariableStateObject* obj = nullptr) const;
+        VariableWidget* addSlider(
+            const State::VariableStateObject* obj = nullptr) const;
 
-        ExpressionWidget* addExpression(const State::Expression* obj = nullptr) const;
+        ExpressionWidget* addExpression(
+            const State::ExpressionStateObject* obj = nullptr) const;
 
         void addPoint() const;
 

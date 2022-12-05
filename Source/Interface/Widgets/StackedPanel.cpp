@@ -22,6 +22,7 @@
 #include "StackedPanel.h"
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Palette.h"
 
 namespace Jam::Editor
 {
@@ -31,74 +32,39 @@ namespace Jam::Editor
         construct();
     }
 
-    StackedPanel::~StackedPanel()
-    {
-        delete _layout;
-        _layout = nullptr;
-    }
+    StackedPanel::~StackedPanel() = default;
 
     void StackedPanel::addWidget(
         QWidget*  widget,
         const int expand) const
     {
-        _contentLayout->addWidget(widget, expand);
+        _layout->addWidget(widget, expand);
     }
 
     void StackedPanel::remove(QWidget* widget) const
     {
-        _contentLayout->removeWidget(widget);
+        _layout->removeWidget(widget);
     }
 
-    void StackedPanel::addLayout(QLayout* widget, int expand) const
+    void StackedPanel::addLayout(QLayout* widget, const int expand) const
     {
-        _contentLayout->addLayout(widget, expand);
-    }
-
-    void StackedPanel::setLabel(const QString& label) const
-    {
-        _title->setText(label);
+        _layout->addLayout(widget, expand);
     }
 
     QSize StackedPanel::sizeHint() const
     {
-        const int h = View::calcMaxHeight(_layout).height();
-        return View::calcMaxHeight(_contentLayout) + QSize{0, h};
+        return View::calcMaxHeight(_layout);
     }
 
     void StackedPanel::construct()
     {
-        View::applyColorRoles(this /*, QPalette::AlternateBase*/);
+        Style::apply(this, TransparentStyle);
 
-        _contentLayout = new QVBoxLayout();
-        _layout        = new QVBoxLayout();
-
-        View::layoutDefaults(_contentLayout,
-                             StackedPanelContentMargin,
-                             StackedPanelContentSpacing);
+        _layout = new QVBoxLayout();
 
         View::layoutDefaults(_layout,
-                             StackedPanelMargin,
-                             StackedPanelContentSpacing >> 1);
-
-        QWidget*     header       = new QWidget();
-        QHBoxLayout* headerLayout = new QHBoxLayout();
-        View::layoutDefaults(headerLayout, 0, 1);
-        View::applyColorRoles(header, QPalette::Window, QPalette::Link);
-
-        // use setLabel, so blank initially...
-        _title = new QLabel("");
-
-        QFont font = _title->font();
-        font.setPointSize(11);
-
-        _title->setFont(font);
-        View::applyColorRoles(_title, QPalette::NoRole, QPalette::Text);
-
-        headerLayout->addWidget(_title);
-        header->setLayout(headerLayout);
-
-        _layout->addWidget(header, 0, Qt::AlignTop);
-        _layout->addLayout(_contentLayout, 1);
+                             StackedPanelContentMargin,
+                             StackedPanelContentSpacing);
 
         setLayout(_layout);
     }

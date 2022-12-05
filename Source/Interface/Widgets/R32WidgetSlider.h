@@ -30,7 +30,7 @@ class QLineEdit;
 
 namespace Jam::Editor
 {
-    class R32WidgetPrivate final : public QWidget
+    class R32WidgetSlider final : public QWidget
     {
         Q_OBJECT
     signals:
@@ -48,7 +48,7 @@ namespace Jam::Editor
         bool     _lock{false};
 
     public:
-        explicit R32WidgetPrivate(QWidget* parent = nullptr);
+        explicit R32WidgetSlider(QWidget* parent = nullptr);
 
         void setValue(const R32& val);
 
@@ -86,12 +86,12 @@ namespace Jam::Editor
         void mouseDoubleClickEvent(QMouseEvent* event) override;
     };
 
-    inline R32 R32WidgetPrivate::value() const
+    inline R32 R32WidgetSlider::value() const
     {
         return _value;
     }
 
-    inline const String& R32WidgetPrivate::label() const
+    inline const String& R32WidgetSlider::label() const
     {
         return _label;
     }

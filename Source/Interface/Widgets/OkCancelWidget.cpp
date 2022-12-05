@@ -30,24 +30,12 @@ namespace Jam::Editor
     OkCancelWidget::OkCancelWidget(QWidget* parent) :
         QWidget(parent)
     {
-        View::widgetDefaults(this);
-        if (parent)
-            View::copyColorRoles(this, parent);
-        else
-            View::emptyWidget(this);
-
         construct(Qt::AlignRight);
     }
 
     OkCancelWidget::OkCancelWidget(const Qt::Alignment& align, QWidget* parent) :
         QWidget(parent)
     {
-        View::widgetDefaults(this);
-        if (parent)
-            View::copyColorRoles(this, parent);
-        else
-            View::emptyWidget(this);
-
         construct(align);
     }
 

@@ -52,9 +52,30 @@ namespace Jam::Editor::Const
 
         inline const QCheckBox* checkBoxWidget() const;
 
-        inline QColor foreground(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& foreground(QPalette::ColorGroup fromGroup = QPalette::Current) const;
 
-        inline QColor background(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& background(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+
+        inline const QColor& shadow(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& dark(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& base(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& mid(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& midLight(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& light(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& highlight(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& window(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& windowText(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& button(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& buttonText(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& tooltipBase(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& tooltipText(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& text(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& brightText(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& highLightedText(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& link(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& linkVisited(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+        inline const QColor& alternateBase(QPalette::ColorGroup fromGroup = QPalette::Current) const;
+
 
         QPoint calculateAlignment(
             const Qt::Alignment& alignment,
@@ -75,12 +96,6 @@ namespace Jam::Editor::Const
             const QColor&        color) const;
 
         void buttonImpl(const QColor& bg, const QColor& fg, const QColor& hv) const;
-
-        void toolbarIconButtonImpl() const;
-
-        void titlebarIconButtonImpl() const;
-
-        void pushButtonImpl() const;
 
     public:
         Renderer(

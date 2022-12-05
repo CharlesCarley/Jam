@@ -31,6 +31,7 @@
 #include "Interface/Area/AreaBranch.h"
 #include "Interface/Area/AreaLeaf.h"
 #include "Interface/Constants.h"
+#include "Style/Style.h"
 #include "Utils/Array.h"
 
 namespace Jam::Editor::View
@@ -45,10 +46,9 @@ namespace Jam::Editor::View
             winRect = {};
     }
 
-    void dialogDefaults(QWidget* widget)
+    void constrainToScreen(QWidget* widget)
     {
         Q_ASSERT(widget);
-
         if (const QScreen* sc =
                 widget
                     ? QApplication::screenAt(widget->pos())
@@ -136,30 +136,29 @@ namespace Jam::Editor::View
                         const int      margin,
                         const QWidget* parent)
     {
-        Q_ASSERT(widget);
-
-        widget->setContentsMargins(margin, margin, margin, margin);
-        widget->setFocusPolicy(Qt::NoFocus);
-
-        if (parent)
-            copyColorRoles(widget, parent);
-        applyBaseClassDefaults(widget);
+        //Q_ASSERT(widget);
+        //widget->setContentsMargins(margin, margin, margin, margin);
+        //widget->setFocusPolicy(Qt::NoFocus);
+        //if (parent)
+        //    copyColorRoles(widget, parent);
+        //applyBaseClassDefaults(widget);
     }
 
     void widgetDefaults(QWidget* widget, const QWidget* parent)
     {
-        Q_ASSERT(widget && parent);
-
-        widget->setContentsMargins(0, 0, 0, 0);
-        copyColorRoles(widget, parent);
-        applyBaseClassDefaults(widget);
+        //Q_ASSERT(widget && parent);
+        //widget->setContentsMargins(0, 0, 0, 0);
+        //copyColorRoles(widget, parent);
+        //applyBaseClassDefaults(widget);
     }
 
     void buttonDefaults(QWidget* widget)
     {
         Q_ASSERT(widget);
-        widget->setMaximumHeight(Const::ButtonHeight);
-        widget->setMinimumHeight(Const::ButtonHeight);
+        widget->setMaximumHeight(Style::hint(ButtonHeight));
+        widget->setMinimumHeight(Style::hint(ButtonHeight));
+        // only constrain the min width..
+        widget->setMinimumWidth(Style::hint(ButtonWidth));
     }
 
     void layoutDefaults(QLayout*  dst,
@@ -179,20 +178,6 @@ namespace Jam::Editor::View
         widget->setContentsMargins(margin, margin, margin, margin);
     }
 
-    void emptyWidget(QWidget* dst)
-    {
-        Q_ASSERT(dst);
-        widgetDefaults(dst);
-        applyColorRoles(dst, QRole::NoRole, QRole::NoRole);
-    }
-
-    void menuRole(QWidget* dst)
-    {
-        Q_ASSERT(dst);
-
-        applyColorRoles(dst, Const::MenuRole, QRole::Text);
-    }
-
     void treeWidgetDefaults(QTreeWidget* dst)
     {
         Q_ASSERT(dst);
@@ -200,8 +185,8 @@ namespace Jam::Editor::View
         dst->setColumnCount(1);
         dst->setHeaderHidden(true);
 
-        widgetDefaults(dst);
-        applyColorRoles(dst, QRole::NoRole, QRole::Text);
+        //widgetDefaults(dst);
+        //applyColorRoles(dst, QRole::NoRole, QRole::Text);
     }
 
     void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent)
@@ -211,7 +196,7 @@ namespace Jam::Editor::View
         dst->setColumnCount(1);
         dst->setHeaderHidden(true);
 
-        widgetDefaults(dst, parent);
+        //widgetDefaults(dst);
     }
 
     void lineEditDefaults(QLineEdit* dst, QRole background, QRole foreground)
@@ -227,9 +212,9 @@ namespace Jam::Editor::View
     void pushButtonDefaults(QPushButton* dst)
     {
         Q_ASSERT(dst);
-        widgetDefaults(dst);
+        //widgetDefaults(dst);
         applyColorRoles(dst, QRole::Button, QRole::Text);
-        dst->setMinimumSize({18, Const::ButtonHeight});
+        dst->setMinimumSize({18, Style::hint(ButtonHeight)});
     }
 
     void addLayoutMargin(QBoxLayout* dst,

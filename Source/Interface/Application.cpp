@@ -20,15 +20,15 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Application.h"
+#include <QVBoxLayout>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Extensions.h"
 #include "Interface/MainArea.h"
 #include "Interface/Widgets/WindowMenuBar.h"
 
 namespace Jam::Editor
 {
     Application::Application(QWidget* parent) :
-        QMainWindow(parent),
+        QWidget(parent),
         _flags{NoFlag}
     {
         construct();
@@ -36,25 +36,29 @@ namespace Jam::Editor
 
     Application::~Application()
     {
-        (void)disconnect(this);
+        saveSettings();
 
         delete _menuBar;
         _menuBar = nullptr;
 
-        saveSettings();
         delete _mainArea;
+        _mainArea = nullptr;
+
+        delete _layout;
+        _layout = nullptr;
     }
 
     void Application::construct()
     {
+        _layout = Style::verticalLayout();
+
         // Update the application window settings
         loadSettings();
 
         setWindowFlags(Qt::FramelessWindowHint);
         setMinimumSize(320, 480);
 
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, QPalette::NoRole, QPalette::HighlightedText);
+        Style::apply(this, ApplicationStyle);
 
         constructMenuBar();
 
@@ -69,6 +73,8 @@ namespace Jam::Editor
             setCentralWidget(_mainArea);
             newProject();
         }
+
+        setLayout(_layout);
     }
 
     void Application::post()
@@ -105,8 +111,19 @@ namespace Jam::Editor
         setWindowState(Qt::WindowMinimized);
     }
 
-}  // namespace Jam::Editor
+    void Application::setMenuBar(QWidget* widget) const
+    {
+        if (widget && _layout)
+            _layout->insertWidget(0, widget);
+    }
 
+    void Application::setCentralWidget(QWidget* widget) const
+    {
+        if (widget && _layout)
+            _layout->addWidget(widget, 1);
+    }
+
+}  // namespace Jam::Editor
 
 // This is probably not a good idea to have these,
 // fragmented like this. But, it separates methods

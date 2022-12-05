@@ -21,7 +21,7 @@
 */
 #pragma once
 #ifndef APPLICATION_INLINE_DEFINITION
-#error This file should not be included here.
+    #error This file should not be included here.
 #endif
 #include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/WindowMenuBar.h"
@@ -46,10 +46,10 @@ namespace Jam::Editor
         QMenu* view = _menuBar->addMenu("View");
         QMenu* help = _menuBar->addMenu("Help");
 
-        View::menuRole(file);
-        View::menuRole(edit);
-        View::menuRole(view);
-        View::menuRole(help);
+        Style::apply(file, AreaMenuItemStyle);
+        Style::apply(edit, AreaMenuItemStyle);
+        Style::apply(view, AreaMenuItemStyle);
+        Style::apply(help, AreaMenuItemStyle);
 
         // -------- [ File ] --------
 
@@ -108,6 +108,8 @@ namespace Jam::Editor
                         {
                             if (_mainArea)
                                 _mainArea->dumpDisplayTree(); });
+
+        view->addAction("Palette", this, &Application::viewPalette);
 
         // -------- [ Help ] --------
 
@@ -178,9 +180,9 @@ namespace Jam::Editor
                 loadProjectFromPath(clickedItemData);
             else
             {
-                Log::writeLine("File ", 
-                    clickedItemData.toStdString(), 
-                    " does not exist.");
+                Log::writeLine("File ",
+                               clickedItemData.toStdString(),
+                               " does not exist.");
                 _recentFiles.validate();
             }
         }

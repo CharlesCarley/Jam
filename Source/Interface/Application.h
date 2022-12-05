@@ -25,6 +25,7 @@
 #include "RememberLastCache.h"
 #include "Utils/Path.h"
 
+class QVBoxLayout;
 class QProcess;
 
 namespace Jam::Editor
@@ -35,12 +36,9 @@ namespace Jam::Editor
     class MainArea;
     class ProjectContext;
 
-    class Application final : public QMainWindow
+    class Application final : public QWidget
     {
         Q_OBJECT
-    signals:
-        void clearContext();
-
     public:
         enum Flags
         {
@@ -49,6 +47,7 @@ namespace Jam::Editor
         };
 
     private:
+        QVBoxLayout*      _layout{nullptr};
         MainArea*         _mainArea{nullptr};
         WindowMenuBar*    _menuBar{nullptr};
         QMenu*            _fileRecent{nullptr};
@@ -56,6 +55,43 @@ namespace Jam::Editor
         RememberLastCache _recentFiles;
         QString           _lastOpenDir{};
         QString           _cachedProjectPath{};
+
+    public:
+        explicit Application(QWidget* parent = nullptr);
+        ~Application() override;
+
+        void post();
+
+        void newProject();
+
+        void openProject();
+
+        void closeProject();
+
+        void saveProject();
+
+        void saveProjectAs();
+
+        void recentItemClicked();
+
+        void viewDocs() const;
+
+        void viewPalette();
+
+        void showAbout();
+
+        void editSettings();
+
+        void toggleMaximize();
+
+        void minimize();
+
+        void setCentralWidget(QWidget* widget) const;
+
+        void setMenuBar(QWidget* widget) const;
+
+    private:
+        bool event(QEvent* event) override;
 
         void construct();
 
@@ -82,26 +118,5 @@ namespace Jam::Editor
         void notifyProjectClosed() const;
 
         void saveProjectImpl(const QString& path);
-
-    public:
-        explicit Application(QWidget* parent = nullptr);
-        ~Application() override;
-
-        void post();
-
-        void newProject();
-        void openProject();
-        void closeProject();
-        void saveProject();
-        void saveProjectAs();
-        void recentItemClicked();
-        void viewDocs() const;
-        void showAbout();
-        void editSettings();
-        void toggleMaximize();
-        void minimize();
-
-    protected:
-        bool event(QEvent* event) override;
     };
 }  // namespace Jam::Editor

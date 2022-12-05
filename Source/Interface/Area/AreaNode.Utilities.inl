@@ -206,10 +206,7 @@ namespace Jam::Editor
         _content->setParentNode(this);
 
         if (!_layout)
-        {
-            _layout = new QVBoxLayout();
-            View::layoutDefaults(_layout);
-        }
+            _layout = Style::verticalLayout();
         else
         {
             // it should be destroyed

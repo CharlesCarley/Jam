@@ -38,6 +38,10 @@ namespace Jam::Editor::State
     {
         _text.reserve(32);
 
+        // change this so that it does not have to copy every
+        // render call
+        Palette::getAccentPalette(_palette);
+
         _size = toVec2I(_screen.viewport().extent());
         _painter->setRenderHint(QPainter::Antialiasing, true);
         _painter->setRenderHint(QPainter::TextAntialiasing, true);
@@ -98,6 +102,13 @@ namespace Jam::Editor::State
         _pen.setColor(col);
         _painter->setPen(_pen);
     }
+
+    
+    void RenderContext::selectColor(const QPalette::ColorRole& col, U8 width)
+    {
+        selectColor(_palette.color(col), width);
+    }
+
 
     void RenderContext::drawLine(
         const int x1,

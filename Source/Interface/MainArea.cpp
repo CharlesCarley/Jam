@@ -64,11 +64,8 @@ namespace Jam::Editor
 
     void MainArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this);
-
-        _layout = new QVBoxLayout();
-        View::layoutDefaults(_layout);
+        Style::apply(this, TransparentStyle);
+        _layout = Style::verticalLayout();
 
         _root = new AreaNode(_creator);
         _root->setArea(_creator->fromType(0));
@@ -100,8 +97,7 @@ namespace Jam::Editor
     // Note: used only as an extension of construct(const QString& layout)
     void MainArea::construct(const XmlNode* node)
     {
-        _layout = new QVBoxLayout();
-        View::layoutDefaults(_layout);
+        _layout = Style::verticalLayout();
 
         _root = new AreaNode(_creator);
 

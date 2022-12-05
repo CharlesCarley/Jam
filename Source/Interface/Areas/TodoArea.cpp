@@ -26,6 +26,7 @@
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -43,12 +44,9 @@ namespace Jam::Editor
 
     void TodoArea::construct()
     {
-        View::widgetDefaults(this);
-        View::applyColorRoles(this, QPalette::Base);
-
-        const auto layout = new QVBoxLayout();
-        View::layoutDefaults(layout);
-
+        Style::apply(this, AreaStyle);
+        const auto layout = Style::verticalLayout();
+        
         QLabel* fill = new QLabel(
             Su::join("Todo(", _todoType, "): What next?").c_str());
 
@@ -59,8 +57,6 @@ namespace Jam::Editor
         layout->addWidget(_toolbar);
         layout->addWidget(fill, 1, Qt::AlignCenter);
 
-        View::widgetDefaults(fill);
-        View::applyColorRoles(fill, QPalette::Base, QPalette::AlternateBase);
         setLayout(layout);
     }
 
