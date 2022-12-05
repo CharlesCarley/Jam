@@ -8,6 +8,6 @@ A starting point for a desktop graphing calculator with Qt.
 - Serializes project via xml.
 
 
-![Im1](Extras/Design/01.png)
-![Im1](Extras/Design/02.png)
+![Im1](Extras/Design/03.png)
+![Im1](Extras/Design/04.png)
 
