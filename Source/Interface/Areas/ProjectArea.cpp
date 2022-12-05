@@ -22,17 +22,17 @@
 #include "Interface/Areas/ProjectArea.h"
 #include <qboxlayout.h>
 #include <QApplication>
+#include <QPushButton>
 #include <QTreeWidget>
 #include "AreaType.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
 #include "Interface/Dialogs/SettingsDialog.h"
 #include "Interface/Events/EventTypes.h"
 #include "Interface/Events/LayerEvents.h"
 #include "Interface/Extensions.h"
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Style.h"
 #include "State/App.h"
 #include "State/FrameStackManager.h"
 
@@ -67,7 +67,7 @@ namespace Jam::Editor
     void ProjectArea::constructToolbar()
     {
         const auto tool = toolbar();
-        const auto set = Style::toolButton(Icons::Settings);
+        const auto set  = Style::toolButton(Icons::Settings);
         connect(set,
                 &QPushButton::clicked,
                 this,

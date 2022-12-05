@@ -29,7 +29,6 @@
 #include "Areas/TodoArea.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Widgets/IconButton.h"
 
 namespace Jam::Editor
 {

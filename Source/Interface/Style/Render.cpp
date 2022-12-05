@@ -26,7 +26,6 @@
 #include <QStyleOption>
 #include <QWidget>
 #include "Interface/Constants.h"
-#include "Interface/Style/PaletteCache.h"
 
 namespace Jam::Editor::Const
 {
@@ -41,8 +40,6 @@ namespace Jam::Editor::Const
         _painter(painter),
         _widget(widget)
     {
-        Q_ASSERT(option && widget && painter);
-        _cache->setCacheContext(option, widget);
         _painter->save();
     }
 
@@ -174,8 +171,8 @@ namespace Jam::Editor::Const
             else
                 slider.adjust(1, 3, -1, -3);
 
-            _painter->fillRect(item->rect, _cache->scrollBarGutter());
-            _painter->fillRect(slider, _cache->scrollbarSlider());
+            _painter->fillRect(item->rect, background().darker(125));
+            _painter->fillRect(slider, background().lighter(125));
         }
     }
 

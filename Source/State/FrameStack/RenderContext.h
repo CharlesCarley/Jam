@@ -21,7 +21,8 @@
 */
 #pragma once
 #include <QPainter>
-#include "Interface/Style/Palette.h"
+#include <QPalette>
+
 #include "Math/Axis.h"
 #include "Math/Color.h"
 #include "Math/Screen.h"

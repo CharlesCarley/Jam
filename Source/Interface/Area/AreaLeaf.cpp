@@ -28,6 +28,7 @@
 #include "Interface/Area/AreaNode.h"
 #include "Interface/Events/BranchEvent.h"
 #include "Interface/Events/SwitchEvent.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -100,6 +101,7 @@ namespace Jam::Editor
                                const QPoint&         at)
     {
         QMenu splitMenu(this);
+        Style::apply(&splitMenu, AreaMenuItemStyle);
         splitMenu.addAction("Split", [=]
                             { QCoreApplication::postEvent(
                                   parentNode(),

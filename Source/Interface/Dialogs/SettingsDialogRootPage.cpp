@@ -21,9 +21,9 @@
 */
 #include "Interface/Dialogs/SettingsDialogRootPage.h"
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include "Interface/Style/Style.h"
-#include "Interface/Widgets/IconButton.h"
 
 namespace Jam::Editor
 {
@@ -43,9 +43,8 @@ namespace Jam::Editor
         const auto layout = Style::horizontalLayout();
 
         const auto brush = Style::toolButton(Icons::Clear);
-
-        layout->addWidget(brush, 0, Qt::AlignTop);
-
+        const auto label = Style::text("Reset to default.");
+        
         connect(brush, &QPushButton::clicked, this, [=]
                 {
                 if (_state)
@@ -54,7 +53,7 @@ namespace Jam::Editor
                     PersistentSettings().apply(*_state);
                 } });
 
-        const auto label = new QLabel("Reset to default.");
+        layout->addWidget(brush, 0, Qt::AlignTop);
         layout->addWidget(label, 1, Qt::AlignTop);
         setLayout(layout);
     }

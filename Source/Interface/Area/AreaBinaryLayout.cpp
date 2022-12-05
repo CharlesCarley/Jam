@@ -23,12 +23,12 @@
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QCoreApplication>
-#include <QPainter>
 #include "Math/Real.h"
 #include "Interface/Area/AreaBinaryLayoutPrivate.h"
 #include "Interface/Area/AreaNode.h"
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {

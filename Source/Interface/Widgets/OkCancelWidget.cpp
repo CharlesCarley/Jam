@@ -23,7 +23,7 @@
 #include <QBoxLayout>
 #include <QPushButton>
 #include "Interface/Constants.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -43,15 +43,12 @@ namespace Jam::Editor
 
     void OkCancelWidget::construct(const Qt::Alignment& align)
     {
-        _layout = new QHBoxLayout();
-        View::layoutDefaults(_layout, 6);
+        Style::apply(this, AreaDialogStyle);
 
-        _layout->setSpacing(Const::SplitterSize);
+        _layout = Style::horizontalLayout(6, 4);
 
-        QPushButton* okay = new QPushButton("Ok");
-        View::pushButtonDefaults(okay);
-        QPushButton* skip = new QPushButton("Cancel");
-        View::pushButtonDefaults(skip);
+        QPushButton* okay = Style::button("Ok");
+        QPushButton* skip = Style::button("Cancel");
 
         if (align == Qt::AlignRight)
             _layout->addStretch(1);
@@ -66,8 +63,6 @@ namespace Jam::Editor
                 { emit okClicked(); });
         connect(skip, &QPushButton::clicked, this, [=]
                 { emit cancelClicked(); });
-
-        View::applyColorRoles(this, QPalette::Window);
         setLayout(_layout);
     }
 

@@ -21,9 +21,10 @@
 */
 #include "Interface/Widgets/ExpressionWidget.h"
 #include <QBoxLayout>
+#include <QPushButton>
+
 #include "Interface/Extensions.h"
 #include "Interface/Style/Style.h"
-#include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/StringWidget.h"
 
 namespace Jam::Editor

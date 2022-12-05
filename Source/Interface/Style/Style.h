@@ -20,9 +20,11 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QPalette>
 #include "Interface/Style/Icons.h"
 
+class QCheckBox;
+class QLabel;
+class QLineEdit;
 class QLayout;
 class QPlainTextEdit;
 class QPushButton;
@@ -46,13 +48,17 @@ namespace Jam::Editor
         AreaProjectTreeStyle,
         AreaSettingsTreeStyle,
         AreaDialogStyle,
+        AreaDialogContainerStyle,
         AreaSliderStyle,
         AreaMenuItemStyle,
         AreaToolMenuItemStyle,
         AreaToolLabelStyle,
         AreaToolButtonStyle,
+        AreaLabelStyle,
+        AreaPushButtonStyle,
         MenuBarStyle,
-        QLineEditStyle,
+        AreaLineStyle,
+        AreaDarkLineStyle,
         QCheckBoxStyle,
     };
 
@@ -61,12 +67,16 @@ namespace Jam::Editor
         SplitterSizeHint,
         ButtonWidth,
         ButtonHeight,
+        PushButtonWidth,
+        PushButtonHeight,
+
     };
 
     class Style
     {
     private:
         static void treeWidgetDefaults(QTreeWidget* widget);
+        static void pushButtonDefaults(QWidget* widget);
 
     public:
         static void apply(QWidget* widget, StyleTypes type);
@@ -77,6 +87,7 @@ namespace Jam::Editor
         static QTreeWidget* treeWidget(const StyleTypes type, QWidget* parent = nullptr);
 
         static void layoutDefaults(QLayout* widget, int margin = 0, int spacing = 0);
+        static void buttonDefaults(QWidget* widget);
 
         static QVBoxLayout* verticalLayout(int margin = 0, int spacing = 0, QWidget* parent = nullptr);
 
@@ -87,6 +98,17 @@ namespace Jam::Editor
         static QPushButton* toolButton(Icons::Icon ico, QWidget* parent = nullptr);
 
         static QPlainTextEdit* plainText(QWidget* parent = nullptr);
+
+        static QLineEdit* line(QWidget* parent = nullptr);
+
+        static QLineEdit* darkLine(QWidget* parent = nullptr);
+
+        static QPushButton* button(const QString& label, QWidget* parent = nullptr);
+
+        static QLabel* text(const QString& label, QWidget* parent = nullptr);
+
+        static QCheckBox* checkBox(const QString& label, bool initialState);
+
     };
 
 }  // namespace Jam::Editor

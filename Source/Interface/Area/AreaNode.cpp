@@ -21,6 +21,8 @@
 */
 #include "Interface/Area/AreaNode.h"
 
+#include "Interface/Style/Style.h"
+
 namespace Jam::Editor
 {
     AreaNode::AreaNode(AreaCreator* creator, QWidget* parent) :

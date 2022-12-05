@@ -24,9 +24,9 @@
 #include <QBoxLayout>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Extensions.h"
 #include "R32WidgetSlider.h"
 #include "VariableStepWidget.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -48,9 +48,7 @@ namespace Jam::Editor
     {
         Style::apply(this, AreaSliderStyle);
 
-        _layout = new QHBoxLayout();
-        View::layoutDefaults(_layout);
-
+        _layout = Style::horizontalLayout();
         _value = new R32WidgetSlider();
 
         _step = new VariableStepWidget();

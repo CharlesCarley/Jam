@@ -21,7 +21,6 @@
 */
 #pragma once
 #include "Equation/StmtParser.h"
-#include "Interface/Events/EventTypes.h"
 #include "State/FrameStack/GridLayer.h"
 
 namespace Jam::Editor::State

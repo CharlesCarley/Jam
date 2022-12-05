@@ -21,7 +21,7 @@
 */
 #include "Interface/Widgets/ContentContainer.h"
 #include <QVBoxLayout>
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -35,8 +35,8 @@ namespace Jam::Editor
 
     void ContentContainer::construct()
     {
-        _layout = new QVBoxLayout();
-        View::applyColorRoles(this, QPalette::Window);
+        Style::apply(this, AreaDialogContainerStyle);
+        _layout = Style::verticalLayout();
 
         setLayout(_layout);
     }
@@ -56,7 +56,7 @@ namespace Jam::Editor
     void ContentContainer::setBorder(const int border) const
     {
         if (_layout)
-            View::layoutDefaults(_layout, border);
+            Style::layoutDefaults(_layout, border);
     }
 
     void ContentContainer::setContentLayout(QLayout* layout) const

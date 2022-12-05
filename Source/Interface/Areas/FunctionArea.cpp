@@ -21,15 +21,15 @@
 */
 #include "Interface/Areas/FunctionArea.h"
 #include <QMenu>
+#include <QPushButton>
 #include <QResizeEvent>
 #include "AreaType.h"
 #include "FunctionAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/ExpressionWidget.h"
-#include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "Interface/Widgets/VariableWidget.h"
 #include "Interface/Widgets/VerticalScrollArea.h"

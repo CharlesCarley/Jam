@@ -21,14 +21,14 @@
 */
 #include "FrameStackArea.h"
 #include <QLabel>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include "AreaType.h"
 #include "FrameStackAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Events/EventTypes.h"
-#include "Interface/Extensions.h"
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -63,6 +63,5 @@ namespace Jam::Editor
 
         setLayout(layout);
     }
-
 
 }  // namespace Jam::Editor

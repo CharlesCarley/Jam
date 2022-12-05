@@ -26,6 +26,7 @@
 #include "Interface/Area/AreaBinaryLayout.h"
 #include "Interface/Area/AreaNode.h"
 #include "Interface/Areas/OutputArea.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -132,7 +133,9 @@ namespace Jam::Editor
 
     void AreaBranch::contextMenu(const QPoint& at) const
     {
-        QMenu         context;
+        QMenu context;
+        Style::apply(&context, AreaMenuItemStyle);
+
         const QString title1 = _orientation == Qt::Vertical ? "Join Top" : "Join Left";
         const QString title2 = _orientation == Qt::Vertical ? "Join Bottom" : "Join Right";
 

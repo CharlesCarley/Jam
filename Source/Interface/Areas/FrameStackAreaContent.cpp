@@ -22,6 +22,7 @@
 #include "FrameStackAreaContent.h"
 #include <QMouseEvent>
 #include "OutputArea.h"
+#include "Interface/Style/Style.h"
 #include "State/FrameStack/GridLayer.h"
 #include "State/FrameStack/RenderContext.h"
 #include "State/FrameStackManager.h"

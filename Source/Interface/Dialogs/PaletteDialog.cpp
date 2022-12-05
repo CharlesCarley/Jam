@@ -25,6 +25,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include "Interface/Style/Palette.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {

@@ -23,6 +23,7 @@
 #include "AreaRefId.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Events/BranchEvent.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {

@@ -24,6 +24,7 @@
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor

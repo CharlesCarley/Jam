@@ -21,11 +21,11 @@
 */
 #pragma once
 #include <QWidget>
-#include "IconButton.h"
-#include "Interface/Events/EventTypes.h"
 #include "Math/Vec2F.h"
 #include "Utils/String.h"
 #include "VariableStepWidget.h"
+
+class QPushButton;
 
 namespace Jam::Editor
 {

@@ -1,13 +1,13 @@
 #include "WidgetTests.h"
-#include "Interface/Area/Area.h"
+#include <QPushButton>
+
 #include "Interface/Area/AreaNode.h"
 #include "Interface/MainArea.h"
 #include "Interface/RememberLastCache.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/I32Widget.h"
-#include "Interface/Widgets/IconButton.h"
 #include "Interface/Widgets/R32Widget.h"
 #include "Interface/Widgets/StringWidget.h"
-#include "State/ProjectManager.h"
 
 namespace Jam::Editor::Testing
 {
@@ -20,7 +20,7 @@ namespace Jam::Editor::Testing
 
     void WidgetTests::testIcon()
     {
-        _test = IconButton::createToolButton(Icons::Add);
+        _test = Style::toolButton(Icons::Add);
 
         const auto local = (QPushButton*)_test;
         const auto size  = local->size();

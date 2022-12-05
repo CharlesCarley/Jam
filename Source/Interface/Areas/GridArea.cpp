@@ -24,9 +24,8 @@
 #include "GridAreaContent.h"
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
-#include "Interface/Constants.h"
 #include "Interface/Events/LayerEvents.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "Interface/Widgets/VerticalScrollArea.h"
 

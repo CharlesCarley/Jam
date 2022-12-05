@@ -24,8 +24,7 @@
 #include <QLineEdit>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -38,18 +37,9 @@ namespace Jam::Editor
 
     void StringWidget::construct()
     {
-        Style::apply(this, QLineEditStyle);
+        _line = Style::line();
 
-        View::buttonDefaults(this);
-        setMinimumWidth(Style::hint(ButtonWidth));
-
-        const auto layout = new QHBoxLayout();
-        View::layoutDefaults(layout);
-
-        _line = new QLineEdit();
-        View::lineEditDefaults(_line);
-        View::buttonDefaults(_line);
-
+        const auto layout = Style::horizontalLayout();
         layout->addWidget(_line);
         setLayout(layout);
 

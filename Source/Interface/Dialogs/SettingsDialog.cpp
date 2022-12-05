@@ -25,6 +25,7 @@
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Dialogs/SettingsDialogProjectPage.h"
 #include "Interface/Dialogs/SettingsDialogRootPage.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 namespace Jam::Editor

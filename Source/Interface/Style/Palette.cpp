@@ -22,6 +22,8 @@
 #include "Interface/Style/Palette.h"
 #include <QApplication>
 #include <QWidget>
+
+#include "Style.h"
 #include "Interface/Constants.h"
 
 namespace Jam::Editor::Const
@@ -53,26 +55,26 @@ namespace Jam::Editor::Const
     };
 
     constexpr QColor NewPalette1[20] = {
-        MakeGrey(0x00),
-        MakeGrey(0x01),
-        MakeGrey(0x02),
-        MakeGrey(0x03),
-        MakeGrey(0x04),
-        MakeGrey(0x08),
-        MakeGrey(0x0B),
-        MakeGrey(0x01),  // window
-        MakeGrey(0x09),
-        MakeGrey(0x04),  // button
-        MakeGrey(0x06),
-        QColor(0xb6, 0xa6, 0x3b),  // tool tip base
-        MakeGrey(0x10),
-        MakeGrey(0x0D),
-        MakeGrey(0x06),  // HighlightedText
-        MakeGrey(0x12),
-        QColor(0x00, 0x63, 0x82),
-        QColor(0x00, 0x41, 0x4E),
-        MakeGrey(0x07),
-        QColor(0xFF, 0x00, 0xFF),
+        MakeGrey(0x00),            // Shadow
+        MakeGrey(0x01),            // Dark
+        MakeGrey(0x02),            // Base
+        MakeGrey(0x03),            // Mid
+        MakeGrey(0x04),            // MidLight
+        MakeGrey(0x08),            // Light
+        MakeGrey(0x0B),            // Highlight
+        MakeGrey(0x01),            // Window
+        MakeGrey(0x09),            // WindowText
+        MakeGrey(0x03),            // Button
+        MakeGrey(0x09),            // ButtonText
+        QColor(0xb6, 0xa6, 0x3b),  // ToolTipBase
+        MakeGrey(0x0B),            // ToolTipText
+        MakeGrey(0x0D),            // Text
+        MakeGrey(0x10),            // BrightText
+        MakeGrey(0x12),            // HighlightedText
+        QColor(0x00, 0x63, 0x82),  // Link
+        QColor(0x00, 0x41, 0x4E),  // LinkVisited
+        MakeGrey(0x07),            // AlternateBase
+        QColor(0xFF, 0x00, 0xFF),  // PlaceholderText
     };
 
     void clearAppPalette(QPalette& palette)
@@ -121,19 +123,19 @@ namespace Jam::Editor::Const
         }
     }
 
+    void copyStylePalette(QPalette& palette, QPalette::ColorGroup group)
+    {
+        int i = 0;
+        for (const QPalette::ColorRole r : RoleOrder)
+            palette.setColor(group, r, NewPalette1[i++]);
+    }
+
     void initializePalette()
     {
         QPalette palette;
         clearAppPalette(palette);
         copyStylePalette(palette, QPalette::All);
         QGuiApplication::setPalette(palette);
-    }
-
-    void copyStylePalette(QPalette& palette, QPalette::ColorGroup group)
-    {
-        int i = 0;
-        for (const QPalette::ColorRole r : RoleOrder)
-            palette.setColor(group, r, NewPalette1[i++]);
     }
 
     inline qreal ByteToReal(const int x)
@@ -276,7 +278,6 @@ namespace Jam::Editor
     {
         getApplicationPalette(palette);
         Style::sliderPalette(palette);
-        
     }
 
     void Palette::swapColorRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b)
@@ -303,14 +304,14 @@ namespace Jam::Editor
 
     void Palette::setAccentRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b)
     {
-        QPalette     palette = widget->palette();
+        QPalette palette = widget->palette();
         palette.setColor(a, Const::accentColor(b));
         widget->setPalette(palette);
     }
 
     void Palette::setColorRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b)
     {
-        QPalette     palette = widget->palette();
+        QPalette palette = widget->palette();
         palette.setColor(a, palette.color(b));
         widget->setPalette(palette);
     }

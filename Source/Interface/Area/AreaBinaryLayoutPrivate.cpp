@@ -24,8 +24,6 @@
 #include <QMouseEvent>
 #include <QScreen>
 #include "Interface/Area/AreaBinaryLayout.h"
-#include "Interface/Constants.h"
-#include "Interface/Extensions.h"
 #include "Interface/Style/Style.h"
 
 namespace Jam::Editor

@@ -20,9 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #include "StackedPanelContent.h"
-#include "Interface/Extensions.h"
 #include "StackedPanel.h"
 #include "StackedPanelManager.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -35,7 +35,7 @@ namespace Jam::Editor
 
     void StackedPanelContent::constructContent()
     {
-        View::applyColorRoles(this);
+        Style::apply(this, TransparentStyle);
         _manger = new StackedPanelManager();
 
         // Use addPanel to add items

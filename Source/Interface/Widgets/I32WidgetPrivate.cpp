@@ -25,6 +25,7 @@
 #include "Interface/Constants.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Utils/Char.h"
 
 namespace Jam::Editor
@@ -46,8 +47,9 @@ namespace Jam::Editor
 
     void I32WidgetPrivate::construct()
     {
-        View::localDefaults(this);
-        View::buttonDefaults(this);
+        Style::apply(this, TransparentStyle);
+        Style::buttonDefaults(this);
+
         Palette::getApplicationPalette(_pal);
     }
 

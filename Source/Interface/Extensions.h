@@ -36,36 +36,11 @@ namespace Jam::Editor::View
     // this namespace should be used for grouping
     // common setters for QWidget and derived Qt types
 
-    using QRole = QPalette::ColorRole;
-
     extern void windowRect(QRect& winRect, const QWidget* widget);
 
     extern void constrainToScreen(QWidget* widget);
 
     extern void contractRect(QRect& winRect, int scale);
-
-    [[deprecated("Move to Style/Pallete.h")]] void applyColorRoles(
-        QWidget*    widget,
-        const QRole background = QPalette::NoRole,
-        const QRole foreground = QPalette::NoRole);
-
-    [[deprecated("Move to Style/Pallete.h")]] extern void clearTextRole(QWidget* widget, QRole foreground = QRole::Text);
-
-    [[deprecated("move to style")]] extern void buttonDefaults(QWidget* widget);
-
-    [[deprecated("Use Style instead")]] extern void layoutDefaults(QLayout* dst, int margin = 0, int spacing = 0);
-
-    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void localDefaults(QWidget* widget, int margin = 0, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
-
-    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void treeWidgetDefaults(QTreeWidget* dst);
-
-    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent);
-
-    extern void lineEditDefaults(QLineEdit* dst, QRole background = QRole::NoRole, QRole foreground = QRole::Text);
-
-    [[deprecated("examine usage relating to ColorRole usage. Use a spectifc role defined through Style.h")]] extern void pushButtonDefaults(QPushButton* dst);
-
-    extern void addLayoutMargin(QBoxLayout* dst, QWidget* content, int margin);
 
     extern bool isBranch(const QWidget* widget);
 

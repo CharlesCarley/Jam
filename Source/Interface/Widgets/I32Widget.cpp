@@ -26,8 +26,7 @@
 #include <QWidget>
 #include "I32WidgetPrivate.h"
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Constants.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Utils/Char.h"
 
 namespace Jam::Editor
@@ -49,18 +48,14 @@ namespace Jam::Editor
     void I32Widget::construct()
     {
         Style::apply(this, TransparentStyle);
+        Style::buttonDefaults(this);
 
-        View::buttonDefaults(this);
 
         _layout = Style::horizontalLayout(2);
         _i32  = new I32WidgetPrivate();
 
-        _edit = new QLineEdit();
-        View::buttonDefaults(_edit);
-
+        _edit = Style::line();
         _edit->setVisible(false);
-        Style::apply(_edit, QLineEditStyle);
-
 
         _layout->addWidget(_i32);
         _layout->addWidget(_edit);
@@ -88,7 +83,6 @@ namespace Jam::Editor
     {
         if (!_i32 || !_edit)
             return;
-
         _i32->setVisible(!edit);
         _edit->setVisible(edit);
 

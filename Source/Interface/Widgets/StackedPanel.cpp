@@ -20,9 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #include "StackedPanel.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -59,12 +59,9 @@ namespace Jam::Editor
     void StackedPanel::construct()
     {
         Style::apply(this, TransparentStyle);
-
-        _layout = new QVBoxLayout();
-
-        View::layoutDefaults(_layout,
-                             StackedPanelContentMargin,
-                             StackedPanelContentSpacing);
+        _layout = Style::verticalLayout(
+            StackedPanelContentMargin,
+            StackedPanelContentSpacing);
 
         setLayout(_layout);
     }

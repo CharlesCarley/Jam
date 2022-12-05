@@ -26,7 +26,7 @@
 #include <QLineEdit>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Utils/Char.h"
 
 namespace Jam::Editor
@@ -39,26 +39,26 @@ namespace Jam::Editor
 
     void VariableStepWidget::construct()
     {
-        const auto layout = Style::horizontalLayout(2,1);
+        const auto layout = Style::horizontalLayout(2, 1);
         makePair(_name, "id");
         makePair(_value, ":=");
         makePair(_min, ">=");
         makePair(_max, "<=");
         makePair(_rate, "+=");
 
-        layout->addWidget(_name.first, 0);
+        layout->addWidget(_name.first, 0, Qt::AlignRight);
         layout->addWidget(_name.second, 1);
 
-        layout->addWidget(_value.first, 0);
+        layout->addWidget(_value.first, 0, Qt::AlignRight);
         layout->addWidget(_value.second, 1);
 
-        layout->addWidget(_min.first, 0);
+        layout->addWidget(_min.first, 0, Qt::AlignRight);
         layout->addWidget(_min.second, 1);
 
-        layout->addWidget(_max.first, 0);
+        layout->addWidget(_max.first, 0, Qt::AlignRight);
         layout->addWidget(_max.second, 1);
 
-        layout->addWidget(_rate.first, 0);
+        layout->addWidget(_rate.first, 0, Qt::AlignRight);
         layout->addWidget(_rate.second, 1);
 
         setLayout(layout);
@@ -77,13 +77,10 @@ namespace Jam::Editor
         LabelLineEditPair& dest,
         const char*        name)
     {
-        dest.first = new QLabel(name);
-        View::localDefaults(dest.first, 0);
-        View::buttonDefaults(dest.first);
+        dest.first = Style::text(name);
         dest.first->setFocusPolicy(Qt::NoFocus);
 
-        dest.second = new QLineEdit();
-        View::lineEditDefaults(dest.second, QPalette::Base);
+        dest.second = Style::darkLine();
         dest.second->setFocusPolicy(Qt::StrongFocus);
 
         connect(dest.second,
@@ -97,6 +94,7 @@ namespace Jam::Editor
                 {
                     onTextChanged();
                     emit stepParamChange(_data);
+                    setFocus();
                 });
     }
 
@@ -122,21 +120,21 @@ namespace Jam::Editor
         if (sender() == _name.second)
         {
             Su::filterRange(_data.name, s, 'a', 'z');
-            //setFocus();
+            // setFocus();
         }
         else if (sender() == _min.second)
         {
             String v;
             Su::filterReal(v, s);
             _data.range.x = Char::toFloat(v);
-            setFocus();
+            // setFocus();
         }
         else if (sender() == _max.second)
         {
             String v;
             Su::filterReal(v, s);
             _data.range.y = Char::toFloat(v);
-            setFocus();
+            // setFocus();
         }
         else if (sender() == _rate.second)
         {
@@ -144,14 +142,14 @@ namespace Jam::Editor
             Su::filterReal(v, s);
 
             _data.rate = Char::toFloat(v);
-            setFocus();
+            // setFocus();
         }
         else if (sender() == _value.second)
         {
             String v;
             Su::filterReal(v, s);
             _data.value = Char::toFloat(v);
-            setFocus();
+            // setFocus();
         }
     }
 
@@ -162,12 +160,15 @@ namespace Jam::Editor
         if (event->lostFocus())
         {
             if (!anyFocused())
+            {
                 emit stepParamChange(_data);
+            }
         }
     }
 
     void VariableStepWidget::focusInEvent(QFocusEvent* event)
     {
+        _value.second->setFocus();
         QWidget::focusInEvent(event);
     }
 

@@ -23,8 +23,8 @@
 #include <qpluginloader.h>
 #include <QApplication>
 #include "Interface/Application.h"
+#include "Interface/Style/Icons.h"
 #include "Interface/Style/MainStyle.h"
-#include "Interface/Widgets/IconButton.h"
 #include "Math/Lg.h"
 #include "State/App.h"
 #include "Utils/Exception.h"

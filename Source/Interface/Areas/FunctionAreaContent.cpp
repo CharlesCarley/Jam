@@ -23,7 +23,8 @@
 #include <QApplication>
 #include <QResizeEvent>
 #include <QWidget>
-#include "Interface/Extensions.h"
+
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/ExpressionWidget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "Interface/Widgets/VariableWidget.h"

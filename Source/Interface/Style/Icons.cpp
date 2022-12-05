@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Icons.h"
 
 namespace Jam::Editor
 {

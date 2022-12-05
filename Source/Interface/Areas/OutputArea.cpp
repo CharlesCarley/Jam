@@ -23,10 +23,12 @@
 #include <QBoxLayout>
 #include <QCoreApplication>
 #include <QPlainTextEdit>
+#include <QPushButton>
+
 #include "Interface/Area/Area.h"
 #include "Interface/Area/AreaToolbar.h"
 #include "Interface/Areas/AreaType.h"
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Style.h"
 #include "State/App.h"
 #include "State/OutputLogMonitor.h"
 

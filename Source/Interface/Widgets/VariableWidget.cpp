@@ -21,8 +21,9 @@
 */
 #include "Interface/Widgets/VariableWidget.h"
 #include <QBoxLayout>
-#include "IconButton.h"
-#include "Interface/Extensions.h"
+#include <QPushButton>
+
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/R32Widget.h"
 
 namespace Jam::Editor
@@ -36,7 +37,7 @@ namespace Jam::Editor
 
     void VariableWidget::construct()
     {
-        View::buttonDefaults(this);
+        Style::buttonDefaults(this);
 
         const auto layout = Style::horizontalLayout();
 
@@ -105,7 +106,7 @@ namespace Jam::Editor
 
     void VariableWidget::setValue(const R32& value)
     {
-        _stepData.value= value;
+        _stepData.value = value;
         _line->setValue(value);
         emit variableChanged(_refId, _stepData);
     }

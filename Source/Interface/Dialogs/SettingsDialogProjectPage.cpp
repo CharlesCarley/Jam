@@ -20,10 +20,11 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Dialogs/SettingsDialogProjectPage.h"
+#include <QCheckBox>
 #include <QVBoxLayout>
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
@@ -43,11 +44,11 @@ namespace Jam::Editor
     {
         const auto projectLayout = Style::verticalLayout();
 
-        const auto minify = Buttons::createCheckBox(
+        const auto minify = Style::checkBox(
             "Write compressed XML files",
             _state ? _state->minify : false);
 
-        const auto reload = Buttons::createCheckBox(
+        const auto reload = Style::checkBox(
             "Reload last project on startup",
             _state ? _state->reload : false);
 

@@ -20,7 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include "Interface/Style/Style.h"
+#include <QPalette>
 
 namespace Jam::Editor
 {
@@ -47,28 +47,19 @@ namespace Jam::Editor
         constexpr QPalette::ColorRole Y03 = QPalette::AlternateBase;
         constexpr QPalette::ColorRole Y04 = QPalette::PlaceholderText;
 
-        [[deprecated("Use Editor::Palette instead")]] extern void accentPalette(QPalette& palette);
-
         constexpr QColor MakeGrey(const int o)
         {
             return {0x19 + 11 * o, 0x19 + 11 * o, 0x1A + 11 * o};
         }
-
-        [[deprecated("Use Editor::Palette instead")]] extern void initializePalette();
-
-        [[deprecated("Use Editor::Palette instead")]] extern void copyStylePalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
     }  // namespace Const
-
 
     class Palette
     {
     public:
         static void applyInternal();
 
-        [[deprecated("TODO: reorganize the palette order")]]
         static void getApplicationPalette(QPalette& palette, QPalette::ColorGroup group = QPalette::All);
 
-        [[deprecated("TODO: reorganize the palette order")]]
         static void getAccentPalette(QPalette& palette);
 
         static void getSliderPalette(QPalette& palette);

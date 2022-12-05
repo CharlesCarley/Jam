@@ -25,7 +25,6 @@
 #include "Math/Axis.h"
 #include "Math/Box.h"
 #include "Math/Lg.h"
-#include "Utils/Char.h"
 #include "Utils/StreamMethods.h"
 
 namespace Jam::Editor::State

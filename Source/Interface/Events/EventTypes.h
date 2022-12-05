@@ -21,7 +21,6 @@
 */
 #pragma once
 #include <QEvent>
-#include "State/FrameStack/FunctionStateObject.h"
 
 namespace Jam::Editor
 {

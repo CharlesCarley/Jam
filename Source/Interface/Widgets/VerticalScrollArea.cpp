@@ -21,14 +21,14 @@
 */
 #include "VerticalScrollArea.h"
 #include <QResizeEvent>
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {
     VerticalScrollArea::VerticalScrollArea(QWidget* parent) :
         QScrollArea(parent)
     {
-        View::applyColorRoles(this);
+        Style::apply(this, TransparentStyle);
         setAlignment(Qt::AlignLeft);
         setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);

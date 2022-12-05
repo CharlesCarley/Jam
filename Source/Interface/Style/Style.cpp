@@ -20,6 +20,9 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Style/Style.h"
+#include <QCheckBox>
+#include <QLabel>
+#include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTreeWidget>
@@ -52,6 +55,13 @@ namespace Jam::Editor
     constexpr Role ProjectTreeBackground = Role::Dark;
     constexpr Role ProjectTreeForeground = Role::Text;
     constexpr Role ProjectTreeAccent     = Role::Base;
+
+    constexpr Role LabelBackground = Role::NoRole;
+    constexpr Role LabelForeground = Role::Text;
+
+    constexpr Role PushButtonBackground = Role::Button;
+    constexpr Role PushButtonForeground = Role::ButtonText;
+    constexpr Role PushButtonHover      = Role::Midlight;
 
     constexpr Role SliderBackground = Role::Shadow;
     constexpr Role SliderBorder     = Role::Window;
@@ -98,14 +108,15 @@ namespace Jam::Editor
     {
         Q_ASSERT(widget);
         widget->setContentsMargins(0, 0, 0, 0);
-        widget->setFocusPolicy(Qt::NoFocus);
 
         switch (type)
         {
         case ApplicationStyle:
             applyColorRoles(widget, Role::NoRole, Role::HighlightedText);
             break;
+        case AreaDialogStyle:
         case AreaStyle:
+        case AreaDialogContainerStyle:
             applyColorRoles(widget, Role::Dark);
             break;
         case AreaGridStyle:
@@ -118,8 +129,19 @@ namespace Jam::Editor
             applyColorRoles(widget, AreaToolbarBackground, AreaToolbarForeground);
             break;
         case AreaToolLabelStyle:
+            buttonDefaults(widget);
             applyColorRoles(widget, Role::NoRole, AreaToolbarForeground);
             break;
+        case AreaLabelStyle:
+            buttonDefaults(widget);
+            applyColorRoles(widget, LabelBackground, LabelForeground);
+            break;
+        case AreaPushButtonStyle:
+            pushButtonDefaults(widget);
+            applyColorRoles(widget, PushButtonBackground, PushButtonForeground);
+            Palette::setColorRole(widget, Role::AlternateBase, PushButtonHover);
+            break;
+
         case AreaToolButtonStyle:
             applyColorRoles(widget, Role::NoRole, AreaToolbarForeground);
             Palette::setColorRole(widget, Role::AlternateBase, AreaToolbarAccent);
@@ -128,10 +150,16 @@ namespace Jam::Editor
             applyColorRoles(widget, ProjectTreeBackground, ProjectTreeForeground);
             Palette::swapColorRole(widget, Role::AlternateBase, ProjectTreeAccent);
             break;
-        case QLineEditStyle:
+        case AreaLineStyle:
+            buttonDefaults(widget);
             applyColorRoles(widget, Role::Base, Role::Text);
             break;
+        case AreaDarkLineStyle:
+            buttonDefaults(widget);
+            applyColorRoles(widget, Role::Dark, Role::Text);
+            break;
         case QCheckBoxStyle:
+            buttonDefaults(widget);
             applyColorRoles(widget, Role::NoRole, CheckBoxLabel);
             Palette::setAccentRole(widget, Role::Link, CheckBoxChecked);
             Palette::setColorRole(widget, Role::AlternateBase, CheckBoxBackground);
@@ -153,10 +181,10 @@ namespace Jam::Editor
             Palette::setColorRole(widget, Role::AlternateBase, ToolMenuAccent);
             break;
         case AreaSliderStyle:
+            buttonDefaults(widget);
             applyColorRoles(widget, SliderBackground, SliderForeground);
             break;
-        case AreaDialogStyle:  // TODO: examine
-        case AreaNodeStyle:    // should be empty
+        case AreaNodeStyle:  // should be empty
         case TransparentStyle:
         default:
             applyColorRoles(widget, Role::NoRole, Role::NoRole);
@@ -172,7 +200,10 @@ namespace Jam::Editor
             return SplitterSize;
         case ButtonHeight:
         case ButtonWidth:
+        case PushButtonWidth:
             return 24;
+        case PushButtonHeight:
+            return 18;
         default:
             break;
         }
@@ -220,6 +251,22 @@ namespace Jam::Editor
         widget->setSpacing(spacing);
         widget->setContentsMargins(margin, margin, margin, margin);
         widget->setSizeConstraint(QLayout::SetMinAndMaxSize);
+    }
+
+    void Style::buttonDefaults(QWidget* widget)
+    {
+        Q_ASSERT(widget);
+        widget->setMaximumHeight(hint(ButtonHeight));
+        widget->setMinimumHeight(hint(ButtonHeight));
+        // only constrain the min width..
+        widget->setMinimumWidth(hint(ButtonWidth));
+    }
+
+    void Style::pushButtonDefaults(QWidget* widget)
+    {
+        Q_ASSERT(widget);
+        widget->setMinimumSize({hint(PushButtonWidth), hint(PushButtonHeight)});
+        widget->setFocusPolicy(Qt::FocusPolicy::TabFocus);
     }
 
     QVBoxLayout* Style::verticalLayout(const int margin,
@@ -272,4 +319,51 @@ namespace Jam::Editor
         edit->setReadOnly(true);
         return edit;
     }
+
+    QLineEdit* Style::line(QWidget* parent)
+    {
+        QLineEdit* le = new QLineEdit(parent);
+
+        le->setContentsMargins(0, 0, 0, 0);
+        le->setClearButtonEnabled(false);
+        le->setReadOnly(false);
+        le->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+        apply(le, AreaLineStyle);
+        return le;
+    }
+
+    QLineEdit* Style::darkLine(QWidget* parent)
+    {
+        QLineEdit* le = new QLineEdit(parent);
+
+        le->setContentsMargins(0, 0, 0, 0);
+        le->setClearButtonEnabled(false);
+        le->setReadOnly(false);
+        le->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+        apply(le, AreaDarkLineStyle);
+        return le;
+    }
+
+    QPushButton* Style::button(const QString& label, QWidget* parent)
+    {
+        QPushButton* btn = new QPushButton(label, parent);
+        apply(btn, AreaPushButtonStyle);
+        return btn;
+    }
+
+    QLabel* Style::text(const QString& label, QWidget* parent)
+    {
+        const auto cb = new QLabel(label);
+        apply(cb, AreaLabelStyle);
+        return cb;
+    }
+
+    QCheckBox* Style::checkBox(const QString& label, bool initialState)
+    {
+        const auto cb = new QCheckBox(label);
+        apply(cb, QCheckBoxStyle);
+        cb->setChecked(initialState);
+        return cb;
+    }
+
 }  // namespace Jam::Editor

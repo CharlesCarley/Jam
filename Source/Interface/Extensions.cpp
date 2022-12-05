@@ -25,13 +25,9 @@
 #include <QCoreApplication>
 #include <QLineEdit>
 #include <QPlainTextEdit>
-#include <QPushButton>
-#include <QTreeWidget>
 #include <QWidget>
 #include "Interface/Area/AreaBranch.h"
 #include "Interface/Area/AreaLeaf.h"
-#include "Interface/Constants.h"
-#include "Style/Style.h"
 #include "Utils/Array.h"
 
 namespace Jam::Editor::View
@@ -74,161 +70,8 @@ namespace Jam::Editor::View
     {
         winRect.adjust(scale, scale, -scale, -scale);
     }
+    
 
-    void applyColorRoles(
-        QWidget*    widget,
-        const QRole background,
-        const QRole foreground)
-    {
-        Q_ASSERT(widget);
-        widget->setAutoFillBackground(background != QRole::NoRole);
-        widget->setForegroundRole(foreground);
-        widget->setBackgroundRole(background);
-    }
-
-    void copyColorRoles(QWidget* dst, const QWidget* src)
-    {
-        Q_ASSERT(src && dst);
-        dst->setAutoFillBackground(src->autoFillBackground());
-        dst->setForegroundRole(src->foregroundRole());
-        dst->setBackgroundRole(src->backgroundRole());
-    }
-
-    void clearTextRole(QWidget* widget, const QRole foreground)
-    {
-        Q_ASSERT(widget);
-        widget->setAutoFillBackground(false);
-        widget->setForegroundRole(foreground);
-        widget->setBackgroundRole(QRole::NoRole);
-    }
-
-    void applyBaseClassDefaults(QWidget* widget)
-    {
-        Q_ASSERT(widget);
-
-        if (widget->inherits(QFrame::staticMetaObject.className()))
-        {
-            QFrame* frame = (QFrame*)widget;
-            frame->setFrameShape(QFrame::NoFrame);
-        }
-
-        if (widget->inherits(QAbstractScrollArea::staticMetaObject.className()))
-        {
-            const QAbstractScrollArea* scrollArea = (QAbstractScrollArea*)widget;
-            if (QWidget* viewport = scrollArea->viewport())
-                copyColorRoles(viewport, widget);
-        }
-
-        if (widget->inherits(QPlainTextEdit::staticMetaObject.className()))
-        {
-            QPlainTextEdit* edit = (QPlainTextEdit*)widget;
-
-            edit->setWordWrapMode(QTextOption::NoWrap);
-            edit->setBackgroundVisible(false);
-            edit->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-            edit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-            edit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-            edit->setReadOnly(true);
-        }
-    }
-
-    void widgetDefaults(QWidget*       widget,
-                        const int      margin,
-                        const QWidget* parent)
-    {
-        //Q_ASSERT(widget);
-        //widget->setContentsMargins(margin, margin, margin, margin);
-        //widget->setFocusPolicy(Qt::NoFocus);
-        //if (parent)
-        //    copyColorRoles(widget, parent);
-        //applyBaseClassDefaults(widget);
-    }
-
-    void widgetDefaults(QWidget* widget, const QWidget* parent)
-    {
-        //Q_ASSERT(widget && parent);
-        //widget->setContentsMargins(0, 0, 0, 0);
-        //copyColorRoles(widget, parent);
-        //applyBaseClassDefaults(widget);
-    }
-
-    void buttonDefaults(QWidget* widget)
-    {
-        Q_ASSERT(widget);
-        widget->setMaximumHeight(Style::hint(ButtonHeight));
-        widget->setMinimumHeight(Style::hint(ButtonHeight));
-        // only constrain the min width..
-        widget->setMinimumWidth(Style::hint(ButtonWidth));
-    }
-
-    void layoutDefaults(QLayout*  dst,
-                        const int margin,
-                        const int spacing)
-    {
-        Q_ASSERT(dst);
-        dst->setSpacing(spacing);
-        dst->setContentsMargins(margin, margin, margin, margin);
-        dst->setSizeConstraint(QLayout::SetMinAndMaxSize);
-    }
-
-    void localDefaults(QWidget* widget, int margin, QRole background, QRole foreground)
-    {
-        Q_ASSERT(widget);
-        applyColorRoles(widget, background, foreground);
-        widget->setContentsMargins(margin, margin, margin, margin);
-    }
-
-    void treeWidgetDefaults(QTreeWidget* dst)
-    {
-        Q_ASSERT(dst);
-
-        dst->setColumnCount(1);
-        dst->setHeaderHidden(true);
-
-        //widgetDefaults(dst);
-        //applyColorRoles(dst, QRole::NoRole, QRole::Text);
-    }
-
-    void treeWidgetDefaults(QTreeWidget* dst, const QWidget* parent)
-    {
-        Q_ASSERT(dst);
-
-        dst->setColumnCount(1);
-        dst->setHeaderHidden(true);
-
-        //widgetDefaults(dst);
-    }
-
-    void lineEditDefaults(QLineEdit* dst, QRole background, QRole foreground)
-    {
-        Q_ASSERT(dst);
-        applyColorRoles(dst, background, foreground);
-        dst->setContentsMargins(0, 0, 0, 0);
-        dst->setClearButtonEnabled(false);
-        dst->setReadOnly(false);
-        buttonDefaults(dst);
-    }
-
-    void pushButtonDefaults(QPushButton* dst)
-    {
-        Q_ASSERT(dst);
-        //widgetDefaults(dst);
-        applyColorRoles(dst, QRole::Button, QRole::Text);
-        dst->setMinimumSize({18, Style::hint(ButtonHeight)});
-    }
-
-    void addLayoutMargin(QBoxLayout* dst,
-                         QWidget*    content,
-                         const int   margin)
-    {
-        Q_ASSERT(dst);
-        const auto innerLayout = new QHBoxLayout();
-        innerLayout->setSpacing(0);
-        innerLayout->setContentsMargins(margin, margin, margin, margin);
-
-        innerLayout->addWidget(content, 1);
-        dst->addLayout(innerLayout, 1);
-    }
 
     bool isBranch(const QWidget* widget)
     {

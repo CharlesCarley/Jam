@@ -24,6 +24,7 @@
 #include <QMouseEvent>
 #include <QVBoxLayout>
 #include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/ContentContainer.h"
 #include "Interface/Widgets/OkCancelWidget.h"
 #include "Interface/Widgets/WindowTitlebar.h"
@@ -55,8 +56,7 @@ namespace Jam::Editor
         setModal(true);
         View::constrainToScreen(this);
 
-        _layout = new QVBoxLayout();
-        View::layoutDefaults(_layout, _border << 1);
+        _layout = Style::verticalLayout(_border << 1);
 
         _content = new QVBoxLayout();
         _center  = new ContentContainer();
@@ -78,12 +78,12 @@ namespace Jam::Editor
         cent->setContentLayout(_content);
         cent->setBorder(1);
 
-        View::applyColorRoles(cent, _borderRole);
+        //View::applyColorRoles(cent, _borderRole);
         connect(cent, &ContentContainer::mouseEntered, this, &Dialog::resetCursor);
         setMouseTracking(true);
 
         _layout->addWidget(cent, 1);
-        View::applyColorRoles(this, _borderRole);
+        //View::applyColorRoles(this, _borderRole);
         setLayout(_layout);
     }
 
@@ -138,7 +138,6 @@ namespace Jam::Editor
             {
                 _center->setContentLayout(layout);
                 _center->setBorder(_border);
-                View::applyColorRoles(this, _borderRole);
             }
         }
     }
@@ -148,8 +147,7 @@ namespace Jam::Editor
         if (_layout)
         {
             _border = border;
-            View::layoutDefaults(_layout, _border);
-            View::applyColorRoles(this, _borderRole);
+            Style::layoutDefaults(_layout, _border);
         }
     }
 
@@ -159,12 +157,12 @@ namespace Jam::Editor
         {
             if (winWidget->windowState() != Qt::WindowMaximized)
             {
-                View::layoutDefaults(_layout, 0);
+                Style::layoutDefaults(_layout, 0);
                 winWidget->setWindowState(Qt::WindowMaximized);
             }
             else
             {
-                View::layoutDefaults(_layout, _border);
+                Style::layoutDefaults(_layout, _border);
                 winWidget->setWindowState(Qt::WindowNoState);
             }
         }

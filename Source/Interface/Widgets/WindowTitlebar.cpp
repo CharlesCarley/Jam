@@ -23,10 +23,12 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QMouseEvent>
+#include <QPushButton>
+
 #include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
-#include "Interface/Widgets/IconButton.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {

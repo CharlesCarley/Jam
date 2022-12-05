@@ -21,10 +21,8 @@
 */
 #include "Interface/Style/MainStyle.h"
 #include <QApplication>
-#include <QPainter>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Palette.h"
-#include "Interface/Style/PaletteCache.h"
 #include "Interface/Style/Render.h"
 #include "Interface/Constants.h"
 
@@ -34,13 +32,13 @@ namespace Jam::Editor
         QProxyStyle()
     {
         Palette::applyInternal();
-        _cache = new PaletteCache();
+        //_cache = new PaletteCache();
     }
 
     MainStyle::~MainStyle()
     {
-        delete _cache;
-        _cache = nullptr;
+        //delete _cache;
+        //_cache = nullptr;
     }
 
     void MainStyle::drawControl(

@@ -24,6 +24,7 @@
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/MainArea.h"
 #include "Interface/Widgets/WindowMenuBar.h"
+#include "Style/Style.h"
 
 namespace Jam::Editor
 {

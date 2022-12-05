@@ -21,7 +21,7 @@
 */
 #include "Interface/Area/AreaContent.h"
 #include "Interface/Area/AreaNode.h"
-#include "Interface/Extensions.h"
+#include "Interface/Style/Style.h"
 
 namespace Jam::Editor
 {

@@ -21,6 +21,8 @@
 */
 #include "Interface/Areas/GridAreaContent.h"
 #include <QWidget>
+
+#include "Interface/Style/Style.h"
 #include "Interface/Widgets/I32Widget.h"
 #include "Interface/Widgets/StackedPanel.h"
 #include "State/App.h"
