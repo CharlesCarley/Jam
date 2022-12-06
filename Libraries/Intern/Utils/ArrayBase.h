@@ -185,7 +185,6 @@ namespace Jam
         {
             if (_capacity < capacity)
             {
-                capacity = Min<uint32_t>(capacity, _alloc.limit);
                 if (_data)
                 {
                     _data     = _alloc.reallocateArray(_data,

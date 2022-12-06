@@ -21,8 +21,9 @@
 */
 #include "FrameStackAreaContent.h"
 #include <QMouseEvent>
-#include "OutputArea.h"
+#include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"
+#include "OutputArea.h"
 #include "State/FrameStack/GridLayer.h"
 #include "State/FrameStack/RenderContext.h"
 #include "State/FrameStackManager.h"
@@ -37,7 +38,11 @@ namespace Jam::Editor
         construct();
     }
 
-    FrameStackAreaContent::~FrameStackAreaContent() = default;
+    FrameStackAreaContent::~FrameStackAreaContent()
+    {
+        delete _palette;
+        _palette = nullptr;
+    }
 
     void FrameStackAreaContent::construct()
     {
@@ -48,12 +53,14 @@ namespace Jam::Editor
 
         setFocusPolicy(Qt::FocusPolicy::StrongFocus);
         resetAxis();
+
+        _palette = new QPalette();
+        Palette::getAccentPalette(*_palette);
     }
 
     void FrameStackAreaContent::resetAxis()
     {
         const QSize sz = size();
-
         constexpr R32 majorSubdivision = 1.f / 5.f;
 
         const R32 minSquare = Min<R32>(
@@ -98,8 +105,9 @@ namespace Jam::Editor
         QPainter paint(this);
         paint.setRenderHint(QPainter::Antialiasing);
 
-        RenderContext canvas(&paint, _screen);
+        RenderContext canvas(&paint, _palette, _screen);
         canvas.clear(0x10, 0x10, 0x10, 0x80);
+
         layerStack()->render(_screen, &canvas);
     }
 

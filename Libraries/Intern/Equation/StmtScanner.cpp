@@ -36,7 +36,7 @@ namespace Jam::Eq
     TokenType filterKeyword(const ScratchBuffer& input)
     {
         const char*  test = input.data();
-        const size_t al   = input.size()-1;
+        const size_t al   = input.size() - 1;
         for (const auto& [word, token, bl] : Keywords)
         {
             if (Char::equals(test, al, word, bl))
@@ -56,6 +56,9 @@ namespace Jam::Eq
         ch = _stream->get();
         while (isValidIdentifier(ch))
         {
+            if (_buf.size() > 0x20)
+                syntaxError("maximum identifier length exceeded");
+
             _buf.push_back((char)ch);
             ch = _stream->get();
         }
@@ -75,8 +78,7 @@ namespace Jam::Eq
                 ScannerBase::save(
                     {
                         _buf.data(),
-                    })
-            );
+                    }));
             tok.setType(TOK_IDENTIFIER);
         }
     }
@@ -99,8 +101,10 @@ namespace Jam::Eq
             if (ch == 'E' || ch == 'e')
                 hasExtra = true;
 
-            _buf.push_back(int8_t(ch));
+            if (_buf.size() > 0x23)
+                syntaxError("maximum number length exceeded");
 
+            _buf.push_back(int8_t(ch));
             ch = _stream->get();
         }
 

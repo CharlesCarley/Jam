@@ -30,11 +30,15 @@ namespace Jam::Eq
     class CallState;
     using SymbolArray = SimpleArray<Symbol*>;
 
+    constexpr I16 DepthClampMax = 0x80;
+    constexpr I16 DepthClampMin = 0x10;
+    constexpr I16 DefaultDepth  = 0x40;
+
     class StmtParser final : public ParserBase
     {
     private:
         SymbolArray _symbols;
-        I16         _maxDepth{0x80};
+        I16         _maxDepth{DefaultDepth};
 
         using Parameter = void (StmtParser::*)(CallState& state);
 
@@ -75,7 +79,7 @@ namespace Jam::Eq
         void reset();
 
     public:
-        explicit StmtParser(I16 maxDepth = 0x80);
+        explicit StmtParser(I16 maxDepth = DefaultDepth);
         ~StmtParser() override;
 
         const SymbolArray& symbols() const;

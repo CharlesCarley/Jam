@@ -22,7 +22,6 @@
 #pragma once
 #include <QPainter>
 #include <QPalette>
-
 #include "Math/Axis.h"
 #include "Math/Color.h"
 #include "Math/Screen.h"
@@ -35,20 +34,21 @@ namespace Jam::Editor::State
     class RenderContext
     {
     private:
-        IColor    _color{0, 0, 0, 1};
-        Vec2I     _size{U32(0), 0};
-        Screen    _screen;
-        QPainter* _painter;
-        QPen      _pen{};
-        QPalette  _palette;
+        IColor          _color{0, 0, 0, 1};
+        Vec2I           _size{U32(0), 0};
+        Screen          _screen;
+        QPainter*       _painter;
+        QPen            _pen{};
+        const QPalette* _palette;
 
         mutable QString _text;
 
         bool isNotValid() const;
 
     public:
-        explicit RenderContext(QPainter* painter,
-                               Screen    screen);
+        explicit RenderContext(QPainter*       painter,
+                               const QPalette* palette,
+                               Screen          screen);
         ~RenderContext();
 
         const Vec2I& size() const;

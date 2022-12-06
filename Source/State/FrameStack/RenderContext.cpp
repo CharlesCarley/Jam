@@ -30,18 +30,16 @@
 namespace Jam::Editor::State
 {
 
-    RenderContext::RenderContext(QPainter* painter,
-                                 Screen    screen) :
+    RenderContext::RenderContext(QPainter*       painter,
+                                 const QPalette* palette,
+                                 Screen          screen) :
         _screen{std::move(screen)},
-        _painter{painter}
+        _painter{painter},
+        _palette{palette}
     {
         _text.reserve(32);
-
-        // change this so that it does not have to copy every
-        // render call
-        Palette::getAccentPalette(_palette);
-
         _size = toVec2I(_screen.viewport().extent());
+
         _painter->setRenderHint(QPainter::Antialiasing, true);
         _painter->setRenderHint(QPainter::TextAntialiasing, true);
     }
@@ -102,12 +100,11 @@ namespace Jam::Editor::State
         _painter->setPen(_pen);
     }
 
-    
     void RenderContext::selectColor(const QPalette::ColorRole& col, U8 width)
     {
-        selectColor(_palette.color(col), width);
+        if (_palette)
+            selectColor(_palette->color(col), width);
     }
-
 
     void RenderContext::drawLine(
         const int x1,

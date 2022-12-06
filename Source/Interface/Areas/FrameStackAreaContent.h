@@ -37,12 +37,12 @@ namespace Jam::Editor
         };
         // LeftPressed = 0x01
         // Shift       = 0x02
-        U32    _state{0};
-        Screen _screen;
-        Vec2F  _p0;
-        R32    _scrollX{0};
-        R32    _scrollY{0};
-
+        U32       _state{0};
+        Screen    _screen;
+        Vec2F     _p0;
+        R32       _scrollX{0};
+        R32       _scrollY{0};
+        QPalette* _palette{nullptr};
 
     public:
         explicit FrameStackAreaContent(QWidget* parent = nullptr);
@@ -52,7 +52,7 @@ namespace Jam::Editor
         void resetAxis();
 
     private:
-        void  construct();
+        void construct();
 
         Vec2F updatePoint(const QMouseEvent* event);
 
@@ -73,7 +73,5 @@ namespace Jam::Editor
         void keyPressEvent(QKeyEvent* event) override;
 
         void keyReleaseEvent(QKeyEvent* event) override;
-
-
     };
 }  // namespace Jam::Editor

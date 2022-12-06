@@ -382,7 +382,7 @@ namespace Jam::Eq
         _cursor = 0;
         _scanner->attach(&input, PathUtil(_file));
 
-        CallState state = CallState{Clamp<I16>(_maxDepth, 0x10, 0x800)};
+        CallState state = CallState{Clamp<I16>(_maxDepth, DepthClampMin, DepthClampMax)};
 
         while (_cursor <= (int32_t)_tokens.size())
         {
