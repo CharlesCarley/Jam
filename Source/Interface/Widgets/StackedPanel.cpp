@@ -21,7 +21,6 @@
 */
 #include "StackedPanel.h"
 #include "Interface/Extensions.h"
-#include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"
 
 namespace Jam::Editor

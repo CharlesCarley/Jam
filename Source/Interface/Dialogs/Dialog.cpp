@@ -34,13 +34,11 @@ namespace Jam::Editor
     constexpr Qt::WindowFlags WindowFlags = Qt::FramelessWindowHint |
                                             Qt::WindowStaysOnTopHint;
 
-
     Dialog::Dialog(const int options, QWidget* parent) :
         QDialog(parent, WindowFlags)
     {
         construct(options & ~Minimize);
     }
-
 
     Dialog::Dialog(QString title, const int options, QWidget* parent) :
         QDialog(parent, WindowFlags),
@@ -77,13 +75,10 @@ namespace Jam::Editor
         ContentContainer* cent = new ContentContainer();
         cent->setContentLayout(_content);
         cent->setBorder(1);
-
-        //View::applyColorRoles(cent, _borderRole);
         connect(cent, &ContentContainer::mouseEntered, this, &Dialog::resetCursor);
         setMouseTracking(true);
 
         _layout->addWidget(cent, 1);
-        //View::applyColorRoles(this, _borderRole);
         setLayout(_layout);
     }
 
@@ -130,7 +125,7 @@ namespace Jam::Editor
         }
     }
 
-    void Dialog::applyLayout(QLayout* layout)
+    void Dialog::applyLayout(QLayout* layout) const
     {
         if (layout)
         {
@@ -142,7 +137,7 @@ namespace Jam::Editor
         }
     }
 
-    void Dialog::setBorder(int border)
+    void Dialog::setBorder(const int border)
     {
         if (_layout)
         {

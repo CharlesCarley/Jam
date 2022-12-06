@@ -22,13 +22,11 @@
 #include "Interface/Style/Palette.h"
 #include <QApplication>
 #include <QWidget>
-
 #include "Style.h"
-#include "Interface/Constants.h"
 
-namespace Jam::Editor::Const
+namespace Jam::Editor
 {
-    constexpr QColor Blue  = QColor(0x34, 0x43, 0x82);
+    constexpr QColor SeedB = QColor(0x34, 0x43, 0x82);
     constexpr QColor SeedY = QColor(0x34, 0x53, 0xA2);
 
     constexpr QPalette::ColorRole RoleOrder[20] = {
@@ -53,6 +51,15 @@ namespace Jam::Editor::Const
         QPalette::AlternateBase,
         QPalette::PlaceholderText,
     };
+
+    constexpr QColor MakeGrey(const int o)
+    {
+        return {
+            0x19 + 11 * o,
+            0x19 + 11 * o,
+            0x1A + 11 * o,
+        };
+    }
 
     constexpr QColor NewPalette1[20] = {
         MakeGrey(0x00),            // Shadow
@@ -119,7 +126,11 @@ namespace Jam::Editor::Const
         for (int group : groups)
         {
             for (int color : colors)
-                palette.setColor((QPalette::ColorGroup)group, (QPalette::ColorRole)color, Empty);
+            {
+                palette.setColor((QPalette::ColorGroup)group,
+                                 (QPalette::ColorRole)color,
+                                 {0xFF, 0x00, 0xFF});
+            }
         }
     }
 
@@ -171,28 +182,28 @@ namespace Jam::Editor::Const
         return r.toRgb();
     }
 
-    constexpr qreal StepRates[5]{
+    constexpr qreal StepRates[5] = {
         0.45,
-        0.6,
+        0.60,
         0.75,
-        0.9,
-        1.0,
+        0.90,
+        1.00,
     };
 
-    const QColor Red    = ModColor(Blue, 345, 1, 1);
-    const QColor Green  = ModColor(Blue, 70, 1, 1);
-    const QColor Yellow = ModColor(Blue, 45, .75, 1);
+    const QColor Red    = ModColor(SeedB, 345, 1, 1);
+    const QColor Green  = ModColor(SeedB, 70, 1, 1);
+    const QColor Yellow = ModColor(SeedB, 45, .75, 1);
 
-    const QColor Blue00   = ModColor(Blue, 190, 1, StepRates[0]);
-    const QColor Blue01   = ModColor(Blue, 190, 1, StepRates[1]);
-    const QColor Blue02   = ModColor(Blue, 190, 1, StepRates[2]);
-    const QColor Blue03   = ModColor(Blue, 190, 1, StepRates[3]);
-    const QColor Blue04   = ModColor(Blue, 190, 1, StepRates[4]);
-    const QColor Green00  = ModColor(Blue, 70, 1, StepRates[0]);
-    const QColor Green01  = ModColor(Blue, 70, 1, StepRates[1]);
-    const QColor Green02  = ModColor(Blue, 70, 1, StepRates[2]);
-    const QColor Green03  = ModColor(Blue, 70, 1, StepRates[3]);
-    const QColor Green04  = ModColor(Blue, 70, 1, StepRates[4]);
+    const QColor Blue00   = ModColor(SeedB, 190, 1, StepRates[0]);
+    const QColor Blue01   = ModColor(SeedB, 190, 1, StepRates[1]);
+    const QColor Blue02   = ModColor(SeedB, 190, 1, StepRates[2]);
+    const QColor Blue03   = ModColor(SeedB, 190, 1, StepRates[3]);
+    const QColor Blue04   = ModColor(SeedB, 190, 1, StepRates[4]);
+    const QColor Green00  = ModColor(SeedB, 70, 1, StepRates[0]);
+    const QColor Green01  = ModColor(SeedB, 70, 1, StepRates[1]);
+    const QColor Green02  = ModColor(SeedB, 70, 1, StepRates[2]);
+    const QColor Green03  = ModColor(SeedB, 70, 1, StepRates[3]);
+    const QColor Green04  = ModColor(SeedB, 70, 1, StepRates[4]);
     const QColor Red00    = ModColor(SeedY, 345, 1, StepRates[0]);
     const QColor Red01    = ModColor(SeedY, 345, 1, StepRates[1]);
     const QColor Red02    = ModColor(SeedY, 345, 1, StepRates[2]);
@@ -236,7 +247,7 @@ namespace Jam::Editor::Const
                 return AccentColors[i];
             ++i;
         }
-        return Empty;
+        return {0xFF, 0x00, 0xFF};
     }
 
     void accentPalette(QPalette& palette)
@@ -245,15 +256,10 @@ namespace Jam::Editor::Const
         for (const QPalette::ColorRole r : RoleOrder)
             palette.setColor(r, AccentColors[i++]);
     }
-
-}  // namespace Jam::Editor::Const
-
-namespace Jam::Editor
-{
     void Palette::applyInternal()
     {
         QPalette palette;
-        Const::clearAppPalette(palette);
+        clearAppPalette(palette);
 
         getApplicationPalette(palette);
 
@@ -263,15 +269,15 @@ namespace Jam::Editor
     void Palette::getApplicationPalette(QPalette& palette, QPalette::ColorGroup group)
     {
         int i = 0;
-        for (const QPalette::ColorRole r : Const::RoleOrder)
-            palette.setColor(group, r, Const::NewPalette1[i++]);
+        for (const QPalette::ColorRole r : RoleOrder)
+            palette.setColor(group, r, NewPalette1[i++]);
     }
 
     void Palette::getAccentPalette(QPalette& palette)
     {
         int i = 0;
-        for (const QPalette::ColorRole r : Const::RoleOrder)
-            palette.setColor(r, Const::AccentColors[i++]);
+        for (const QPalette::ColorRole r : RoleOrder)
+            palette.setColor(r, AccentColors[i++]);
     }
 
     void Palette::getSliderPalette(QPalette& palette)
@@ -296,7 +302,7 @@ namespace Jam::Editor
     {
         QPalette     palette = widget->palette();
         const QColor ca      = palette.color(a);
-        const QColor cb      = Const::accentColor(b);
+        const QColor cb      = accentColor(b);
         palette.setColor(a, cb);
         palette.setColor(b, ca);
         widget->setPalette(palette);
@@ -305,7 +311,7 @@ namespace Jam::Editor
     void Palette::setAccentRole(QWidget* widget, QPalette::ColorRole a, QPalette::ColorRole b)
     {
         QPalette palette = widget->palette();
-        palette.setColor(a, Const::accentColor(b));
+        palette.setColor(a, accentColor(b));
         widget->setPalette(palette);
     }
 

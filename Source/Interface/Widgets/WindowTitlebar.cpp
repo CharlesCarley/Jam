@@ -24,8 +24,6 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPushButton>
-
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"
@@ -55,7 +53,7 @@ namespace Jam::Editor
     {
         Style::apply(this, MenuBarStyle);
 
-        _toolbar = Style::horizontalLayout(0, Const::ToolbarSpacing);
+        _toolbar = Style::horizontalLayout(0, Style::hint(ToolbarSpacing));
         _toolbar->setContentsMargins((_titleBarBit & Title) != 0 ? 6 : 1, 1, 0, 1);
 
         if (_titleBarBit & Title)

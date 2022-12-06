@@ -20,8 +20,6 @@
 -------------------------------------------------------------------------------
 */
 #include "Interface/Widgets/WindowMenuBar.h"
-
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"

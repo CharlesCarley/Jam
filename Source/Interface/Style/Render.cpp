@@ -25,10 +25,13 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QWidget>
-#include "Interface/Constants.h"
 
 namespace Jam::Editor::Const
 {
+    constexpr QColor Empty  = QColor(0xFF, 0x00, 0xFF);
+    constexpr int NormalFactor   = 125;
+    constexpr int SubtleFactor   = 105;
+
     Renderer::Renderer(PaletteCache*       cache,
                        const QStyle*       parent,
                        const QStyleOption* option,

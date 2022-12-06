@@ -28,7 +28,7 @@ namespace Jam::Editor
     class EditorApp final : public QApplication
     {
     private:
-        void        construct() const;
+        void construct() const;
 
     public:
         EditorApp(int&   argc,

@@ -22,7 +22,6 @@
 #include "Interface/Widgets/OkCancelWidget.h"
 #include <QBoxLayout>
 #include <QPushButton>
-#include "Interface/Constants.h"
 #include "Interface/Style/Style.h"
 
 namespace Jam::Editor

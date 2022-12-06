@@ -23,7 +23,6 @@
 #include <QLabel>
 #include <QMenu>
 #include <QMouseEvent>
-#include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"
 
 namespace Jam::Editor
@@ -55,8 +54,8 @@ namespace Jam::Editor
     QSize AreaEdge::sizeHint() const
     {
         if (_orientation == Qt::Vertical)
-            return {Style::hint(SplitterSizeHint), -1};
-        return {-1, Style::hint(SplitterSizeHint)};
+            return {Style::hint(SplitterSize), -1};
+        return {-1, Style::hint(SplitterSize)};
     }
 
 }  // namespace Jam::Editor

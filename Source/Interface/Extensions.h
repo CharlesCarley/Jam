@@ -20,7 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-#include <QPalette>
+#include <QRect>
 #include "Utils/Array.h"
 
 class QLayoutItem;

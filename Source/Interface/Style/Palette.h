@@ -47,10 +47,6 @@ namespace Jam::Editor
         constexpr QPalette::ColorRole Y03 = QPalette::AlternateBase;
         constexpr QPalette::ColorRole Y04 = QPalette::PlaceholderText;
 
-        constexpr QColor MakeGrey(const int o)
-        {
-            return {0x19 + 11 * o, 0x19 + 11 * o, 0x1A + 11 * o};
-        }
     }  // namespace Const
 
     class Palette

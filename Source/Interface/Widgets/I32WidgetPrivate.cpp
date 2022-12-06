@@ -22,7 +22,6 @@
 #include "I32WidgetPrivate.h"
 #include <QMouseEvent>
 #include <QPainter>
-#include "Interface/Constants.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Style.h"

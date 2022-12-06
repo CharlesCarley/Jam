@@ -22,7 +22,6 @@
 #include "R32WidgetSlider.h"
 #include <QMouseEvent>
 #include <QPainter>
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"
@@ -30,6 +29,8 @@
 
 namespace Jam::Editor
 {
+    // This is the width of the sub-rect on each side of
+    // the whole rectangle, which is used to step +-
     constexpr I32 Sr = 6;
 
     constexpr QLineF MidLines[] = {
@@ -74,7 +75,8 @@ namespace Jam::Editor
 
     void R32WidgetSlider::setValue(const QString& val)
     {
-        String       str;
+        String str;
+
         const String raw = val.toStdString();
         if (Su::filterReal(str, raw))
             setValue(Char::toFloat(str));
@@ -149,7 +151,6 @@ namespace Jam::Editor
 
         _cap = false;
         event->accept();
-
         if (const QPointF d = event->position();
             isInInnerRect(d))
             emit doubleClicked();
@@ -185,9 +186,8 @@ namespace Jam::Editor
                 p1.setX(0);
 
             p1 /= width();
-            _d = {R32(p1.x()), R32(p1.x())};
-            _d.clamp(0, 1);
-            setValue(_range.dmm() * _d.x + _range.x);
+            _d = R32(p1.x());
+            setValue(_range.dmm() * _d + _range.x);
         }
         else
             QWidget::mouseMoveEvent(event);

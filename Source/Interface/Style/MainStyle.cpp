@@ -24,7 +24,6 @@
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/Render.h"
-#include "Interface/Constants.h"
 
 namespace Jam::Editor
 {
@@ -115,7 +114,7 @@ namespace Jam::Editor
         case CE_CustomBase:
         default:
             Log::writeLine("CE->Unhandled : ", element);
-            renderer.fillRect(option->rect, Const::Empty);
+            renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
             break;
         }
     }

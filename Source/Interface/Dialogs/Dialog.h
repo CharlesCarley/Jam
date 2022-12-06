@@ -20,9 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #pragma once
-
 #include <QFileDialog>
-#include "Interface/Constants.h"
 #include "Interface/Widgets/WindowTitlebar.h"
 
 class QVBoxLayout;
@@ -61,7 +59,6 @@ namespace Jam::Editor
         bool              _drag{false};
         QPointF           _last{};
         int               _border{1};
-        Const::QRole      _borderRole{Const::BorderRole};
         QString           _title{};
 
     public:
@@ -109,7 +106,7 @@ namespace Jam::Editor
         void leaveEvent(QEvent* event) override;
 
     protected:
-        void applyLayout(QLayout* layout);
+        void applyLayout(QLayout* layout) const;
     };
 
     inline int Dialog::border() const

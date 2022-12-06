@@ -24,7 +24,6 @@
 #include "AreaBinaryLayout.h"
 #include "AreaCreator.h"
 #include "Interface/Area/AreaContextSwitch.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Palette.h"
 #include "Interface/Style/Style.h"

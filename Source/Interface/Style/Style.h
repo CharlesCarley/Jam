@@ -59,12 +59,13 @@ namespace Jam::Editor
         MenuBarStyle,
         AreaLineStyle,
         AreaDarkLineStyle,
-        QCheckBoxStyle,
+        AreaCheckBoxStyle,
     };
 
     enum Hints
     {
-        SplitterSizeHint,
+        ToolbarSpacing,
+        SplitterSize,
         ButtonWidth,
         ButtonHeight,
         PushButtonWidth,
@@ -76,17 +77,20 @@ namespace Jam::Editor
     {
     private:
         static void treeWidgetDefaults(QTreeWidget* widget);
+
         static void pushButtonDefaults(QWidget* widget);
 
     public:
         static void apply(QWidget* widget, StyleTypes type);
-        static int  hint(Hints type);
+
+        static int hint(Hints type);
 
         static void sliderPalette(QPalette& palette);
 
         static QTreeWidget* treeWidget(const StyleTypes type, QWidget* parent = nullptr);
 
         static void layoutDefaults(QLayout* widget, int margin = 0, int spacing = 0);
+
         static void buttonDefaults(QWidget* widget);
 
         static QVBoxLayout* verticalLayout(int margin = 0, int spacing = 0, QWidget* parent = nullptr);
@@ -107,8 +111,7 @@ namespace Jam::Editor
 
         static QLabel* text(const QString& label, QWidget* parent = nullptr);
 
-        static QCheckBox* checkBox(const QString& label, bool initialState);
-
+        static QCheckBox* checkBox(const QString& label, bool initial);
     };
 
 }  // namespace Jam::Editor

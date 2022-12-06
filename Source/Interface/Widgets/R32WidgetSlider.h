@@ -41,7 +41,7 @@ namespace Jam::Editor
         R32      _value{0};
         R32      _rate{0};
         U8       _cap{0};
-        Vec2F    _d{0.f, 0};
+        R32      _d{0.f};
         Vec2F    _range{-R32(0x10000), R32(0x10000)};
         String   _label;
         QPalette _pal;

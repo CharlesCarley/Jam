@@ -23,12 +23,11 @@
 #include <QApplication>
 #include <QContextMenuEvent>
 #include <QCoreApplication>
-#include "Math/Real.h"
 #include "Interface/Area/AreaBinaryLayoutPrivate.h"
 #include "Interface/Area/AreaNode.h"
-#include "Interface/Constants.h"
 #include "Interface/Extensions.h"
 #include "Interface/Style/Style.h"
+#include "Math/Real.h"
 
 namespace Jam::Editor
 {
@@ -132,7 +131,7 @@ namespace Jam::Editor
         if (_orientation == Qt::Vertical)
         {
             // top, bottom split
-            const int baseHeight = (y2 - y1 - (Const::SplitterSize));
+            const int baseHeight = (y2 - y1 - (Style::hint(SplitterSize)));
 
             int ya = (int)(baseHeight * _split);
             int yb = (int)(baseHeight * (1.0 - _split));
@@ -143,14 +142,14 @@ namespace Jam::Editor
 
             a->setGeometry({x1, y1, xs, ya});
             y1 += ya;
-            s->setGeometry({x1, y1, xs, Const::SplitterSize});
-            y1 += Const::SplitterSize;
+            s->setGeometry({x1, y1, xs, Style::hint(SplitterSize)});
+            y1 += Style::hint(SplitterSize);
             b->setGeometry({x1, y1, xs, yb});
         }
         else
         {
             // left, right split
-            const int baseHeight = (x2 - x1 - Const::SplitterSize);
+            const int baseHeight = (x2 - x1 - Style::hint(SplitterSize));
 
             int xa = (int)(baseHeight * _split);
             int xb = (int)(baseHeight * (1.0 - _split));
@@ -158,8 +157,8 @@ namespace Jam::Editor
 
             a->setGeometry({x1, y1, xa, ys});
             x1 += xa;
-            s->setGeometry({x1, y1, Const::SplitterSize, ys});
-            x1 += Const::SplitterSize;
+            s->setGeometry({x1, y1, Style::hint(SplitterSize), ys});
+            x1 += Style::hint(SplitterSize);
             b->setGeometry({x1, y1, xb, ys});
         }
     }
@@ -173,7 +172,6 @@ namespace Jam::Editor
     void AreaBinaryLayout::construct(AreaNode* left, AreaNode* right)
     {
         Style::layoutDefaults(this);
-
         if (left)
         {
             addWidget(left);

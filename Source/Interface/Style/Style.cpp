@@ -64,10 +64,7 @@ namespace Jam::Editor
     constexpr Role PushButtonHover      = Role::Midlight;
 
     constexpr Role SliderBackground = Role::Shadow;
-    constexpr Role SliderBorder     = Role::Window;
-    constexpr Role SliderAccent     = Role::Mid;
     constexpr Role SliderForeground = Role::Text;
-    constexpr Role SliderStep       = Role::Text;
 
     constexpr Role CheckBoxBackground = Role::Mid;
     constexpr Role CheckBoxChecked    = Const::G03;
@@ -76,14 +73,7 @@ namespace Jam::Editor
     constexpr Role AreaToolbarBackground = Role::Mid;
     constexpr Role AreaToolbarForeground = Role::Highlight;
     constexpr Role AreaToolbarAccent     = Role::Midlight;
-
-    constexpr Role AreaBackground = Role::Dark;
-    constexpr Role AreaForeground = Role::Text;
-
-    constexpr Role AreaSplitter = Role::Dark;
-    constexpr int  SplitterSize = 3;
-
-    constexpr Role AreaIconAccent = MenuBarIconAccent;  // or G01
+    constexpr Role AreaSplitter          = Role::Dark;
 
     void applyColorRoles(
         QWidget*   widget,
@@ -129,19 +119,18 @@ namespace Jam::Editor
             applyColorRoles(widget, AreaToolbarBackground, AreaToolbarForeground);
             break;
         case AreaToolLabelStyle:
-            buttonDefaults(widget);
             applyColorRoles(widget, Role::NoRole, AreaToolbarForeground);
+            buttonDefaults(widget);
             break;
         case AreaLabelStyle:
-            buttonDefaults(widget);
             applyColorRoles(widget, LabelBackground, LabelForeground);
+            buttonDefaults(widget);
             break;
         case AreaPushButtonStyle:
-            pushButtonDefaults(widget);
             applyColorRoles(widget, PushButtonBackground, PushButtonForeground);
             Palette::setColorRole(widget, Role::AlternateBase, PushButtonHover);
+            pushButtonDefaults(widget);
             break;
-
         case AreaToolButtonStyle:
             applyColorRoles(widget, Role::NoRole, AreaToolbarForeground);
             Palette::setColorRole(widget, Role::AlternateBase, AreaToolbarAccent);
@@ -151,18 +140,18 @@ namespace Jam::Editor
             Palette::swapColorRole(widget, Role::AlternateBase, ProjectTreeAccent);
             break;
         case AreaLineStyle:
-            buttonDefaults(widget);
             applyColorRoles(widget, Role::Base, Role::Text);
+            buttonDefaults(widget);
             break;
         case AreaDarkLineStyle:
-            buttonDefaults(widget);
             applyColorRoles(widget, Role::Dark, Role::Text);
-            break;
-        case QCheckBoxStyle:
             buttonDefaults(widget);
+            break;
+        case AreaCheckBoxStyle:
             applyColorRoles(widget, Role::NoRole, CheckBoxLabel);
             Palette::setAccentRole(widget, Role::Link, CheckBoxChecked);
             Palette::setColorRole(widget, Role::AlternateBase, CheckBoxBackground);
+            buttonDefaults(widget);
             break;
         case AreaSettingsTreeStyle:
             applyColorRoles(widget, SettingsTreeBackground, SettingsTreeForeground);
@@ -181,8 +170,8 @@ namespace Jam::Editor
             Palette::setColorRole(widget, Role::AlternateBase, ToolMenuAccent);
             break;
         case AreaSliderStyle:
-            buttonDefaults(widget);
             applyColorRoles(widget, SliderBackground, SliderForeground);
+            buttonDefaults(widget);
             break;
         case AreaNodeStyle:  // should be empty
         case TransparentStyle:
@@ -192,12 +181,14 @@ namespace Jam::Editor
         }
     }
 
-    int Style::hint(Hints type)
+    int Style::hint(const Hints type)
     {
         switch (type)
         {
-        case SplitterSizeHint:
-            return SplitterSize;
+        case ToolbarSpacing:
+            return 10;
+        case SplitterSize:
+            return 4;
         case ButtonHeight:
         case ButtonWidth:
         case PushButtonWidth:
@@ -212,14 +203,13 @@ namespace Jam::Editor
 
     void Style::sliderPalette(QPalette& palette)
     {
-        // SliderBackground = shadow
-        // SliderBorder = window
-        // SliderAccent = mid
-        // constexpr Role SliderBackground = Role::Shadow;
-        // constexpr Role SliderBorder     = Role::Window;
-        // constexpr Role SliderAccent     = Role::Mid;
-        // constexpr Role SliderForeground = Role::Text;
-        // constexpr Role SliderStep       = Role::Text;
+        // Theses are accessed through R32WidgetSlider::palette
+        // methods when rendering .
+        // constexpr Role SliderBackground = shadow()
+        // constexpr Role SliderBorder     = window()
+        // constexpr Role SliderAccent     = mid()
+        // constexpr Role SliderForeground = text()
+        // constexpr Role SliderStep       = brightText()
         palette.setColor(Role::BrightText, palette.color(Role::Text));
     }
 
@@ -246,8 +236,11 @@ namespace Jam::Editor
         return widget;
     }
 
-    void Style::layoutDefaults(QLayout* widget, int margin, int spacing)
+    void Style::layoutDefaults(QLayout*  widget,
+                               const int margin,
+                               const int spacing)
     {
+        Q_ASSERT(widget);
         widget->setSpacing(spacing);
         widget->setContentsMargins(margin, margin, margin, margin);
         widget->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -289,6 +282,7 @@ namespace Jam::Editor
 
     QHBoxLayout* Style::paddedArea(QWidget* child, const int margin)
     {
+        Q_ASSERT(child);
         QHBoxLayout* widget = horizontalLayout(margin);
         widget->addWidget(child);
         return widget;
@@ -297,8 +291,8 @@ namespace Jam::Editor
     QPushButton* Style::toolButton(const Icons::Icon ico, QWidget* parent)
     {
         QPushButton* button = new QPushButton(parent);
-        button->setIcon(get(ico));
 
+        button->setIcon(get(ico));
         button->setMaximumSize({
             hint(ButtonWidth),
             hint(ButtonHeight),
@@ -311,59 +305,68 @@ namespace Jam::Editor
     QPlainTextEdit* Style::plainText(QWidget* parent)
     {
         const auto edit = new QPlainTextEdit(parent);
+
         edit->setWordWrapMode(QTextOption::NoWrap);
         edit->setBackgroundVisible(false);
         edit->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         edit->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
         edit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         edit->setReadOnly(true);
+
         return edit;
     }
 
     QLineEdit* Style::line(QWidget* parent)
     {
-        QLineEdit* le = new QLineEdit(parent);
+        QLineEdit* line = new QLineEdit(parent);
 
-        le->setContentsMargins(0, 0, 0, 0);
-        le->setClearButtonEnabled(false);
-        le->setReadOnly(false);
-        le->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        apply(le, AreaLineStyle);
-        return le;
+        line->setContentsMargins(0, 0, 0, 0);
+        line->setClearButtonEnabled(false);
+        line->setReadOnly(false);
+        line->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+
+        apply(line, AreaLineStyle);
+
+        return line;
     }
 
     QLineEdit* Style::darkLine(QWidget* parent)
     {
-        QLineEdit* le = new QLineEdit(parent);
+        QLineEdit* edit = new QLineEdit(parent);
 
-        le->setContentsMargins(0, 0, 0, 0);
-        le->setClearButtonEnabled(false);
-        le->setReadOnly(false);
-        le->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        apply(le, AreaDarkLineStyle);
-        return le;
+        edit->setContentsMargins(0, 0, 0, 0);
+        edit->setClearButtonEnabled(false);
+        edit->setReadOnly(false);
+        edit->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+
+        apply(edit, AreaDarkLineStyle);
+        return edit;
     }
 
     QPushButton* Style::button(const QString& label, QWidget* parent)
     {
-        QPushButton* btn = new QPushButton(label, parent);
-        apply(btn, AreaPushButtonStyle);
-        return btn;
+        QPushButton* button = new QPushButton(label, parent);
+
+        apply(button, AreaPushButtonStyle);
+        return button;
     }
 
     QLabel* Style::text(const QString& label, QWidget* parent)
     {
-        const auto cb = new QLabel(label);
-        apply(cb, AreaLabelStyle);
-        return cb;
+        const auto text = new QLabel(label);
+
+        apply(text, AreaLabelStyle);
+        return text;
     }
 
-    QCheckBox* Style::checkBox(const QString& label, bool initialState)
+    QCheckBox* Style::checkBox(const QString& label, const bool initial)
     {
-        const auto cb = new QCheckBox(label);
-        apply(cb, QCheckBoxStyle);
-        cb->setChecked(initialState);
-        return cb;
+        const auto checkBox = new QCheckBox(label);
+
+        apply(checkBox, AreaCheckBoxStyle);
+
+        checkBox->setChecked(initial);
+        return checkBox;
     }
 
 }  // namespace Jam::Editor
