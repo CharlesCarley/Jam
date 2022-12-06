@@ -21,31 +21,45 @@
 */
 #pragma once
 #include "Math/Integer.h"
-#include "Utils/ParserBase/StackGuard.h"
+#include "Utils/Exception.h"
 
-namespace Jam::Eq
+namespace Jam
 {
-    class CallState : public StackGuard
+    class StackGuard
     {
     private:
-        I16 _comma{0};
+        const U16 _max;
+        U16       _depth{0};
+
+        StackGuard(const StackGuard&) = default;
 
     public:
-        explicit CallState(const I16& max) :
-            StackGuard(max) {}
+        explicit StackGuard(const U16& max) :
+            _max(max) {}
 
-        void setCommaCount(const I16 c);
+        void depthGuard();
 
-        const I16& commaCount() const;
+        void resetGuard();
+
+        U16 depth() const;
     };
 
-    inline void CallState::setCommaCount(const I16 c)
+    inline void StackGuard::depthGuard()
     {
-        _comma = c;
+        if (++_depth > _max)
+        {
+            throw Exception(
+                "maximum recursion depth exceeded");
+        }
     }
 
-    inline const I16& CallState::commaCount() const
+    inline void StackGuard::resetGuard()
     {
-        return _comma;
+        _depth = 0;
     }
-}  // namespace Jam::Eq
+
+    inline U16 StackGuard::depth() const
+    {
+        return _depth;
+    }
+}  // namespace Jam

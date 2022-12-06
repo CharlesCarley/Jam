@@ -35,7 +35,7 @@ foreach (file ${TestTarget_SRC})
     target_link_libraries(
         ${SubTargetName} 
         ${Jam_LIBRARY}
-        Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Svg Qt6::Test
+        Qt6::Widgets Qt6::Core Qt6::Gui Qt6::Svg Qt6::Test Qt::Platform
         Editor.Source
     )
 
@@ -50,7 +50,7 @@ foreach (file ${TestTarget_SRC})
         add_custom_command(TARGET  ${SubTargetName} POST_BUILD
             COMMENT  "Running ${SubTargetName}"
             WORKING_DIRECTORY     ${Bootstrap_DIR}
-            COMMAND $<TARGET_FILE:${SubTargetName}>
+            COMMAND ${Bootstrap_DIR}/${SubTargetName}
         )
     endif()
 

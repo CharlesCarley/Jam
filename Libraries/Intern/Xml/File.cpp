@@ -29,14 +29,22 @@
 
 namespace Jam::Xml
 {
-    File::File() :
-        _root(new Node())
+    File::File(const U16& maxTags,
+               const U16& maxDepth) :
+        _root(new Node()),
+        _maxDepth(Clamp(maxDepth, MinParseDepth, MaxParseDepth)),
+        _maxTags(maxTags)
     {
         _scanner = new Scanner();
     }
 
-    File::File(const TypeFilter* filter, const size_t filterSize) :
-        _root(new Node())
+    File::File(const TypeFilter* filter,
+               const size_t      filterSize,
+               const U16&        maxTags,
+               const U16&        maxDepth) :
+        _root(new Node()),
+        _maxDepth(Clamp(maxDepth, MinParseDepth, MaxParseDepth)),
+        _maxTags(maxTags)
     {
         _scanner = new Scanner();
         applyFilter(filter, filterSize);
@@ -63,12 +71,9 @@ namespace Jam::Xml
     {
         OutputStringStream oss;
         oss << message << std::endl;
-
         while (_stack.size() > 1)
         {
             const Node* nd = _stack.top();
-            oss << nd->name() << std::endl;
-
             _stack.pop();
             delete nd;
         }
@@ -77,6 +82,9 @@ namespace Jam::Xml
 
     Node* File::createTag(const String& name)
     {
+        if (++_tagCount > _maxTags)
+            error("maximum tag limit exceeded");
+
         Node* node = new Node(name);
         _stack.push(node);
         return node;
@@ -151,15 +159,17 @@ namespace Jam::Xml
         }
     }
 
-    void File::ruleAttributeList()
+    void File::ruleAttributeList(StackGuard& guard)
     {
+        guard.depthGuard();
+
         int8_t t0 = token(0).type();
 
         if (t0 != TOK_EN_TAG && t0 != TOK_SLASH)
         {
             do
             {
-                ruleAttribute();
+                ruleAttribute(guard);
                 t0 = token(0).type();
 
                 if (t0 == TOK_EOF)
@@ -169,8 +179,10 @@ namespace Jam::Xml
         }
     }
 
-    void File::ruleAttribute()
+    void File::ruleAttribute(StackGuard& guard)
     {
+        guard.depthGuard();
+
         const int8_t t0 = token(0).type();
         const int8_t t1 = token(1).type();
         const int8_t t2 = token(2).type();
@@ -197,8 +209,10 @@ namespace Jam::Xml
         advanceCursor(3);
     }
 
-    void File::ruleXmlRoot()
+    void File::ruleXmlRoot(StackGuard& guard)
     {
+        guard.depthGuard();
+
         int8_t       t0 = token(0).type();
         const int8_t t1 = token(1).type();
         const int8_t t2 = token(2).type();
@@ -215,7 +229,7 @@ namespace Jam::Xml
 
         while (t0 != TOK_QUESTION)
         {
-            ruleAttribute();
+            ruleAttribute(guard);
             t0 = token(0).type();
             if (t0 == TOK_EOF)
                 error("unexpected end of file");
@@ -228,8 +242,10 @@ namespace Jam::Xml
         advanceCursor();
     }
 
-    void File::ruleStartTag()
+    void File::ruleStartTag(StackGuard& guard)
     {
+        guard.depthGuard();
+
         const Token& t0 = token(0);
         const Token& t1 = token(1);
 
@@ -247,7 +263,7 @@ namespace Jam::Xml
 
         createTag(value);
 
-        ruleAttributeList();
+        ruleAttributeList(guard);
 
         // Test exit state from the attribute list call
         // > means leave node on the stack
@@ -270,8 +286,10 @@ namespace Jam::Xml
             advanceCursor();
     }
 
-    void File::ruleContent()
+    void File::ruleContent(StackGuard& guard)
     {
+        guard.depthGuard();
+
         const Token& t0 = token(0);
         if (t0.type() != TOK_TEXT)
             error("expected content text");
@@ -293,8 +311,10 @@ namespace Jam::Xml
         advanceCursor();
     }
 
-    void File::ruleEndTag()
+    void File::ruleEndTag(StackGuard& guard)
     {
+        guard.depthGuard();
+
         // '<' '/'
         const int8_t t0 = token(0).type();
         const int8_t t1 = token(1).type();
@@ -330,22 +350,26 @@ namespace Jam::Xml
         reduceRule();
     }
 
-    void File::ruleObject()
+    void File::ruleObject(StackGuard& guard)
     {
+        guard.depthGuard();
+
         const int8_t t0 = token(0).type();
         const int8_t t1 = token(1).type();
         const int8_t t2 = token(2).type();
 
         if (t0 == TOK_ST_TAG && t1 == TOK_IDENTIFIER)
-            ruleStartTag();
+            ruleStartTag(guard);
         else if (t0 == TOK_ST_TAG && t1 == TOK_SLASH && t2 == TOK_IDENTIFIER)
-            ruleEndTag();
+            ruleEndTag(guard);
         else
-            ruleContent();
+            ruleContent(guard);
     }
 
-    void File::ruleObjectList()
+    void File::ruleObjectList(StackGuard& guard)
     {
+        guard.depthGuard();
+
         const int8_t t0 = token(0).type();
         const int8_t t1 = token(1).type();
 
@@ -353,14 +377,14 @@ namespace Jam::Xml
         {
             createTag("xml");
 
-            ruleXmlRoot();
+            ruleXmlRoot(guard);
 
             // If this actually controlled the parser
             // set it here, but it's not so just drop it.
             dropRule();
         }
         else if (t0 == TOK_ST_TAG || t0 == TOK_TEXT)
-            ruleObject();
+            ruleObject(guard);
         else
             error("unknown token parsed 0x", Char::toHexString((uint8_t)t0));
     }
@@ -371,18 +395,22 @@ namespace Jam::Xml
         // initially and attach the input stream
         // to the scanner
         _cursor = 0;
+        _tagCount = 1;
         _scanner->attach(&input, PathUtil(_file));
-
         _stack.push(_root);
 
+
+
+        StackGuard guard(_maxDepth);
         while (_cursor <= (int32_t)_tokens.size())
         {
             if (const int8_t tok = token(0).type();
                 tok == TOK_EOF)
                 break;
 
+            guard.resetGuard();
             const int32_t op = _cursor;
-            ruleObjectList();
+            ruleObjectList(guard);
 
             // if the cursor did not
             // advance force it to.

@@ -11,6 +11,23 @@
 using namespace Jam;
 
 ///////////////////////////////////////////////////////////////////////////////
+GTEST_TEST(Expression, Overflow)
+{
+    StringStream ss;
+    ss << "(2*(2*(2*(2*(2*(2*(2*(2*(2*x^2)^2)^2)^2)^2)^2)^2)^2)^2)";
+    try
+    {
+        Eq::StmtParser code(75);
+        code.read(ss);
+        constexpr bool threwException = false;
+        EXPECT_TRUE(threwException);
+    }
+    catch (const Exception& ex)
+    {
+        EXPECT_EQ(String(ex.what()),
+                  "maximum recursion depth exceeded");
+    }
+}
 
 GTEST_TEST(Expression, Parse00d)
 {
@@ -91,7 +108,7 @@ GTEST_TEST(Expression, Parse009)
     constexpr R64 exit = R64(3.018392941684311);
 
     Eq::Statement eval;
-    int      i = 0;
+    int           i = 0;
 
     eval.set("x", i);
     eval.set("a", a);
@@ -169,8 +186,8 @@ GTEST_TEST(Expression, Parse006)
 
     ExpectDataTest(exec, Parse6Values, exec.size());
 
-    Eq::Statement  eval;
-    const R64 v = eval.execute(exec);
+    Eq::Statement eval;
+    const R64     v = eval.execute(exec);
     EXPECT_EQ(v, Eq::InitialHash + 2);
 
     Eq::ValueList values[3] = {{}, {}, {}};
@@ -207,7 +224,7 @@ void TestDouble(R64 a, R64 b)
 
 void Parse4ValueCheck(
     const Eq::SymbolArray& exec,
-    Eq::Statement&              eval,
+    Eq::Statement&         eval,
     R64                    a,
     R64                    b,
     R64                    c,

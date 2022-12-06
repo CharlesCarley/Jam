@@ -22,6 +22,7 @@
 #pragma once
 #include <stack>
 #include "Utils/ParserBase/ParserBase.h"
+#include "Utils/ParserBase/StackGuard.h"
 #include "Utils/String.h"
 #include "Xml/Node.h"
 #include "Xml/TypeFilter.h"
@@ -63,6 +64,10 @@ namespace Jam
 namespace Jam::Xml
 {
     class Scanner;
+    constexpr U16 MaxParseDepth   = 0x40;
+    constexpr U16 MinParseDepth   = 0x00;
+    constexpr U16 DefaultMaxDepth = 0x10;
+    constexpr U16 TagUpperBound   = 0x400;
 
     /**
      * \brief Provides a string based Cache implementation.
@@ -122,6 +127,9 @@ namespace Jam::Xml
         NodeStack     _stack;
         TypeFilterMap _filter;
         bool          _isAttached{true};
+        const U16     _maxDepth{0};
+        const U16     _maxTags{0};
+        U16           _tagCount{0};
 
     private:
         /**
@@ -137,21 +145,21 @@ namespace Jam::Xml
          */
         void writeImpl(OStream& output, int format) override;
 
-        void ruleAttributeList();
+        void ruleAttributeList(StackGuard& guard);
 
-        void ruleAttribute();
+        void ruleAttribute(StackGuard& guard);
 
-        void ruleObject();
+        void ruleObject(StackGuard& guard);
 
-        void ruleStartTag();
+        void ruleStartTag(StackGuard& guard);
 
-        void ruleContent();
+        void ruleContent(StackGuard& guard);
 
-        void ruleEndTag();
+        void ruleEndTag(StackGuard& guard);
 
-        void ruleXmlRoot();
+        void ruleXmlRoot(StackGuard& guard);
 
-        void ruleObjectList();
+        void ruleObjectList(StackGuard& guard);
 
         Node* createTag(const String& name);
 
@@ -164,14 +172,23 @@ namespace Jam::Xml
         void errorMessageImpl(String& dest, const String& message) override;
 
     public:
-        File();
+        File(const U16& maxTags  = TagUpperBound,
+             const U16& maxDepth = DefaultMaxDepth);
 
         /**
          * \brief Construct the parser with Node type filter.
          * \param filter A constant array of tag-name to tag-id structures.
          * \param filterSize The total size of the constant array.
+         * \param maxTags Defines the total number of allowed tags.
+         *  TagUpperBound(1024) by default.
+         * \param maxDepth Defines the maximum recursion level.
+         *    Internally clamps to MaxParseDepth, and MinParseDepth
+         *    regardless of input [0, 64].
          */
-        File(const TypeFilter* filter, size_t filterSize);
+        File(const TypeFilter* filter,
+             size_t            filterSize,
+             const U16&        maxTags  = TagUpperBound,
+             const U16&        maxDepth = DefaultMaxDepth);
 
         ~File() override;
 
@@ -195,7 +212,7 @@ namespace Jam::Xml
 
         Node* detachRoot();
 
-        static  Node* constructClone(const Node* root, const TypeFilter* filter, size_t filterSize);
+        static Node* constructClone(const Node* root, const TypeFilter* filter, size_t filterSize);
     };
 
 }  // namespace Jam::Xml

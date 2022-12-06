@@ -6,7 +6,8 @@ include (Bootstrap)
 file(GLOB TestTarget_SRC *.cpp)
 
 set_group(Scan_SRC 
-    Scan:*.eq
+    Content/Exp:*.eq
+    Content/Xml:*.xml
     TestData:*.inl
 )
 
