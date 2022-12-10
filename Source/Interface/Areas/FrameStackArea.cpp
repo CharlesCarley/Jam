@@ -52,16 +52,31 @@ namespace Jam::Editor
 
         const auto home = Style::toolButton(Icons::Home);
         tools->addWidget(home, 0, Qt::AlignRight);
-        connect(home, &QPushButton::clicked, this, [=]
-                { _private->resetAxis(); });
+        connect(home,
+                &QPushButton::clicked,
+                this,
+                &FrameStackArea::onHomeClicked);
 
         _private = new FrameStackAreaContent();
         layout->addWidget(tools);
         layout->addWidget(_private, 1);
-
-        _private->resetAxis();
-
         setLayout(layout);
     }
 
+    void FrameStackArea::onHomeClicked()
+    {
+        update();
+        _private->updateSize(_private->size());
+        repaint();
+    }
+
+    bool FrameStackArea::event(QEvent* event)
+    {
+        if ((int)event->type() == ProjectOpened)
+        {
+            onHomeClicked();
+            return true;
+        }
+        return Area::event(event);
+    }
 }  // namespace Jam::Editor

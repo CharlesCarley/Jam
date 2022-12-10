@@ -166,9 +166,9 @@ namespace Jam::Editor::State
                 expr->insert("range",
                              Sc::join(ValueSetF({vso->range().x, vso->range().y}, 0, 6)));
                 expr->insert("rate",
-                             Sc::join(FloatPrint(vso->rate())));
+                             Sc::join(PrintR32(vso->rate())));
                 expr->insert("value",
-                             Sc::join(FloatPrint(vso->value())));
+                             Sc::join(PrintR32(vso->value())));
                 expr->insert("ref", (int)vso->location());
                 func->addChild(expr);
             }

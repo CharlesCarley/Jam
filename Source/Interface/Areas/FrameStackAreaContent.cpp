@@ -52,31 +52,14 @@ namespace Jam::Editor
         setMaximumSize(I32(ScreenMax), I32(ScreenMax));
 
         setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-        resetAxis();
 
         _palette = new QPalette();
         Palette::getAccentPalette(*_palette);
-    }
 
-    void FrameStackAreaContent::resetAxis()
-    {
-        const QSize sz = size();
-        constexpr R32 majorSubdivision = 1.f / 5.f;
-
-        const R32 minSquare = Min<R32>(
-                                  R32(sz.width()),
-                                  R32(sz.height())) *
-                              majorSubdivision;
-
-        _scrollX = minSquare;
-        _scrollY = minSquare;
-        _screen.init({0.f, 0.f});
-        _screen.reset();
-        _screen.setXAxis(minSquare);
-        _screen.setYAxis(minSquare);
-
+        updateSize(size());
         update();
     }
+
 
     Vec2F FrameStackAreaContent::updatePoint(
         const QMouseEvent* event)
@@ -86,8 +69,8 @@ namespace Jam::Editor
             R32(event->position().y()),
         };
         const Vec2F p = {
-            _p0.x - p1.x,
-            _p0.y - p1.y,
+            p1.x - _p0.x,
+            p1.y - _p0.y,
         };
         _p0 = p1;
         return p;
@@ -95,8 +78,14 @@ namespace Jam::Editor
 
     void FrameStackAreaContent::updateSize(const QSize& sz)
     {
+        _screen.init({0.f, 0.f});
         _screen.setViewport(0, 0, sz.width(), sz.height());
         _screen.reset();
+        _screen.makeSquare();
+
+        _scrollX = _screen.axis().x.rc();
+        _scrollY = _screen.axis().y.rc();
+
         update();
     }
 
@@ -107,7 +96,6 @@ namespace Jam::Editor
 
         RenderContext canvas(&paint, _palette, _screen);
         canvas.clear(0x10, 0x10, 0x10, 0x80);
-
         layerStack()->render(_screen, &canvas);
     }
 
@@ -118,9 +106,9 @@ namespace Jam::Editor
 
     void FrameStackAreaContent::wheelEvent(QWheelEvent* event)
     {
-        const R32 d = 6 * R32(event->angleDelta().y() > 0 ? 1 : -1);
-        _scrollX += d;
-        _scrollY += d;
+        const R32 d = R32(event->angleDelta().y()) < 0 ? -1 : 1;
+        _scrollX += 1 * d;
+        _scrollY += 1 * d;
         _screen.setXStep(I32(_scrollX));
         _screen.setYStep(I32(_scrollY));
         update();
@@ -154,7 +142,7 @@ namespace Jam::Editor
         if (_state & Left)
         {
             const Vec2F p = updatePoint(event);
-            _screen.translate(-p.x, -p.y);
+            _screen.translate(p.x, p.y);
             update();
         }
         QWidget::mouseMoveEvent(event);
@@ -163,7 +151,7 @@ namespace Jam::Editor
     void FrameStackAreaContent::keyPressEvent(QKeyEvent* event)
     {
         if (event->key() == Qt::Key_R)
-            resetAxis();
+            updateSize(size());
 
         event->modifiers() ==
                 Qt::ShiftModifier

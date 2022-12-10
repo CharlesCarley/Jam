@@ -28,8 +28,7 @@ namespace Jam::Editor::State
     GridLayer::GridLayer() :
         BaseLayer(GridType)
     {
-        _minor.reserve(125);
-        _major.reserve(25);
+        _major.reserve(30);
         _center.reserve(2);
     }
 
@@ -43,140 +42,82 @@ namespace Jam::Editor::State
     {
         Box bb;
         _screen.corners(bb);
+        const Vec2F so = _screen.offset();
+        const Vec2F ao = _screen.aspectOffset();
 
-        const Vec2F& origin   = _screen.origin();
-        const Vec2F  multiple = _screen.aspectMultiple();
+        Box   sb;
+        Vec2F ds;
+        _screen.unitRect(sb, ds);
 
-        bb = (bb * multiple) + origin;
-        bb = bb + origin;
+        const Vec2F of = ao + so + ds;
 
-        const Vec2F offset = _screen.aspectOffset() + origin;
+        const R32 xd = _screen.axis().xMajor();
+        const R32 yd = _screen.axis().yMajor();
 
-        constexpr I32   major = 5;
-        constexpr Vec2I m1    = {major, major + 1};
+        R32 sr = sb.w() * reciprocal(xd, 0);
+        if (sr > 0)
+        {
+            const R32 ix = bb.x1 + fmod(of.x, sr);
 
-        const Vec2F maj = {
-            (bb.x2 - bb.x1) / (R32(m1.y) - R32(axis.x.mod(m1.x))),
-            (bb.y2 - bb.y1) / (R32(m1.y) - R32(axis.y.mod(m1.x))),
-        };
-        const Vec2F min = {
-            maj.x / (R32(m1.y) - R32(axis.x.mod(m1.x))),
-            maj.y / (R32(m1.y) - R32(axis.y.mod(m1.x))),
-        };
+            R32 sv = ix;
+            while (sv < bb.x2)
+            {
+                axisLine(sv, XAxis, _major);
+                sv += sr;
+            }
+        }
 
-        stepGrid(bb.x1, bb.y1, bb.x2, bb.y2, maj, offset, _major);
-        stepGrid(bb.x1, bb.y1, bb.x2, bb.y2, min, offset, _minor);
+        sr     = sb.h() * reciprocal(yd, 0);
+        if (sr > 0)
+        {
+            const R32 iy = bb.y1 + fmod(of.y, sr);
 
-        canvas.selectColor(_minorColor);
-        canvas.drawLines(_minor);
-        _minor.resizeFast(0);
+            R32 sv = iy;
+            while (sv < bb.y2)
+            {
+                axisLine(sv, YAxis, _major);
+                sv += sr;
+            }
+        }
 
         canvas.selectColor(_majorColor);
         canvas.drawLines(_major);
-        _major.resizeFast(0);
-
-        axisLine(offset.x + (bb.x2 - bb.x1) * Half, 1, _center);
-        axisLine(offset.y + (bb.y2 - bb.y1) * Half, 0, _center);
+        //_major.resizeFast(0);
 
         canvas.selectColor(_originColor);
+        axisLine(sb.cx(), XAxis, _center);
+        axisLine(sb.cy(), YAxis, _center);
         canvas.drawLines(_center);
         _center.resizeFast(0);
 
+        // canvas.drawBoxF(sb, 2);
         canvas.selectColor(_textColor);
-        stepLabels(canvas, bb.x1, bb.y1, bb.x2, bb.y2, maj, offset, axis);
-    }
+        // canvas.drawR32(5, 40, "sq", sb.w() / _screen.axis().xMajor());
+        // canvas.drawR32(5, 60, "ds", ds.x);
+        // canvas.drawR32(5, 80, "r10", axis.x.r10());
 
-    void GridLayer::stepGrid(
-        const R32    x1,
-        const R32    y1,
-        const R32    x2,
-        const R32    y2,
-        const Vec2F& ax,
-        const Vec2F& offset,
-        LineBuffer&  buffer) const
-    {
-        const R32 hw = offset.x + (x2 - x1) * Half;
-        const R32 hh = offset.y + (y2 - y1) * Half;
-
-        R32 s0 = hw;
-        while (s0 < _screen.w())
+        for (const QLineF& pt : _major)
         {
-            axisLine(s0, 1, buffer);
-            s0 += ax.x;
+            if (isZero(R32(pt.x2()) - R32(pt.x1())))
+            {
+                const R32 px = R32(pt.x2());
+                const R32 ox = -bb.cx() + px - so.x;
+                if (const R32 av = axis.x.pointByI(ox);
+                    !isZero(av))
+                    canvas.axisValue(px, bb.cy() + so.y, av, true);
+            }
+            else
+            {
+                const R32 py = R32(pt.y2());
+                const R32 oy = -bb.cy() + py - so.y;
+                if (const R32 av = axis.y.pointByI(-oy);
+                    !isZero(av))
+                {
+                    canvas.axisValue(bb.cx() + so.x, py, av, false);
+                }
+            }
         }
-
-        s0 = hw;
-        while (s0 > 0)
-        {
-            axisLine(s0, 1, buffer);
-            s0 -= ax.x;
-        }
-
-        s0 = hh;
-        while (s0 < _screen.h())
-        {
-            axisLine(s0, 0, buffer);
-            s0 += ax.y;
-        }
-
-        s0 = hh;
-        while (s0 > 0)
-        {
-            axisLine(s0, 0, buffer);
-            s0 -= ax.y;
-        }
-    }
-
-    void GridLayer::stepLabels(
-        const RenderContext& canvas,
-        const R32            x1,
-        const R32            y1,
-        const R32            x2,
-        const R32            y2,
-        const Vec2F&         ax,
-        const Vec2F&         offset,
-        const Axis&          gx) const
-    {
-        const R32 hw = offset.x + (x2 - x1) * Half;
-        const R32 hh = offset.y + (y2 - y1) * Half;
-        const R32 cx = ax.x;
-        const R32 cy = ax.y;
-
-        R32 s0 = hw + ax.x;
-        R32 v  = cx;
-        while (s0 < _screen.w())
-        {
-            canvas.axisValue(I32(s0), I32(hh), gx.x.pointByI(v), true);
-            s0 += ax.x;
-            v += ax.x;
-        }
-
-        s0 = hw - ax.x;
-        v  = -cx;
-        while (s0 > 0)
-        {
-            canvas.axisValue(I32(s0), I32(hh), gx.x.pointByI(v), true);
-            s0 -= ax.x;
-            v -= ax.x;
-        }
-
-        s0 = hh + ax.y;
-        v  = cy;
-        while (s0 < _screen.h())
-        {
-            canvas.axisValue(I32(hw), I32(s0), gx.y.pointByI(-v), false);
-            s0 += ax.y;
-            v += ax.y;
-        }
-
-        s0 = hh - ax.y;
-        v  = -cy;
-        while (s0 > 0)
-        {
-            canvas.axisValue(I32(hw), I32(s0), gx.y.pointByI(-v), false);
-            s0 -= ax.y;
-            v -= ax.y;
-        }
+        _major.resizeFast(0);
     }
 
     void GridLayer::axisLine(
@@ -184,10 +125,10 @@ namespace Jam::Editor::State
         const int   dir,
         LineBuffer& dest) const
     {
-        if (dest.size() > 256)
+        if (dest.size() > MaxBuf)
             return;
 
-        if (dir)
+        if (dir == XAxis)
             dest.push_back(QLineF{
                 QPointF{(qreal)step,                0.0},
                 QPointF{(qreal)step, (qreal)_screen.h()},

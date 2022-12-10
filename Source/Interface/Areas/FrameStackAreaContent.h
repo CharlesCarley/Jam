@@ -49,14 +49,12 @@ namespace Jam::Editor
 
         ~FrameStackAreaContent() override;
 
-        void resetAxis();
+        void updateSize(const QSize& sz);
 
     private:
         void construct();
 
         Vec2F updatePoint(const QMouseEvent* event);
-
-        void updateSize(const QSize& sz);
 
         void paintEvent(QPaintEvent* event) override;
 

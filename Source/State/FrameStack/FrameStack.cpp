@@ -38,6 +38,7 @@ namespace Jam::Editor::State
         for (BaseLayer* element : _layers)
         {
             element->setScreen(sc);
+            element->update();
             element->render(*canvas);
         }
     }

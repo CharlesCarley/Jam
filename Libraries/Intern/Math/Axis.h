@@ -7,8 +7,8 @@ namespace Jam
     class Axis
     {
     public:
-        Slice x{1, 1};
-        Slice y{1, 1};
+        Slice x{};
+        Slice y{};
 
         Axis() = default;
 
@@ -17,14 +17,13 @@ namespace Jam
             set(rhs);
         }
 
+        R32 xMajor() const { return x.r10(); }
+
+        R32 yMajor() const { return y.r10(); }
+
         void set(const Axis& ax);
 
-        void set(U8 idx, const Vec2F& ax);
-
-        bool scale(U8 ax, U8 idx, I32 count);
-
-        void print() const;
-
+        void set(U8 idx, const I32& ax);
     };
 
 }  // namespace Jam

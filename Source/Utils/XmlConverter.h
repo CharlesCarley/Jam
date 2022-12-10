@@ -66,11 +66,6 @@ namespace Jam
                                const XmlNode* tag,
                                I32Array&      dest);
 
-        static Axis toAxis(const String&  attr,
-                           const XmlNode* tag,
-                           const Slice&   defX = {1, 1},
-                           const Slice&   defY = {1, 1});
-
         static uint32_t toIntFromBinary(const XmlNode* tag);
 
         static void toStream(OStream& stream, const XmlNode* fromRoot, I8 indent = 0);

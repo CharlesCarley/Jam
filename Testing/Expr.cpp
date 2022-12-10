@@ -84,16 +84,20 @@ GTEST_TEST(Expression, Parse00a)
     logSymbols(code.symbols());
 
     Eq::Statement eval;
-    eval.set("b", 5);
+    constexpr I64 mod = 5;
+    eval.set("b", mod);
 
     int i = 0;
-    do
+    while (i < 10)
     {
-        eval.set("x", i++);
-    } while (eval.execute(code.symbols()) <= 3.0 && i < 10);
+        eval.set("x", i);
+        if ((I64)eval.execute(code.symbols()) == mod - 1)
+            break;
+        ++i;
+    }
 
-    EXPECT_EQ(i, 5);
-    EXPECT_DOUBLE_EQ(eval.peek(0), 4.0);
+    EXPECT_EQ(i, mod - 1);
+    EXPECT_DOUBLE_EQ(eval.peek(0), mod - 1);
 }
 
 GTEST_TEST(Expression, Parse009)

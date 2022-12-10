@@ -33,18 +33,20 @@ namespace Jam::Editor::State
         enum Flags
         {
             None,
-            YUp = 0x01
+            YUp    = 0x01,
+            XAxis  = 0x02,
+            YAxis  = 0x04,
+            MaxBuf = 0x40,
         };
 
     private:
         U32        _majorColor{0x2b2b2bFF};
         U32        _minorColor{0x212121FF};
         U32        _originColor{0x4B4B4BFF};
-        U32        _textColor{0x9B9B9BFF};
+        U32        _textColor{0x6B6B6BFF};
         U8         _flags{None};
         Vec2F      _origin;
         LineBuffer _major;
-        LineBuffer _minor;
         LineBuffer _center;
 
     public:
@@ -69,23 +71,6 @@ namespace Jam::Editor::State
         void screenGrid(
             RenderContext& canvas,
             const Axis&    axis);
-
-        void stepGrid(R32          x1,
-                      R32          y1,
-                      R32          x2,
-                      R32          y2,
-                      const Vec2F& ax,
-                      const Vec2F& offset,
-                      LineBuffer&  buffer) const;
-
-        void stepLabels(const RenderContext& canvas,
-                        R32                  x1,
-                        R32                  y1,
-                        R32                  x2,
-                        R32                  y2,
-                        const Vec2F&         ax,
-                        const Vec2F&         offset,
-                        const Axis&          gx) const;
 
         void axisLine(const R32&  step,
                       int         dir,

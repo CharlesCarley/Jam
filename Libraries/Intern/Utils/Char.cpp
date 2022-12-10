@@ -206,7 +206,7 @@ namespace Jam
         if (in && *in)
         {
             InputStringStream ss(in);
-            DoublePrint a(0);
+            PrintR64 a(0);
             a.from(ss);
             return (double)a;//std::strtod(in, nullptr);
         }

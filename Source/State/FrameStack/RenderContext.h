@@ -30,6 +30,7 @@
 namespace Jam::Editor::State
 {
     using LineBuffer = SimpleArray<QLineF>;
+    using RealBuffer = SimpleArray<Vec2F>;
 
     class RenderContext
     {
@@ -53,7 +54,7 @@ namespace Jam::Editor::State
 
         const Vec2I& size() const;
 
-        void axisValue(int x0, int y0, const R32& v, bool hor = true) const;
+        void axisValue(const R32 x0, const R32 y0, const R32& v2, const bool hor = true) const;
 
         void selectColor(const QPalette::ColorRole& col, U8 width = 1);
 
@@ -71,7 +72,11 @@ namespace Jam::Editor::State
 
         void drawPoint(int x0, int y0, int scale) const;
 
+        void drawR32(int x0, int y0, const String& s, const R32& v, U8 p = 3) const;
+
         void drawVec2F(int x0, int y0, const Vec2F& v, U8 p = 3) const;
+
+        void drawBoxF(const Box& v, U8 p = 3) const;
 
         void drawAxisF(int x0, int y0, const Axis& v) const;
 

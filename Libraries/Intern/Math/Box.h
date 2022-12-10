@@ -68,6 +68,9 @@ namespace Jam
 
         Vec2F v4() const;
 
+        R32 cx() const { return x1 + (x2 - x1) * Half; }
+        R32 cy() const { return y1 + (y2 - y1) * Half; }
+
         void makeArray(Vec2F* dest) const;
 
         Box operator*(const Vec2F& sz) const;
@@ -75,6 +78,8 @@ namespace Jam
         Vec2F center() const;
 
         Vec2F halfSize() const;
+
+        Vec2F size() const { return {w(), h()}; }
 
         Box operator+(const Vec2F& o) const
         {
@@ -119,7 +124,7 @@ namespace Jam
 
     inline Vec2F Box::center() const
     {
-        return {x1 + Half * w(), y1 + Half * h()};
+        return {cx(), cy()};
     }
 
     inline Vec2F Box::halfSize() const

@@ -29,6 +29,7 @@ namespace Jam
     using R64      = double;
     using R32      = float;
     using R32Array = SimpleArray<R32>;
+    using Real     = R64;
 
     constexpr R64 E64  = 2.7182818284590452353602874713527;
     constexpr R64 Pi64 = 3.1415926535897932384626433832795;
@@ -143,6 +144,11 @@ namespace Jam
                         const R32  tolerance = Epsilon)
     {
         return fabs(a) > tolerance;
+    }
+
+    inline R32 makeDivBy(const R32& a, const R32& d)
+    {
+        return a - R32(fmod(a, d));
     }
 
 }  // namespace Jam

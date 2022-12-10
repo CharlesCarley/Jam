@@ -177,8 +177,26 @@ namespace Jam
             return R32(Max(y, x) - Min(y, x));
         }
 
+
+
         I32 ix() const { return I32(x); }
         I32 iy() const { return I32(y); }
+
+        Vec2F operator/(const Vec2F& v) const
+        {
+            return {
+                x * Jam::reciprocal(v.x),
+                y * Jam::reciprocal(v.y),
+            };
+        }
+
+        Vec2F operator*(const Vec2F& m) const
+        {
+            return {
+                x * m.x,
+                y * m.y,
+            };
+        }
     };
 
 }  // namespace Jam

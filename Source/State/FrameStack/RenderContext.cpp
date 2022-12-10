@@ -20,6 +20,7 @@
 -------------------------------------------------------------------------------
 */
 #include "RenderContext.h"
+#include <QPainterPath>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Palette.h"
 #include "Math/Axis.h"
@@ -159,29 +160,66 @@ namespace Jam::Editor::State
         OutputStringStream oss;
         oss << SetS({"x", "y"})
             << Equ()
-            << SetF({v.x, v.y}, (p * 2) + 2, p, true);
+            << SetF({v.x, v.y}, 0, p, true);
         _painter->drawText(x0, y0, QString::fromStdString(oss.str()));
     }
 
-    void RenderContext::axisValue(
-        const int  x0,
-        const int  y0,
-        const R32& v,
-        const bool hor) const
+    void RenderContext::drawR32(int x0, int y0, const String& s, const R32& v, U8 p) const
     {
         OutputStringStream oss;
-        oss << FloatPrint(v, 5, 4);
-        _text = QString::fromStdString(oss.str());
+        oss << SetS({s})
+            << Equ()
+            << SetF({v}, 0, p, true);
+        _painter->drawText(x0, y0, QString::fromStdString(oss.str()));
+    }
+
+    void RenderContext::drawBoxF(const Box& v, const U8 p) const
+    {
+        QPainterPath pth;
+        pth.moveTo(
+            qreal(v.x1),
+            qreal(v.y1 + 1));
+        pth.lineTo(
+            qreal(v.x2),
+            qreal(v.y1 + 1));
+        pth.lineTo(
+            qreal(v.x2),
+            qreal(v.y2));
+        pth.lineTo(
+            qreal(v.x1),
+            qreal(v.y2));
+        pth.closeSubpath();
+        _painter->drawPath(pth);
+
+        OutputStringStream oss;
+        oss << SetS({"w", "h"})
+            << Equ()
+            << SetF({v.w(), v.h()}, 0, p, true);
+
+        _painter->drawText(I32(v.x1),
+                           I32(v.y1) + 20,
+                           QString::fromStdString(oss.str()));
+    }
+
+    void RenderContext::axisValue(
+        const R32  x0,
+        const R32  y0,
+        const R32& v2,
+        const bool hor) const
+    {
+        OutputStringStream o2;
+        o2 << PrintR32(v2, 5, 2);
+        _text = QString::fromStdString(o2.str());
 
         QRect r = _painter->fontMetrics()
-                      .tightBoundingRect(_text)
-                      .translated(x0, y0);
+                      .tightBoundingRect(_text);
 
         if (hor)
             r = r.translated(-r.width() >> 1, r.height() << 1);
         else
             r = r.translated(0, r.height());
 
+        r = r.translated(I32(x0), I32(y0));
         _painter->drawText(r.x(), r.y(), _text);
     }
 
@@ -191,10 +229,16 @@ namespace Jam::Editor::State
         const Axis& v) const
     {
         OutputStringStream oss;
-        oss << SetS({"xn", "xd", "xn", "yd"})
+
+        oss << SetS({"xi", "yi", "x", "y"})
             << Equ()
-            << SetU({v.x.n(), v.x.d()})
-            << SetU({v.y.n(), v.y.d()});
+            << SetF({
+                        v.x.rn(),
+                        v.y.rn(),
+                        R32(v.x.value()),
+                        R32(v.y.value()),
+                    },
+                    0);
         _painter->drawText(x0, y0, QString(oss.str().c_str()));
     }
 

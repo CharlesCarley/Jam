@@ -47,7 +47,7 @@ namespace Jam::Editor::State
         _origin.y      = ss.y - _screen.offset().y;
 
         const I32 w = I32(_screen.w());
-        for (I32 i0 = 1; i0 < w; ++i0)
+        for (I32 i0 = 0; i0 < w; ++i0)
             renderExpression(canvas, i0);
     }
 
@@ -55,24 +55,27 @@ namespace Jam::Editor::State
     {
         for (const auto vso : _expr)
         {
-            const Vec2F a = eval(R32(i0 - 1), vso->symbols());
-            const Vec2F b = eval(R32(i0), vso->symbols());
+            const R32 xm = R32(i0);
+            const R32 xc = R32(i0 + 0.5);
+            const R32 xp = R32(i0 + 1);
 
-            if (abs(a.y - b.y) <= _screen.h())
+            const Vec2F a = eval(xm, vso->symbols());
+            if (isnan(a.y)) continue;
+            const Vec2F b = eval(xc, vso->symbols());
+            if (isnan(b.y)) continue;
+            const Vec2F c = eval(xp, vso->symbols());
+            if (isnan(c.y)) continue;
+
+            const R32 ab = fabs(a.y - b.y);
+            const R32 bc = fabs(b.y - c.y);
+            if (ab >= 0.f)
             {
-                canvas.selectColor((QPalette::ColorRole)B03, 2);
+                if (const R32 abc = fabs(ab - bc); abc > 1.f)
+                    canvas.selectColor(G03, 2);
+                else
+                    canvas.selectColor(B03, 2);
                 canvas.drawLine(a.x, a.y, b.x, b.y);
-            }
-            else
-            {
-                const Vec2F c = eval(R32(i0 - 1) + Half, vso->symbols());
-
-                if (isnan(c.y) && !isnan(b.y))
-                {
-                    canvas.selectColor((QPalette::ColorRole)R04, 2);
-                    const R32 yV = sign(a.x) * (_screen.h() + 3);
-                    canvas.drawLine(a.x, yV, b.x, b.y);
-                }
+                canvas.drawLine(b.x, b.y, c.x, c.y);
             }
         }
     }
@@ -93,7 +96,6 @@ namespace Jam::Editor::State
             p0.y = _screen.axis().y.pointBy(R32(oy));
             if (_x == JtNpos)
                 _x = _stmt.indexOf("x");
-
             if (_y == JtNpos)
                 _stmt.set("y", oy);
             else

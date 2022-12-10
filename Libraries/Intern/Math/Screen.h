@@ -38,7 +38,7 @@ namespace Jam
         Vec2F _c{0.f, 0};      // offset to viewport center
         RectF _v{0, 0, 1, 1};  // fixed bounds of the viewport ([x] [x] [L] [L])
         Vec2F _i{0.f, 0};      // the 'home' origin
-        Axis  _axis{};
+        Axis  _a{};
 
     public:
         Screen() = default;
@@ -95,11 +95,6 @@ namespace Jam
             return _o;
         }
 
-        [[deprecated("use size instead")]] Vec2F extent() const
-        {
-            return _v.extent();
-        }
-
         Vec2F size() const
         {
             return _v.extent();
@@ -107,22 +102,22 @@ namespace Jam
 
         void setXStep(const I32 x)
         {
-            _axis.x.stepI(x);
+            _a.x.setStep(x);
         }
 
         void setYStep(const I32 y)
         {
-            _axis.y.stepI(y);
+            _a.y.setStep(y);
         }
 
         void setXAxis(const R32 v)
         {
-            _axis.set(0, {v, 1.f});
+            _a.set(0, I32(v));
         }
 
         void setYAxis(const R32 v)
         {
-            _axis.set(1, {v, 1.f});
+            _a.set(1, I32(v));
         }
 
         const Vec2F& center() const
@@ -169,8 +164,11 @@ namespace Jam
         {
             _i = ori;
         }
-        const Axis& axis() const { return _axis; }
 
+        const Axis& axis() const { return _a; }
+
+        Vec2I scroll() const;
+        
         void setViewport(const RectF& v);
 
         void setViewport(const R32& x,
@@ -182,5 +180,8 @@ namespace Jam
                          const I32& y,
                          const I32& w,
                          const I32& h);
+
+        void unitRect(Box& dest, Vec2F &offs) const;
+        void makeSquare();
     };
 }  // namespace Jam

@@ -154,28 +154,6 @@ namespace Jam
         }
     }
 
-    Axis XmlConverter::toAxis(const String&  attr,
-                              const XmlNode* tag,
-                              const Slice&   defX,
-                              const Slice&   defY)
-    {
-        Axis     dest;
-        I32Array v;
-        toIntArray(attr, tag, v);
-
-        if (v.size() == 4)
-        {
-            dest.x = {v[0], v[1]};
-            dest.y = {v[2], v[3]};
-        }
-        else
-        {
-            dest.x = defX;
-            dest.y = defY;
-        }
-        return dest;
-    }
-
     uint32_t XmlConverter::toIntFromBinary(const XmlNode* tag)
     {
         uint32_t result = 0;

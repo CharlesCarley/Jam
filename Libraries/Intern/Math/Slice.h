@@ -4,71 +4,117 @@
 
 namespace Jam
 {
-    constexpr I32 SliceHigh = 0xFFFFFE;
-    constexpr R32 SliceLow  = 1.f / R32(SliceHigh);
 
-    class Slice  // [0...1]
+    template <U32 N>  // [N..1],[1..1/N]
+    class SliceT
     {
+    public:
+        const R64 low = R64(1) / R64(N);
+
     private:
         U32 _n{1};
         U32 _d{1};
-        I32 _c{0};
-        I8  _s{0};
+        I32 _c{1};
+        I32 _c10{10};
+
+        static I32 m8(const I32 x)
+        {
+            return 8 - x % 8;
+        }
+
+        static I32 m2(const I32 x)
+        {
+            return x % 2;
+        }
+
+        void clampC10()
+        {
+            // https://www.desmos.com/calculator/futo1mo0pf
+            constexpr R32 s = 1.f / 0.5f;
+            const I32     x = I32(floor(R32(Abs(_c)) * s));
+
+            _c10 = 2 + (m8(x) + m2(x));
+        }
+
+        void clamp()
+        {
+            _c = Clamp(_c, -I32(N), I32(N));
+
+            if (_c < 0)
+            {
+                _d = Abs(_c);
+                _n = 1;
+            }
+            else if (_c > 0)
+            {
+                _d = 1;
+                _n = _c;
+            }
+            else
+            {
+                _d = 1;
+                _n = 1;
+                _c = 1;
+            }
+        }
 
     public:
-        Slice() = default;
-        Slice(const Slice& rhs)
+        SliceT() = default;
+        SliceT(const SliceT<N>& rhs)
         {
-            set(I32(rhs._n), I32(rhs._d));
+            _n = rhs._n;
+            _d = rhs._d;
+            _c = rhs._c;
+            clamp();
+            clampC10();
         }
 
-        Slice(const I32& n, const I32& d)
+        SliceT& operator=(const SliceT<N>& rhs)
         {
-            set(n, d);
+            _n = rhs._n;
+            _d = rhs._d;
+            _c = rhs._c;
+            clamp();
+            clampC10();
+            return *this;
         }
 
-        void set(const I32& n, const I32& d);
-
-        bool validate() const
+        void setStep(const I32 i)
         {
-            return _n >= 1 && _d >= 1;
+            _c = i;
+            clamp();
+            clampC10();
         }
 
-        void step(I32 delta);
-        void stepI(I32 value);
-
-        R32 upper() const
+        void inc()
         {
-            return R32(_n) * reciprocal(R32(_d));
+            if (++_c == 0) ++_c;
+            clamp();
+            clampC10();
         }
 
-        R32 lower() const
+        void dec()
         {
-            return R32(_d) * reciprocal(R32(_n));
+            if (--_c == 0) --_c;
+            clamp();
+            clampC10();
         }
 
-        R32 fraction() const
+        R64 value() const
         {
-            const R32 f = (SliceLow - R32(_d) / R32(SliceHigh));
-            return R32(sign()) * R32(_n) + f;
+            return R64(_n) + (low - R64(_d) / R64(N));
         }
 
-        R32 inverse() const
+        I32 mod(const I32 n) const
         {
-            return reciprocal(fraction());
+            if (n != 0)
+                return _c % n;
+            return 0;
         }
 
-        R32 max() const
-        {
-            return R32(Max(_n, _d));
-        }
-
-        R32 mod(I32 x) const
-        {
-            if (_d < _n)
-                return R32(_n % x);
-            return R32(_d % x);
-        }
+        R32 rn() const { return R32(_c) + R32(N); }
+        R32 r10() const { return R32(_c10); }
+        R32 rc() const { return R32(_c); }
 
         R32 pointBy(const R32 x) const
         {
@@ -79,39 +125,8 @@ namespace Jam
         {
             return R32(_d) * x / R32(_n);
         }
-
-        void n(const I32& n)
-        {
-            set(n, I32(_d));
-        }
-
-        void d(const I32& d)
-        {
-            set(I32(_n), d);
-        }
-
-        I32 i() const
-        {
-            return _c;
-        }
-
-        I8 sign() const { return _s; }
-
-        const U32& n() const { return _n; }
-        const U32& d() const { return _d; }
-
-        static I8 sign(const I32& n, const I32& d)
-        {
-            return n * d >= 0 ? 1 : -1;
-        }
-
-        void print(U8 p = 3) const;
-
-        
-        Vec2F toVec2F() const
-        {
-            return Vec2F{_n, _d};
-        }
     };
+
+    using Slice = SliceT<1'000'000>;
 
 }  // namespace Jam

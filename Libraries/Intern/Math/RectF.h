@@ -33,17 +33,17 @@ namespace Jam
         RectF()               = default;
         RectF(const RectF& v) = default;
 
-        Vec2F lt() const { return {x, y}; }
-        Vec2F rb() const { return {x + w, y + h}; }
+        Vec2F lt() const { return {l(), t()}; }
+        Vec2F rb() const { return {r(), b()}; }
 
         Vec2F extent() const { return {w, h}; }
 
         Vec2F halfExtent() const { return {w * Half, h * Half}; }
 
         R32 l() const { return x; }
-        R32 t() const { return x; }
+        R32 t() const { return y; }
         R32 r() const { return x + w; }
-        R32 b() const { return x + h; }
+        R32 b() const { return y + h; }
 
         RectF operator*(const Vec2F& sz) const
         {

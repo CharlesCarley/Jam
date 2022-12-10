@@ -33,7 +33,10 @@ namespace Jam::Eq
         }
     }
 
-    void Statement::push(const R64& v, const size_t& idx, const U8 flag)
+    void Statement::push(
+        const R64&    v,
+        const size_t& idx,
+        const U8      flag)
     {
         _stack.push({v, idx, flag});
     }
@@ -253,8 +256,8 @@ namespace Jam::Eq
 
     double lMod(const double a, const double b)
     {
-        const double r = remainder(a, b);
-        return r < 0 ? b + r : r;
+        const double v = a * reciprocal(b, 0);
+        return (v - floor(v)) * b;
     }
 
     void Statement::eval(const Symbol* sy)

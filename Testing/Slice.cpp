@@ -19,31 +19,28 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#pragma once
-#include "Interface/Area/Area.h"
+#include "Math/Slice.h"
+#include "gtest/gtest.h"
 
-namespace Jam::Editor
+using namespace Jam;
+
+GTEST_TEST(Slice, Slice01)
 {
-    class FrameStackAreaContent;
+    SliceT<1000> s;
+    int          i = 0;
+    s.setStep(1000);
 
-    class FrameStackArea final : public Area
+    EXPECT_DOUBLE_EQ(s.value(), 1000);
+
+    while (i < 2000)
     {
-        Q_OBJECT
-    private:
-        FrameStackAreaContent* _private{nullptr};
+        EXPECT_LE(s.r10(), 10);
+        EXPECT_GE(s.r10(), 4);
+        EXPECT_EQ(remainder(s.r10(), 2), 0);
 
-    public:
-        explicit FrameStackArea(AreaCreator* creator,
-                                size_t       refId  = JtNpos,
-                                QWidget*     parent = nullptr);
-        ~FrameStackArea() override;
-
-    private:
-        void construct();
-
-        void onHomeClicked();
-
-        bool event(QEvent* event) override;
-    };
-
-}  // namespace Jam::Editor
+        //Dbg::println(s.r10());
+        s.dec();
+        ++i;
+    }
+    EXPECT_DOUBLE_EQ(s.value(), 0.001);
+}

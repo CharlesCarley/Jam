@@ -33,7 +33,7 @@ namespace Jam::Editor
 {
 
     GridArea::GridArea(AreaCreator* creator,
-                       size_t       refId,
+                       const size_t refId,
                        QWidget*     parent) :
         Area(creator, AtGrid, refId, parent)
     {
@@ -48,8 +48,10 @@ namespace Jam::Editor
 
         _area = new VerticalScrollArea();
         const auto layout = Style::verticalLayout();
+
         layout->addWidget(toolbar());
         layout->addWidget(_area, 1);
+
         setLayout(layout);
     }
 

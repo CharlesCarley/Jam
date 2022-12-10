@@ -102,7 +102,6 @@ namespace Jam::Editor
     void FunctionArea::constructContent()
     {
         _func = new FunctionAreaContent();
-        // _func->setBackgroundRole(QPalette::AlternateBase);
         _area->setWidget(_func);
         _area->invalidate();
 

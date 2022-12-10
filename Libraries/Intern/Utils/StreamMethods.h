@@ -53,18 +53,22 @@ namespace Jam
     class Hex : CallableStream<Hex<T>>
     {
     private:
-        size_t _frag;
+        size_t _value;
 
     public:
         explicit Hex(T v) :
-            _frag{(size_t)v} {}
+            _value{(size_t)v} {}
         explicit Hex(T* v) :
-            _frag{(size_t)v} {}
+            _value{(size_t)v} {}
 
         OStream& operator()(OStream& out) const
         {
-            out << std::setfill('0') << std::setw(sizeof(T) << 1);
-            return out << std::uppercase << std::hex << _frag;
+            return out
+                   << std::setfill('0')
+                   << std::setw(sizeof(T) << 1)
+                   << std::uppercase
+                   << std::hex
+                   << _value;
         }
     };
 
@@ -74,6 +78,7 @@ namespace Jam
         OStream& operator()(OStream& out) const
         {
             static int nr = 0;
+
             return out << std::setfill('0')
                        << std::setw(8)
                        << std::uppercase
@@ -82,51 +87,60 @@ namespace Jam
         }
     };
 
-    template <typename T, uint8_t W = (sizeof(T) << 1) + 2, uint8_t P = sizeof(T) << 1>
+    template <typename T,
+              uint8_t W = (sizeof(T) << 1) + 2,
+              uint8_t P = sizeof(T) << 1>
     class FPrintT : CallableStream<FPrintT<T, W, P>>
     {
     private:
-        T       _frag;
+        T       _value;
         uint8_t _w;
         uint8_t _p;
 
     public:
-        explicit FPrintT(const T& v, uint8_t w = W, uint8_t p = P) :
-            _frag{v}, _w(w), _p(p) {}
+        explicit FPrintT(const T&      v,
+                         const uint8_t w = W,
+                         const uint8_t p = P) :
+            _value{v}, _w(w), _p(p) {}
 
         OStream& operator()(OStream& out) const
         {
             return out
                    << std::setprecision(_p)
-                   << _frag
-                   << std::fixed;
+                   << std::fixed
+                   << _value;
         }
 
         void from(IStream& in)
         {
-            in >> std::setfill(' ') >> std::setw(_w) >> std::setprecision(_p) >> _frag;
+            in >>
+                std::setfill(' ') >>
+                std::setw(_w) >>
+                std::setprecision(_p) >>
+                _value;
         }
 
         explicit operator T()
         {
-            return _frag;
+            return _value;
         }
     };
 
-    template <typename T, uint8_t Len>
+    template <typename T,
+              uint8_t Len>
     class Bin : CallableStream<Bin<T, Len>>
     {
     private:
-        std::bitset<Len> _frag;
+        std::bitset<Len> _value;
 
     public:
         explicit Bin(const T& v) :
-            _frag(v) {}
+            _value(v) {}
 
         OStream& operator()(OStream& out) const
         {
             size_t        i   = 0;
-            const String& str = _frag.to_string();
+            const String& str = _value.to_string();
             while (i < str.size())
             {
                 out << str[i];
@@ -138,7 +152,8 @@ namespace Jam
         }
     };
 
-    template <uint8_t PadIn = 1, uint8_t PadOut = 1>
+    template <uint8_t PadIn  = 1,
+              uint8_t PadOut = 1>
     class Equ : CallableStream<Equ<PadIn, PadOut>>
     {
     private:
@@ -164,14 +179,19 @@ namespace Jam
     struct Tab : CallableStream<Tab>
     {
         mutable uint8_t w{4};
+
         Tab() = default;
+
         explicit Tab(const uint8_t nw) :
             w(nw) {}
 
         OStream& operator()(OStream& out) const
         {
             w = std::max<uint8_t>(w, 1);
-            return out << std::setfill(' ') << std::setw(w - 1) << ' ';
+            return out
+                   << std::setfill(' ')
+                   << std::setw(std::streamsize(w) - 1)
+                   << ' ';
         }
     };
 
@@ -204,7 +224,12 @@ namespace Jam
         }
     };
 
-    template <typename T, uint8_t O, uint8_t S, uint8_t C, uint8_t W, uint8_t P>
+    template <typename T,
+              uint8_t O,
+              uint8_t S,
+              uint8_t C,
+              uint8_t W,
+              uint8_t P>
     class TPrintSet : CallableStream<TPrintSet<T, O, S, C, W, P>>
     {
     public:
@@ -248,28 +273,23 @@ namespace Jam
         }
     };
 
-    using SetD  = TPrintSet<double, '[', ',', ']', sizeof(double) << 1, 12>;
-    using SetF  = TPrintSet<float, '[', ',', ']', 6, 3>;
-    using SetI  = TPrintSet<int32_t, '[', ',', ']', 0, 8>;
-    using SetL  = TPrintSet<int64_t, '[', ',', ']', 0, 8>;
-    using SetU  = TPrintSet<uint32_t, '[', ',', ']', 0, 8>;
-    using SetUl = TPrintSet<uint64_t, '[', ',', ']', 0, 8>;
-    using SetS  = TPrintSet<String, '(', ',', ')', 0, 0>;
-
+    using SetD      = TPrintSet<double, '[', ',', ']', sizeof(double) << 1, 12>;
+    using SetF      = TPrintSet<float, '[', ',', ']', 6, 3>;
+    using SetI      = TPrintSet<int32_t, '[', ',', ']', 0, 8>;
+    using SetL      = TPrintSet<int64_t, '[', ',', ']', 0, 8>;
+    using SetU      = TPrintSet<uint32_t, '[', ',', ']', 0, 8>;
+    using SetUl     = TPrintSet<uint64_t, '[', ',', ']', 0, 8>;
+    using SetS      = TPrintSet<String, '(', ',', ')', 0, 0>;
     using ValueSetF = TPrintSet<float, '\0', ',', '\0', 6, 3>;
     using ValueSetI = TPrintSet<int, '\0', ',', '\0', 0, 8>;
     using ValueSetU = TPrintSet<uint32_t, '\0', ',', '\0', 0, 8>;
     using ValueSetS = TPrintSet<String, '\0', ',', '\0', 0, 0>;
-
-    using Line = FillT<32, '-', ' '>;
-
-    using Bin8  = Bin<uint8_t, 8>;
-    using Bin16 = Bin<uint16_t, 16>;
-    using Bin32 = Bin<uint32_t, 32>;
-    using Bin64 = Bin<uint64_t, 64>;
-
-    using FloatDPrint = FPrintT<float, 0, 3>;
-    using FloatPrint  = FPrintT<float>;
-    using DoublePrint = FPrintT<double>;
+    using Line      = FillT<32, '-', ' '>;
+    using Bin8      = Bin<uint8_t, 8>;
+    using Bin16     = Bin<uint16_t, 16>;
+    using Bin32     = Bin<uint32_t, 32>;
+    using Bin64     = Bin<uint64_t, 64>;
+    using PrintR32  = FPrintT<float, 5, 3>;
+    using PrintR64  = FPrintT<double>;
 
 }  // namespace Jam
