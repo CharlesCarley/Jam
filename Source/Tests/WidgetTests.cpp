@@ -6,7 +6,7 @@
 #include "Interface/RememberLastCache.h"
 #include "Interface/Style/Style.h"
 #include "Interface/Widgets/I32Widget.h"
-#include "Interface/Widgets/R32Widget.h"
+#include "Interface/Widgets/SliderWidget.h"
 #include "Interface/Widgets/StringWidget.h"
 
 namespace Jam::Editor::Testing
@@ -77,7 +77,7 @@ namespace Jam::Editor::Testing
 
     void WidgetTests::testR32()
     {
-        const auto val = new R32Widget();
+        const auto val = new SliderWidget();
         _test          = val;
         val->setRange(-1, 1);
         val->setValue(111);

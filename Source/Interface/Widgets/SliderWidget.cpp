@@ -19,39 +19,39 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "R32Widget.h"
+#include "SliderWidget.h"
 #include <qtextlayout.h>
 #include <QBoxLayout>
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
-#include "R32WidgetSlider.h"
-#include "VariableStepWidget.h"
 #include "Interface/Style/Style.h"
+#include "SliderSlideWidget.h"
+#include "SliderEditWidget.h"
 
 namespace Jam::Editor
 {
 
-    R32Widget::R32Widget(QWidget* parent) :
+    SliderWidget::SliderWidget(QWidget* parent) :
         QWidget(parent)
     {
         construct();
     }
 
-    R32Widget::~R32Widget()
+    SliderWidget::~SliderWidget()
     {
         delete _layout;
         delete _value;
         delete _step;
     }
 
-    void R32Widget::construct()
+    void SliderWidget::construct()
     {
         Style::apply(this, AreaSliderStyle);
 
         _layout = Style::horizontalLayout();
-        _value = new R32WidgetSlider();
+        _value  = new SliderSlideWidget();
 
-        _step = new VariableStepWidget();
+        _step = new SliderEditWidget();
         _step->setVisible(false);
 
         _layout->addWidget(_value);
@@ -62,48 +62,45 @@ namespace Jam::Editor
         connectSignals();
     }
 
-    
-    void R32Widget::connectSignals()
+    void SliderWidget::connectSignals()
     {
         if (_step)
         {
             connect(_step,
-                    &VariableStepWidget::stepParamChange,
+                    &SliderEditWidget::stepParamChange,
                     this,
-                    &R32Widget::onStepParamChange);
+                    &SliderWidget::onStepParamChange);
         }
 
         if (_value)
         {
             connect(_value,
-                    &R32WidgetSlider::doubleClicked,
+                    &SliderSlideWidget::doubleClicked,
                     this,
-                    &R32Widget::onDoubleClicked);
+                    &SliderWidget::onDoubleClicked);
             connect(_value,
-                    &R32WidgetSlider::valueChanged,
+                    &SliderSlideWidget::valueChanged,
                     this,
-                    &R32Widget::onValueChanged);
+                    &SliderWidget::onValueChanged);
         }
     }
 
-
-
-    void R32Widget::editingFinished() const
+    void SliderWidget::editingFinished() const
     {
         makeEditable(false);
     }
 
-    void R32Widget::onDoubleClicked() const
+    void SliderWidget::onDoubleClicked() const
     {
         makeEditable(true);
     }
 
-    void R32Widget::returnPressed() const
+    void SliderWidget::returnPressed() const
     {
         makeEditable(false);
     }
 
-    void R32Widget::onStepParamChange(const VariableStepData& data)
+    void SliderWidget::onStepParamChange(const VariableStepData& data)
     {
         makeEditable(false);
         _data = data;
@@ -111,13 +108,13 @@ namespace Jam::Editor
         emit stepDataChanged(data);
     }
 
-    void R32Widget::onValueChanged(const R32& value)
+    void SliderWidget::onValueChanged(const R32& value)
     {
         _data.value = value;
         emit stepDataChanged(_data);
     }
 
-    void R32Widget::makeEditable(const bool edit) const
+    void SliderWidget::makeEditable(const bool edit) const
     {
         if (!_value || !_step)
             return;
@@ -138,7 +135,7 @@ namespace Jam::Editor
         }
     }
 
-    void R32Widget::mouseDoubleClickEvent(QMouseEvent* event)
+    void SliderWidget::mouseDoubleClickEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -146,7 +143,7 @@ namespace Jam::Editor
         event->accept();
     }
 
-    void R32Widget::keyPressEvent(QKeyEvent* event)
+    void SliderWidget::keyPressEvent(QKeyEvent* event)
     {
         if (!event)
             return;
@@ -160,45 +157,45 @@ namespace Jam::Editor
             QWidget::keyPressEvent(event);
     }
 
-    void R32Widget::setValue(const R32& value)
+    void SliderWidget::setValue(const R32& value)
     {
         _data.value = value;
         if (_value)
             _value->setValue(_data.value);
     }
 
-    void R32Widget::setRange(const R32& min, const R32& max)
+    void SliderWidget::setRange(const R32& min, const R32& max)
     {
         _data.range = {min, max};
         if (_value)
             _value->setRange(_data.range);
     }
 
-    void R32Widget::setRate(const R32& rate)
+    void SliderWidget::setRate(const R32& rate)
     {
         _data.rate = rate;
         if (_value)
-            _value->setRate(_data.value);
+            _value->setRate(_data.rate);
     }
 
-    void R32Widget::setLabel(const String& label)
+    void SliderWidget::setLabel(const String& label)
     {
         _data.name = label;
         if (_value)
             _value->setLabel(_data.name);
     }
 
-    R32 R32Widget::value() const
+    R32 SliderWidget::value() const
     {
         return _value ? _value->value() : -1;
     }
 
-    String R32Widget::string() const
+    String SliderWidget::string() const
     {
         return _value ? _value->text() : "";
     }
 
-    String R32Widget::label() const
+    String SliderWidget::label() const
     {
         if (_value)
             return _value->label();

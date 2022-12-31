@@ -22,7 +22,7 @@
 #pragma once
 #include <QWidget>
 #include "Math/Real.h"
-#include "VariableStepWidget.h"
+#include "SliderEditWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
@@ -30,10 +30,10 @@ class QLineEdit;
 namespace Jam::Editor
 {
     struct VariableStepData;
-    class VariableStepWidget;
-    class R32WidgetSlider;
+    class SliderEditWidget;
+    class SliderSlideWidget;
 
-    class R32Widget final : public QWidget
+    class SliderWidget final : public QWidget
     {
         Q_OBJECT
     signals:
@@ -41,14 +41,14 @@ namespace Jam::Editor
         void stepDataChanged(const VariableStepData& data) const;
 
     private:
-        QHBoxLayout*        _layout{nullptr};
-        VariableStepWidget* _step{nullptr};
-        R32WidgetSlider*   _value{nullptr};
-        VariableStepData    _data;
+        QHBoxLayout*       _layout{nullptr};
+        SliderEditWidget*  _step{nullptr};
+        SliderSlideWidget* _value{nullptr};
+        VariableStepData   _data;
 
     public:
-        explicit R32Widget(QWidget* parent = nullptr);
-        ~R32Widget() override;
+        explicit SliderWidget(QWidget* parent = nullptr);
+        ~SliderWidget() override;
 
         void setValue(const R32& value);
 

@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "VariableStepWidget.h"
+#include "SliderEditWidget.h"
 #include <qevent.h>
 #include <QBoxLayout>
 #include <QLabel>
@@ -31,13 +31,13 @@
 
 namespace Jam::Editor
 {
-    VariableStepWidget::VariableStepWidget(QWidget* parent) :
+    SliderEditWidget::SliderEditWidget(QWidget* parent) :
         QWidget(parent)
     {
         construct();
     }
 
-    void VariableStepWidget::construct()
+    void SliderEditWidget::construct()
     {
         const auto layout = Style::horizontalLayout(2, 1);
         makePair(_name, "id");
@@ -64,7 +64,7 @@ namespace Jam::Editor
         setLayout(layout);
     }
 
-    bool VariableStepWidget::anyFocused() const
+    bool SliderEditWidget::anyFocused() const
     {
         return _rate.second->hasFocus() ||
                _name.second->hasFocus() ||
@@ -73,11 +73,18 @@ namespace Jam::Editor
                _value.second->hasFocus();
     }
 
-    void VariableStepWidget::makePair(
-        LabelLineEditPair& dest,
-        const char*        name)
+    void SliderEditWidget::exitEditTest()
+    {
+        // needs to be bound to the R32Widget
+        if (!anyFocused())
+            emit stepParamChange(_data);
+    }
+
+    void SliderEditWidget::makePair(LabelLineEditPair& dest,
+                                    const char*        name)
     {
         dest.first = Style::text(name);
+        dest.first->setAlignment(Qt::AlignCenter);
         dest.first->setFocusPolicy(Qt::NoFocus);
 
         dest.second = Style::darkLine();
@@ -86,7 +93,8 @@ namespace Jam::Editor
         connect(dest.second,
                 &QLineEdit::editingFinished,
                 this,
-                &VariableStepWidget::onTextChanged);
+                &SliderEditWidget::onTextChanged);
+
         connect(dest.second,
                 &QLineEdit::returnPressed,
                 this,
@@ -98,7 +106,7 @@ namespace Jam::Editor
                 });
     }
 
-    void VariableStepWidget::setStepData(const VariableStepData& data)
+    void SliderEditWidget::setStepData(const VariableStepData& data)
     {
         _data = data;
         _lock = true;
@@ -110,64 +118,55 @@ namespace Jam::Editor
         _lock = false;
     }
 
-    void VariableStepWidget::onTextChanged()
+    void SliderEditWidget::onTextChanged()
     {
         if (_lock)
             return;
 
-        const String s = ((QLineEdit*)sender())->text().toStdString();
+        const String source = ((QLineEdit*)sender())->text().toStdString();
 
+        // name, value, min, max, rate
         if (sender() == _name.second)
+            Su::filterAZaz(_data.name, source, 1);
+        else if (sender() == _value.second)
         {
-            Su::filterRange(_data.name, s, 'a', 'z');
-            // setFocus();
+            String v;
+            Su::filterReal(v, source);
+            _data.value = Char::toFloat(v);
         }
         else if (sender() == _min.second)
         {
             String v;
-            Su::filterReal(v, s);
+            Su::filterReal(v, source);
             _data.range.x = Char::toFloat(v);
-            // setFocus();
         }
         else if (sender() == _max.second)
         {
             String v;
-            Su::filterReal(v, s);
+            Su::filterReal(v, source);
             _data.range.y = Char::toFloat(v);
-            // setFocus();
         }
         else if (sender() == _rate.second)
         {
             String v;
-            Su::filterReal(v, s);
-
+            Su::filterReal(v, source);
             _data.rate = Char::toFloat(v);
-            // setFocus();
         }
-        else if (sender() == _value.second)
-        {
-            String v;
-            Su::filterReal(v, s);
-            _data.value = Char::toFloat(v);
-            // setFocus();
-        }
+
+        exitEditTest();
     }
 
-    void VariableStepWidget::focusOutEvent(QFocusEvent* event)
+    void SliderEditWidget::focusOutEvent(QFocusEvent* event)
     {
         QWidget::focusOutEvent(event);
 
         if (event->lostFocus())
-        {
-            if (!anyFocused())
-            {
-                emit stepParamChange(_data);
-            }
-        }
+            exitEditTest();
     }
 
-    void VariableStepWidget::focusInEvent(QFocusEvent* event)
+    void SliderEditWidget::focusInEvent(QFocusEvent* event)
     {
+        // focus the most likely element to change.
         _value.second->setFocus();
         QWidget::focusInEvent(event);
     }

@@ -199,7 +199,7 @@ namespace Jam
         const String& input,
         const int8_t  start,
         const int8_t  end,
-        size_t        max)
+        const size_t  max)
     {
         destination.clear();
         for (const char ch : input)
@@ -213,10 +213,24 @@ namespace Jam
         return destination.size() != input.size();
     }
 
+    bool StringUtils::filterAZaz(String& destination, const String& input, const size_t max)
+    {
+        destination.clear();
+        for (const char ch : input)
+        {
+            if (isLetter(ch))
+                destination.push_back(ch);
+
+            if (destination.size() > max)
+                break;
+        }
+        return destination.size() != input.size();
+    }
+
     bool StringUtils::filterAscii(
         String&       destination,
         const String& input,
-        size_t        max)
+        const size_t  max)
     {
         destination.clear();
         for (const char ch : input)

@@ -19,7 +19,7 @@
   3. This notice may not be removed or altered from any source distribution.
 -------------------------------------------------------------------------------
 */
-#include "R32WidgetSlider.h"
+#include "SliderSlideWidget.h"
 #include <QMouseEvent>
 #include <QPainter>
 #include "Interface/Extensions.h"
@@ -31,22 +31,16 @@ namespace Jam::Editor
 {
     // This is the width of the sub-rect on each side of
     // the whole rectangle, which is used to step +-
-    constexpr I32 Sr = 6;
+    constexpr I32 Sr  = 6;
+    constexpr I32 Srh = Sr >> 1;
 
-    constexpr QLineF MidLines[] = {
-        {     0.0, 0.5 * Sr, 1.0 * Sr, 0.5 * Sr}, // x
-        {0.5 * Sr,      0.0, 0.5 * Sr, 1.0 * Sr}, // y
-    };
-    constexpr QLineF Hl = MidLines[0];
-    constexpr QLineF Vl = MidLines[1];
-
-    R32WidgetSlider::R32WidgetSlider(QWidget* parent) :
+    SliderSlideWidget::SliderSlideWidget(QWidget* parent) :
         QWidget(parent)
     {
         construct();
     }
 
-    void R32WidgetSlider::construct()
+    void SliderSlideWidget::construct()
     {
         Style::apply(this, TransparentStyle);
         Palette::getSliderPalette(_pal);
@@ -55,34 +49,32 @@ namespace Jam::Editor
         setMaximumHeight(Style::hint(ButtonHeight));
     }
 
-    bool R32WidgetSlider::isInInnerRect(const QPointF& d) const
+    bool SliderSlideWidget::isInInnerRect(const QPointF& d) const
     {
         const QRectF p = geometry();
         return d.x() > p.x() + Sr && d.x() < p.width() - Sr;
     }
 
-    void R32WidgetSlider::setValue(const R32& val)
+    void SliderSlideWidget::setValue(const R32& val)
     {
         if (!equals(val, _value))
         {
             _value = Clamp(val, _range.x, _range.y);
+            updateDisplay();
             if (!_lock)
                 emit valueChanged(_value);
-
             update();
         }
     }
 
-    void R32WidgetSlider::setValue(const QString& val)
+    void SliderSlideWidget::setValue(const QString& val)
     {
-        String str;
-
         const String raw = val.toStdString();
-        if (Su::filterReal(str, raw))
+        if (String str; Su::filterReal(str, raw))
             setValue(Char::toFloat(str));
     }
 
-    void R32WidgetSlider::setRate(const R32& val)
+    void SliderSlideWidget::setRate(const R32& val)
     {
         if (!equals(val, _rate))
         {
@@ -91,19 +83,20 @@ namespace Jam::Editor
         }
     }
 
-    void R32WidgetSlider::setRange(const Vec2F& val)
+    void SliderSlideWidget::setRange(const Vec2F& val)
     {
         _range = val;
         setValue(Clamp(_value, _range.x, _range.y));
     }
 
-    void R32WidgetSlider::setLabel(const String& value)
+    void SliderSlideWidget::setLabel(const String& value)
     {
         _label = Su::join(value, " := ");
+        updateDisplay();
         update();
     }
 
-    void R32WidgetSlider::setStepData(const VariableStepData& step)
+    void SliderSlideWidget::setStepData(const VariableStepData& step)
     {
         _lock = true;
         setLabel(step.name);
@@ -114,12 +107,12 @@ namespace Jam::Editor
         setFocus();
     }
 
-    String R32WidgetSlider::text() const
+    String SliderSlideWidget::text() const
     {
         return Char::toString(_value);
     }
 
-    void R32WidgetSlider::handleSingleTick(const QPointF& d)
+    void SliderSlideWidget::handleSingleTick(const QPointF& d)
     {
         if (d.x() < Sr)
             setValue(_value - _rate);
@@ -127,7 +120,7 @@ namespace Jam::Editor
             setValue(_value + _rate);
     }
 
-    void R32WidgetSlider::mousePressEvent(QMouseEvent* event)
+    void SliderSlideWidget::mousePressEvent(QMouseEvent* event)
     {
         if (!event)
             return;
@@ -136,7 +129,7 @@ namespace Jam::Editor
         {
             if (const QPointF d = event->position();
                 isInInnerRect(d))
-                _cap = true;
+                _captured = true;
             else
                 handleSingleTick(d);
         }
@@ -144,40 +137,49 @@ namespace Jam::Editor
             QWidget::mousePressEvent(event);
     }
 
-    void R32WidgetSlider::mouseDoubleClickEvent(QMouseEvent* event)
+    void SliderSlideWidget::mouseDoubleClickEvent(QMouseEvent* event)
     {
         if (!event)
             return;
 
-        _cap = false;
-        event->accept();
-        if (const QPointF d = event->position();
-            isInInnerRect(d))
+        _captured = false;
+
+        if (const QPointF d = event->position(); isInInnerRect(d))
             emit doubleClicked();
         else
             handleSingleTick(d);
     }
 
-    void R32WidgetSlider::mouseReleaseEvent(QMouseEvent* event)
+    void SliderSlideWidget::updateDisplay()
+    {
+        // needs to be manually updated any
+        // time one of the values change
+        _display = QString::fromStdString(
+            StringUtils::join(
+                _label,
+                Char::toString(_value)));
+    }
+
+    void SliderSlideWidget::mouseReleaseEvent(QMouseEvent* event)
     {
         if (!event)
             return;
 
         if (event->button() == Qt::LeftButton)
         {
-            _cap = false;
+            _captured = false;
             event->accept();
         }
         else
             QWidget::mouseReleaseEvent(event);
     }
 
-    void R32WidgetSlider::mouseMoveEvent(QMouseEvent* event)
+    void SliderSlideWidget::mouseMoveEvent(QMouseEvent* event)
     {
         if (!event)
             return;
 
-        if (_cap)
+        if (_captured)
         {
             QPointF p1 = event->position();
             if (p1.x() > width())
@@ -187,56 +189,41 @@ namespace Jam::Editor
 
             p1 /= width();
             _d = R32(p1.x());
-            setValue(_range.dmm() * _d + _range.x);
+            _d = _range.dmm() * _d + _range.x;
+            _d -= fmod(_d, _rate);
+            setValue(_d);
         }
         else
             QWidget::mouseMoveEvent(event);
     }
 
-    void R32WidgetSlider::paintEvent(QPaintEvent* event)
+    void SliderSlideWidget::paintEvent(QPaintEvent* event)
     {
-        QPainter           paint(this);
-        const QFontMetrics metrics = paint.fontMetrics();
+        QPainter paint(this);
 
-        const I32 w = width(), h = height();
-        const I32 th = metrics.height();
-        const I32 r0 = w - Sr;
-        const I32 r1 = (h >> 1) - (Sr >> 1);
+        // base fill
+        paint.fillRect(geometry(), _pal.shadow());
+        paint.setPen(_pal.shadow().color().lighter(175));
+        QRect contracted = geometry().adjusted(0, 0, -1, -1);
+        paint.drawRect(contracted);
 
-        paint.fillRect(0, 0, w, h, _pal.shadow());
-        paint.setPen(_pal.window().color());
-        paint.drawRect(1, 1, w - 1, h - 1);
+        // fill the value of slider
+        contracted.adjust(2, 2, -1, -1);
+        const R32 ws = (fabs(_range.x) + R32(_value)) / _range.dmm() * R32(contracted.width());
+        paint.fillRect(contracted.x(), contracted.y(), I32(ws), contracted.height(), _pal.mid());
 
-        const R32 ws = (fabs(_range.x) + R32(_value)) / _range.dmm() * R32(w);
-        paint.fillRect(0, 0, I32(ws), h, _pal.mid());
         paint.setPen(_pal.text().color());
+        paint.drawText(contracted.width() >> 1, paint.fontMetrics().height(), _display);
 
-        paint.drawText(
-            w >> 1,
-            th,
-            StringUtils::join(
-                _label,
-                Char::toString(_value))
-                .c_str());
+        const I32 my = contracted.y() + (contracted.height() >> 1);
+        const I32 mx = contracted.right() - Srh;
 
-        paint.setPen(_pal.brightText().color());
-        paint.drawLine(
-            I32(Hl.x1()),
-            r1 + I32(Hl.y1()),
-            I32(Hl.x2()),
-            r1 + I32(Hl.y2()));
-
-        paint.drawLine(
-            r0 + I32(Hl.x1()),
-            r1 + I32(Hl.y1()),
-            r0 + I32(Hl.x2()),
-            r1 + I32(Hl.y2()));
-
-        paint.drawLine(
-            r0 + I32(Vl.x1()),
-            r1 + I32(Vl.y1()),
-            r0 + I32(Vl.x2()),
-            r1 + I32(Vl.y2()));
+        const QLine lines[] = {
+            QLine(1+contracted.left(), my, 1+Sr, my),
+            QLine(contracted.right() - Sr, my, contracted.right(), my),
+            QLine(mx, my - Srh, mx, my + Srh),
+        };
+        paint.drawLines(lines, 3);
     }
 
 }  // namespace Jam::Editor

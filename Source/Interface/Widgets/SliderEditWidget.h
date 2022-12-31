@@ -38,7 +38,7 @@ namespace Jam::Editor
 
     using LabelLineEditPair = std::pair<QLabel*, QLineEdit*>;
 
-    class VariableStepWidget final : public QWidget
+    class SliderEditWidget final : public QWidget
     {
         Q_OBJECT
     signals:
@@ -54,7 +54,7 @@ namespace Jam::Editor
         bool              _lock{false};
 
     public:
-        explicit VariableStepWidget(QWidget* parent = nullptr);
+        explicit SliderEditWidget(QWidget* parent = nullptr);
 
         void setStepData(const VariableStepData& data);
 
@@ -62,6 +62,8 @@ namespace Jam::Editor
         void construct();
 
         bool anyFocused() const;
+
+        void exitEditTest();
 
         void makePair(LabelLineEditPair& dest, const char* name);
 

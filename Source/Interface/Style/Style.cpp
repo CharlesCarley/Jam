@@ -63,7 +63,7 @@ namespace Jam::Editor
     constexpr Role PushButtonForeground = Role::ButtonText;
     constexpr Role PushButtonHover      = Role::Midlight;
 
-    constexpr Role SliderBackground = Role::Shadow;
+    constexpr Role SliderBackground = Role::NoRole;
     constexpr Role SliderForeground = Role::Text;
 
     constexpr Role CheckBoxBackground = Role::Mid;
@@ -144,7 +144,7 @@ namespace Jam::Editor
             buttonDefaults(widget);
             break;
         case AreaDarkLineStyle:
-            applyColorRoles(widget, Role::Dark, Role::Text);
+            applyColorRoles(widget, Role::Shadow, Role::Text);
             buttonDefaults(widget);
             break;
         case AreaCheckBoxStyle:
@@ -354,7 +354,6 @@ namespace Jam::Editor
     QLabel* Style::text(const QString& label, QWidget* parent)
     {
         const auto text = new QLabel(label);
-
         apply(text, AreaLabelStyle);
         return text;
     }

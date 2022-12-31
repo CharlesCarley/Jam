@@ -24,7 +24,7 @@
 #include <QPushButton>
 
 #include "Interface/Style/Style.h"
-#include "Interface/Widgets/R32Widget.h"
+#include "Interface/Widgets/SliderWidget.h"
 
 namespace Jam::Editor
 {
@@ -41,7 +41,7 @@ namespace Jam::Editor
 
         const auto layout = Style::horizontalLayout();
 
-        _line = new R32Widget();
+        _line = new SliderWidget();
         _del  = Style::toolButton(Icons::Delete);
 
         layout->addWidget(_line, 1);
@@ -61,11 +61,11 @@ namespace Jam::Editor
                     emit deleteVariable(_refId);
                 });
         connect(_line,
-                &R32Widget::stepDataChanged,
+                &SliderWidget::stepDataChanged,
                 this,
                 &VariableWidget::onStepDataChanged);
         connect(_line,
-                &R32Widget::valueChanged,
+                &SliderWidget::valueChanged,
                 this,
                 &VariableWidget::onValueChanged);
     }

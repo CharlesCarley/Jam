@@ -28,9 +28,9 @@
 
 namespace Jam::Editor::Const
 {
-    constexpr QColor Empty  = QColor(0xFF, 0x00, 0xFF);
-    constexpr int NormalFactor   = 125;
-    constexpr int SubtleFactor   = 105;
+    constexpr QColor Empty        = QColor(0xFF, 0x00, 0xFF);
+    constexpr int    NormalFactor = 125;
+    constexpr int    SubtleFactor = 105;
 
     Renderer::Renderer(PaletteCache*       cache,
                        const QStyle*       parent,
@@ -262,10 +262,10 @@ namespace Jam::Editor::Const
 
         if (_option->state & QStyle::State_ReadOnly)
             _painter->fillRect(_option->rect, background().lighter());
-        else
+        else if (_widget->backgroundRole() != QPalette::NoRole)
             _painter->fillRect(_option->rect, background());
 
-        _painter->drawRect(_option->rect /*.adjusted(1, 1, -1, -1)*/);
+        _painter->drawRect(_option->rect.adjusted(0, 0, -1, -1));
     }
 
     void Renderer::spinBox() const

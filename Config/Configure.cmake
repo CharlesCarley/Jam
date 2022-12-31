@@ -67,7 +67,7 @@ endif()
 
 # Qt setup
 set(Jam_QT_HOME $ENV{Qt6} CACHE STRING  "")
-set(Jam_QT_VERSION "6.4.0" CACHE STRING  "")
+set(Jam_QT_VERSION "6.4.1" CACHE STRING  "")
 set(Jam_QT_BUILD "msvc2019_64" CACHE STRING  "")
 set(Jam_QT_ROOT  "${Jam_QT_HOME}\\${Jam_QT_VERSION}\\${Jam_QT_BUILD}" CACHE STRING "" FORCE)
 

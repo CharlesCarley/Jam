@@ -23,14 +23,14 @@
 #include <QWidget>
 #include "Math/Vec2F.h"
 #include "Math/Vec2I.h"
-#include "VariableStepWidget.h"
+#include "SliderEditWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
 
 namespace Jam::Editor
 {
-    class R32WidgetSlider final : public QWidget
+    class SliderSlideWidget final : public QWidget
     {
         Q_OBJECT
     signals:
@@ -40,15 +40,18 @@ namespace Jam::Editor
     private:
         R32      _value{0};
         R32      _rate{0};
-        U8       _cap{0};
+        U8       _captured{0};
         R32      _d{0.f};
         Vec2F    _range{-R32(0x10000), R32(0x10000)};
         String   _label;
+        QString  _display;
         QPalette _pal;
         bool     _lock{false};
 
+
+
     public:
-        explicit R32WidgetSlider(QWidget* parent = nullptr);
+        explicit SliderSlideWidget(QWidget* parent = nullptr);
 
         void setValue(const R32& val);
 
@@ -68,7 +71,7 @@ namespace Jam::Editor
 
         const String& label() const;
 
-    protected:
+    private:
         void construct();
 
         void handleSingleTick(const QPointF& d);
@@ -84,14 +87,16 @@ namespace Jam::Editor
         void paintEvent(QPaintEvent* event) override;
 
         void mouseDoubleClickEvent(QMouseEvent* event) override;
+
+        void updateDisplay();
     };
 
-    inline R32 R32WidgetSlider::value() const
+    inline R32 SliderSlideWidget::value() const
     {
         return _value;
     }
 
-    inline const String& R32WidgetSlider::label() const
+    inline const String& SliderSlideWidget::label() const
     {
         return _label;
     }

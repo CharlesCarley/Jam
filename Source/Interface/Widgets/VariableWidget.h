@@ -23,7 +23,7 @@
 #include <QWidget>
 #include "Math/Vec2F.h"
 #include "Utils/String.h"
-#include "VariableStepWidget.h"
+#include "SliderEditWidget.h"
 
 class QPushButton;
 
@@ -36,8 +36,8 @@ namespace Jam::Editor
         class VariableStateObject;
     }
 
-    class VariableStepWidget;
-    class R32Widget;
+    class SliderEditWidget;
+    class SliderWidget;
 
     class VariableWidget final : public QWidget
     {
@@ -50,9 +50,9 @@ namespace Jam::Editor
         //  void onValueChange(const R32& data) const;
 
     private:
-        R32Widget*          _line{nullptr};
+        SliderWidget*          _line{nullptr};
         QPushButton*        _del{nullptr};
-        VariableStepWidget* _edit{nullptr};
+        SliderEditWidget* _edit{nullptr};
         size_t              _refId{JtNpos};
         VariableStepData    _stepData;
 

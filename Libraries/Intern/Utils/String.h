@@ -102,6 +102,11 @@ namespace Jam
             int8_t        end,
             size_t        max = 256);
 
+        static bool filterAZaz(
+            String&       destination,
+            const String& input,
+            size_t        max = 256);
+
         static bool filterAscii(
             String&       destination,
             const String& input,
