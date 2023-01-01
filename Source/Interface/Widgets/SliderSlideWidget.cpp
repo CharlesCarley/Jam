@@ -60,9 +60,11 @@ namespace Jam::Editor
         if (!equals(val, _value))
         {
             _value = Clamp(val, _range.x, _range.y);
-            updateDisplay();
+
             if (!_lock)
                 emit valueChanged(_value);
+
+            updateDisplay();
             update();
         }
     }
@@ -91,7 +93,7 @@ namespace Jam::Editor
 
     void SliderSlideWidget::setLabel(const String& value)
     {
-        _label = Su::join(value, " := ");
+        _label = value;
         updateDisplay();
         update();
     }
@@ -107,6 +109,11 @@ namespace Jam::Editor
         setFocus();
     }
 
+    Vec2F SliderSlideWidget::range() const
+    {
+        return _range;
+    }
+
     String SliderSlideWidget::text() const
     {
         return Char::toString(_value);
@@ -114,10 +121,13 @@ namespace Jam::Editor
 
     void SliderSlideWidget::handleSingleTick(const QPointF& d)
     {
-        if (d.x() < Sr)
-            setValue(_value - _rate);
-        else if (d.x() > width() - Sr)
-            setValue(_value + _rate);
+        if (!isZero(_rate))
+        {
+            if (d.x() < Sr)
+                setValue(_value - _rate);
+            else if (d.x() > width() - Sr)
+                setValue(_value + _rate);
+        }
     }
 
     void SliderSlideWidget::mousePressEvent(QMouseEvent* event)
@@ -157,6 +167,7 @@ namespace Jam::Editor
         _display = QString::fromStdString(
             StringUtils::join(
                 _label,
+                ":=",
                 Char::toString(_value)));
     }
 
@@ -179,17 +190,11 @@ namespace Jam::Editor
         if (!event)
             return;
 
-        if (_captured)
+        if (_captured && !isZero(_rate))
         {
-            QPointF p1 = event->position();
-            if (p1.x() > width())
-                p1.setX(width());
-            if (p1.x() < 0)
-                p1.setX(0);
-
-            p1 /= width();
-            _d = R32(p1.x());
-            _d = _range.dmm() * _d + _range.x;
+            const R32 w  = R32(width());
+            const R32 u = Clamp(R32(event->position().x()), 0.f - _rate, w + _rate) / w;
+            _d = _range.dmm() * u + _range.x;
             _d -= fmod(_d, _rate);
             setValue(_d);
         }
@@ -219,7 +224,7 @@ namespace Jam::Editor
         const I32 mx = contracted.right() - Srh;
 
         const QLine lines[] = {
-            QLine(1+contracted.left(), my, 1+Sr, my),
+            QLine(1 + contracted.left(), my, 1 + Sr, my),
             QLine(contracted.right() - Sr, my, contracted.right(), my),
             QLine(mx, my - Srh, mx, my + Srh),
         };

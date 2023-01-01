@@ -40,6 +40,22 @@ namespace Jam::Editor
         AreaCreator* _creator{nullptr};
         QVBoxLayout* _layout{nullptr};
 
+    public:
+        explicit MainArea(const String& layout = "",
+                          QWidget*      parent = nullptr);
+        ~MainArea() override;
+
+        void dumpDisplayTree();
+
+        void clear();
+
+        AreaNode* root() const;
+
+        void serialize(String& dest);
+
+        void notify(QEvent* evt);
+
+    private:
         void construct();
 
         void construct(const String& layout);
@@ -71,21 +87,6 @@ namespace Jam::Editor
         void handleBuildError(const char* message);
 
         ScopePtr<XmlNode*> serialize();
-
-    public:
-        explicit MainArea(const String& layout = "",
-                          QWidget*       parent = nullptr);
-        ~MainArea() override;
-
-        void dumpDisplayTree();
-
-        void clear();
-
-        AreaNode* root() const;
-
-        void serialize(String& dest);
-
-        void notify(QEvent* evt);
     };
 
     inline AreaNode* MainArea::root() const

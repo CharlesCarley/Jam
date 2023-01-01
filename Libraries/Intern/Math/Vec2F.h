@@ -1,5 +1,4 @@
 #pragma once
-#include "Math/Integer.h"
 #include "Math/Real.h"
 
 namespace Jam
@@ -155,7 +154,7 @@ namespace Jam
             return *this;
         }
 
-        Vec2F operator+(R32 scale) const
+        Vec2F operator+(const R32 scale) const
         {
             const R32 sc = Jam::reciprocal(scale, 0);
             return {x * sc, y * sc};
@@ -176,8 +175,6 @@ namespace Jam
         {
             return R32(Max(y, x) - Min(y, x));
         }
-
-
 
         I32 ix() const { return I32(x); }
         I32 iy() const { return I32(y); }

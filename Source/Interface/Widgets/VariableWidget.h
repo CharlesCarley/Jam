@@ -22,8 +22,8 @@
 #pragma once
 #include <QWidget>
 #include "Math/Vec2F.h"
-#include "Utils/String.h"
 #include "SliderEditWidget.h"
+#include "Utils/String.h"
 
 class QPushButton;
 
@@ -45,16 +45,13 @@ namespace Jam::Editor
     signals:
         void deleteVariable(size_t refid);
         void variableChanged(size_t refid, const VariableStepData& data);
-
-        // void stepDataChanged(const VariableStepData& data) const;
-        //  void onValueChange(const R32& data) const;
-
+        
     private:
-        SliderWidget*          _line{nullptr};
-        QPushButton*        _del{nullptr};
+        SliderWidget*     _line{nullptr};
+        QPushButton*      _del{nullptr};
         SliderEditWidget* _edit{nullptr};
-        size_t              _refId{JtNpos};
-        VariableStepData    _stepData;
+        size_t            _refId{JtNpos};
+        VariableStepData  _stepData;
 
     public:
         explicit VariableWidget(QWidget* parent = nullptr);
@@ -71,7 +68,7 @@ namespace Jam::Editor
 
         size_t refId() const;
 
-        const VariableStepData& data() { return _stepData; }
+        const VariableStepData& data();
 
     private:
         void construct();
@@ -79,8 +76,6 @@ namespace Jam::Editor
         void connectSignals();
 
         void onStepDataChanged(const VariableStepData& data);
-
-        void onValueChanged(const R32& data);
     };
 
     inline void VariableWidget::setRefId(const size_t id)
@@ -92,4 +87,10 @@ namespace Jam::Editor
     {
         return _refId;
     }
+
+    inline const VariableStepData& VariableWidget::data()
+    {
+        return _stepData;
+    }
+
 }  // namespace Jam::Editor

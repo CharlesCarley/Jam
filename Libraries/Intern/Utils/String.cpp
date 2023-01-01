@@ -20,9 +20,8 @@
 -------------------------------------------------------------------------------
 */
 #include "Utils/String.h"
-#include <algorithm>
-#include "Definitions.h"
 #include "Utils/Char.h"
+#include "Utils/Definitions.h"
 
 namespace Jam
 {
@@ -128,7 +127,9 @@ namespace Jam
         split(destination, input, inp);
     }
 
-    void StringUtils::splitRejectEmpty(StringArray& destination, const String& input, const char separator)
+    void StringUtils::splitRejectEmpty(StringArray&  destination,
+                                       const String& input,
+                                       const char    separator)
     {
         String t0 = input;
 
@@ -188,7 +189,7 @@ namespace Jam
 
     void StringUtils::trim(String&       destination,
                            const String& input,
-                           char          character)
+                           const char    character)
     {
         trimL(destination, input, character);
         trimR(destination, destination, character);
@@ -204,7 +205,7 @@ namespace Jam
         destination.clear();
         for (const char ch : input)
         {
-            if (destination.size() > max)
+            if (destination.size() >= max)
                 break;
 
             if (ch >= start && ch <= end)
@@ -218,11 +219,11 @@ namespace Jam
         destination.clear();
         for (const char ch : input)
         {
+            if (destination.size() >= max)
+                break;
+
             if (isLetter(ch))
                 destination.push_back(ch);
-
-            if (destination.size() > max)
-                break;
         }
         return destination.size() != input.size();
     }
@@ -235,8 +236,9 @@ namespace Jam
         destination.clear();
         for (const char ch : input)
         {
-            if (destination.size() > max)
+            if (destination.size() >= max)
                 break;
+
             if (ch >= 0x20 && ch < 0x7F)
                 destination.push_back(ch);
         }
@@ -246,12 +248,12 @@ namespace Jam
     bool StringUtils::filterInt(
         String&       destination,
         const String& input,
-        size_t        max)
+        const size_t  max)
     {
         destination.clear();
         for (const char ch : input)
         {
-            if (destination.size() > max)
+            if (destination.size() >= max)
                 break;
 
             if (ch >= '0' && ch < '9' || ch == '-')
@@ -263,12 +265,12 @@ namespace Jam
     bool StringUtils::filterReal(
         String&       destination,
         const String& input,
-        size_t        max)
+        const size_t  max)
     {
         destination.clear();
         for (const char ch : input)
         {
-            if (destination.size() > max)
+            if (destination.size() >= max)
                 break;
 
             if (ch >= '0' && ch < '9' ||
@@ -284,8 +286,7 @@ namespace Jam
         return destination.size() != input.size();
     }
 
-    void StringUtils::trimWs(
-        String& di, const String& in)
+    void StringUtils::trimWs(String& di, const String& in)
     {
         const size_t n2 = in.size();
         const size_t n1 = (n2 >> 1) + n2 % 2;
@@ -316,7 +317,7 @@ namespace Jam
         di = in.substr(x, y - x);
     }
 
-    void StringUtils::trimL(String& destination, const String& input, char character)
+    void StringUtils::trimL(String& destination, const String& input, const char character)
     {
         size_t st;
         for (st = 0; st < input.size(); ++st)

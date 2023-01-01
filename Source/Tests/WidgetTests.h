@@ -44,7 +44,7 @@ namespace Jam::Editor::Testing
 
         void testString();
 
-        void testR32();
+        void testSlider();
 
         static void pathList();
 

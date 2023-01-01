@@ -21,9 +21,9 @@
 */
 #pragma once
 #include <QWidget>
+#include "Interface/Widgets/SliderEditWidget.h"
 #include "Math/Vec2F.h"
 #include "Math/Vec2I.h"
-#include "SliderEditWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
@@ -42,13 +42,12 @@ namespace Jam::Editor
         R32      _rate{0};
         U8       _captured{0};
         R32      _d{0.f};
+        R64      _x{0};
         Vec2F    _range{-R32(0x10000), R32(0x10000)};
-        String   _label;
-        QString  _display;
-        QPalette _pal;
         bool     _lock{false};
-
-
+        String   _label{};
+        QString  _display{};
+        QPalette _pal{};
 
     public:
         explicit SliderSlideWidget(QWidget* parent = nullptr);
@@ -66,6 +65,8 @@ namespace Jam::Editor
         void setStepData(const VariableStepData& step);
 
         R32 value() const;
+
+        Vec2F range() const;
 
         String text() const;
 

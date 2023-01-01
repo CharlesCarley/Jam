@@ -123,7 +123,11 @@ namespace Jam::Editor
         if (_lock)
             return;
 
-        const String source = ((QLineEdit*)sender())->text().toStdString();
+        const QLineEdit *edit = (QLineEdit*)sender();
+        if (!edit)
+            return;
+
+        const String source = edit->text().toStdString();
 
         // name, value, min, max, rate
         if (sender() == _name.second)
@@ -158,17 +162,15 @@ namespace Jam::Editor
 
     void SliderEditWidget::focusOutEvent(QFocusEvent* event)
     {
-        QWidget::focusOutEvent(event);
-
-        if (event->lostFocus())
+        if (event && event->lostFocus())
             exitEditTest();
     }
 
     void SliderEditWidget::focusInEvent(QFocusEvent* event)
     {
+        Q_ASSERT(_value.second);
         // focus the most likely element to change.
-        _value.second->setFocus();
-        QWidget::focusInEvent(event);
+        if (_value.second)
+            _value.second->setFocus();
     }
-
 }  // namespace Jam::Editor

@@ -25,8 +25,8 @@
 #include <QWidget>
 #include "Interface/Areas/OutputArea.h"
 #include "Interface/Style/Style.h"
-#include "SliderSlideWidget.h"
 #include "SliderEditWidget.h"
+#include "SliderSlideWidget.h"
 
 namespace Jam::Editor
 {
@@ -83,6 +83,54 @@ namespace Jam::Editor
                     this,
                     &SliderWidget::onValueChanged);
         }
+    }
+
+    void SliderWidget::setValue(const R32& value)
+    {
+        _data.value = value;
+        if (_value)
+            _value->setValue(_data.value);
+    }
+
+    void SliderWidget::setRange(const R32& min, const R32& max)
+    {
+        _data.range = {min, max};
+        if (_value)
+            _value->setRange(_data.range);
+    }
+
+    void SliderWidget::setRate(const R32& rate)
+    {
+        _data.rate = rate;
+        if (_value)
+            _value->setRate(_data.rate);
+    }
+
+    void SliderWidget::setLabel(const String& label)
+    {
+        Su::filterAZaz(_data.name, label, 1);
+        if (_value)
+            _value->setLabel(_data.name);
+    }
+
+    R32 SliderWidget::value() const
+    {
+        return _value ? _value->value() : _data.value;
+    }
+
+    Vec2F SliderWidget::range() const
+    {
+        return _value ? _value->range() : _data.range;
+    }
+
+    String SliderWidget::string() const
+    {
+        return _value ? _value->text() : "";
+    }
+
+    String SliderWidget::label() const
+    {
+        return _value ? _value->label() : "";
     }
 
     void SliderWidget::editingFinished() const
@@ -157,48 +205,4 @@ namespace Jam::Editor
             QWidget::keyPressEvent(event);
     }
 
-    void SliderWidget::setValue(const R32& value)
-    {
-        _data.value = value;
-        if (_value)
-            _value->setValue(_data.value);
-    }
-
-    void SliderWidget::setRange(const R32& min, const R32& max)
-    {
-        _data.range = {min, max};
-        if (_value)
-            _value->setRange(_data.range);
-    }
-
-    void SliderWidget::setRate(const R32& rate)
-    {
-        _data.rate = rate;
-        if (_value)
-            _value->setRate(_data.rate);
-    }
-
-    void SliderWidget::setLabel(const String& label)
-    {
-        _data.name = label;
-        if (_value)
-            _value->setLabel(_data.name);
-    }
-
-    R32 SliderWidget::value() const
-    {
-        return _value ? _value->value() : -1;
-    }
-
-    String SliderWidget::string() const
-    {
-        return _value ? _value->text() : "";
-    }
-
-    String SliderWidget::label() const
-    {
-        if (_value)
-            return _value->label();
-        return {};
-    }
 }  // namespace Jam::Editor

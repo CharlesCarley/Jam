@@ -22,7 +22,7 @@
 #pragma once
 
 #include <QMainWindow>
-#include "RememberLastCache.h"
+#include "Interface/RememberLastCache.h"
 #include "Utils/Path.h"
 
 class QVBoxLayout;

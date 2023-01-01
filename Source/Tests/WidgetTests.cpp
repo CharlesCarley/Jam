@@ -1,6 +1,5 @@
 #include "WidgetTests.h"
 #include <QPushButton>
-
 #include "Interface/Area/AreaNode.h"
 #include "Interface/MainArea.h"
 #include "Interface/RememberLastCache.h"
@@ -68,19 +67,30 @@ namespace Jam::Editor::Testing
         _test           = val2;
         connect(val2, &StringWidget::editingFinished, this, [=]
                 { ++nr2; });
-
-        val2->setText("Event should be disconnected from val ...");
-
+        val2->setText("... ('nr' should not increment)");
         QCOMPARE(nr, 4);
         QCOMPARE(nr2, 1);
     }
 
-    void WidgetTests::testR32()
+    void WidgetTests::testSlider()
     {
         const auto val = new SliderWidget();
-        _test          = val;
+
+        _test = val;
+
         val->setRange(-1, 1);
         val->setValue(111);
+        val->setLabel("ABC");
+        QCOMPARE(val->label(), "A");
+        val->setLabel("abc");
+        QCOMPARE(val->label(), "a");
+        val->setLabel("0a");
+        QCOMPARE(val->label(), "a");
+        val->setLabel("((*&^%$#@!1234567890,<>?|}{[\\]a");
+        QCOMPARE(val->label(), "a");
+
+        QCOMPARE(val->range().x, -1.f);
+        QCOMPARE(val->range().y, 1.f);
         QCOMPARE(val->value(), 1);
         QCOMPARE(val->string(), "1");
     }

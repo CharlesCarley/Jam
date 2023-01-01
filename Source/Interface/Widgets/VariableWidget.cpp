@@ -22,7 +22,6 @@
 #include "Interface/Widgets/VariableWidget.h"
 #include <QBoxLayout>
 #include <QPushButton>
-
 #include "Interface/Style/Style.h"
 #include "Interface/Widgets/SliderWidget.h"
 
@@ -64,22 +63,12 @@ namespace Jam::Editor
                 &SliderWidget::stepDataChanged,
                 this,
                 &VariableWidget::onStepDataChanged);
-        connect(_line,
-                &SliderWidget::valueChanged,
-                this,
-                &VariableWidget::onValueChanged);
     }
 
     void VariableWidget::onStepDataChanged(const VariableStepData& data)
     {
         _stepData = data;
         _line->setValue(_stepData.value);
-        emit variableChanged(_refId, _stepData);
-    }
-
-    void VariableWidget::onValueChanged(const R32& data)
-    {
-        _stepData.value = data;
         emit variableChanged(_refId, _stepData);
     }
 

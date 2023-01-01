@@ -21,8 +21,8 @@
 */
 #pragma once
 #include <QWidget>
+#include "Interface/Widgets/SliderEditWidget.h"
 #include "Math/Real.h"
-#include "SliderEditWidget.h"
 
 class QHBoxLayout;
 class QLineEdit;
@@ -37,14 +37,15 @@ namespace Jam::Editor
     {
         Q_OBJECT
     signals:
-        void valueChanged(R32 val);
         void stepDataChanged(const VariableStepData& data) const;
 
     private:
         QHBoxLayout*       _layout{nullptr};
         SliderEditWidget*  _step{nullptr};
         SliderSlideWidget* _value{nullptr};
-        VariableStepData   _data;
+        // Caches the get/sets on the step data to have faster access to
+        // the contents of the step data via stepDataChanged signals
+        VariableStepData _data{};
 
     public:
         explicit SliderWidget(QWidget* parent = nullptr);
@@ -59,6 +60,8 @@ namespace Jam::Editor
         void setLabel(const String& label);
 
         R32 value() const;
+
+        Vec2F range() const;
 
         String string() const;
 

@@ -87,7 +87,7 @@ namespace Jam::Editor
 
         static void sliderPalette(QPalette& palette);
 
-        static QTreeWidget* treeWidget(const StyleTypes type, QWidget* parent = nullptr);
+        static QTreeWidget* treeWidget(StyleTypes type, QWidget* parent = nullptr);
 
         static void layoutDefaults(QLayout* widget, int margin = 0, int spacing = 0);
 

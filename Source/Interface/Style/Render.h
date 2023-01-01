@@ -33,7 +33,6 @@ namespace Jam::Editor::Const
     class Renderer
     {
     private:
-        PaletteCache*       _cache{nullptr};
         const QStyle*       _style{nullptr};
         const QStyleOption* _option{nullptr};
         QPainter*           _painter{nullptr};
@@ -76,7 +75,6 @@ namespace Jam::Editor::Const
         inline const QColor& linkVisited(QPalette::ColorGroup fromGroup = QPalette::Current) const;
         inline const QColor& alternateBase(QPalette::ColorGroup fromGroup = QPalette::Current) const;
 
-
         QPoint calculateAlignment(
             const Qt::Alignment& alignment,
             const QRect&         inRect,
@@ -98,12 +96,10 @@ namespace Jam::Editor::Const
         void buttonImpl(const QColor& bg, const QColor& fg, const QColor& hv) const;
 
     public:
-        Renderer(
-            PaletteCache*       cache,
-            const QStyle*       parent,
-            const QStyleOption* option,
-            QPainter*           painter,
-            const QWidget*      widget);
+        Renderer(const QStyle*       parent,
+                 const QStyleOption* option,
+                 QPainter*           painter,
+                 const QWidget*      widget);
         ~Renderer();
 
         void horizontalRule(const QColor& color) const;

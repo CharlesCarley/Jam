@@ -37,14 +37,13 @@ namespace Jam::Editor
     private:
         QHBoxLayout* _toolbar{nullptr};
 
-    protected:
-        void mouseDoubleClickEvent(QMouseEvent* event) override;
-
     public:
         explicit WindowMenuBar(QWidget* parent = nullptr);
         ~WindowMenuBar() override;
 
     private:
         void construct();
+
+        void mouseDoubleClickEvent(QMouseEvent* event) override;
     };
 }  // namespace Jam::Editor

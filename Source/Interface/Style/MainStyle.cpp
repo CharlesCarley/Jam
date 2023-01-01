@@ -31,14 +31,9 @@ namespace Jam::Editor
         QProxyStyle()
     {
         Palette::applyInternal();
-        //_cache = new PaletteCache();
     }
 
-    MainStyle::~MainStyle()
-    {
-        //delete _cache;
-        //_cache = nullptr;
-    }
+    MainStyle::~MainStyle() = default;
 
     void MainStyle::drawControl(
         const ControlElement element,
@@ -46,7 +41,7 @@ namespace Jam::Editor
         QPainter*            painter,
         const QWidget*       widget) const
     {
-        const Const::Renderer renderer(_cache, this, option, painter, widget);
+        const Const::Renderer renderer(this, option, painter, widget);
         switch (element)
         {
         case CE_MenuBarEmptyArea:
@@ -125,7 +120,7 @@ namespace Jam::Editor
         QPainter*              painter,
         const QWidget*         widget) const
     {
-        const Const::Renderer renderer(_cache, this, option, painter, widget);
+        const Const::Renderer renderer(this, option, painter, widget);
 
         switch (element)
         {
@@ -190,7 +185,7 @@ namespace Jam::Editor
         case PE_CustomBase:
         default:
             Log::writeLine("PE->Unhandled : ", element);
-            //renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
+            // renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
             break;
         }
     }
@@ -201,7 +196,7 @@ namespace Jam::Editor
         QPainter*                  painter,
         const QWidget*             widget) const
     {
-        const Const::Renderer renderer(_cache, this, option, painter, widget);
+        const Const::Renderer renderer(this, option, painter, widget);
 
         switch (control)
         {
@@ -223,7 +218,7 @@ namespace Jam::Editor
         case CC_CustomBase:
         default:
             Log::writeLine("CC->Unhandled : ", control);
-            // renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
+            renderer.fillRect(option->rect, QColor(0xFF, 0x00, 0xFF));
             break;
         }
     }

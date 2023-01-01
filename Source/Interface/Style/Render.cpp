@@ -32,12 +32,10 @@ namespace Jam::Editor::Const
     constexpr int    NormalFactor = 125;
     constexpr int    SubtleFactor = 105;
 
-    Renderer::Renderer(PaletteCache*       cache,
-                       const QStyle*       parent,
+    Renderer::Renderer(const QStyle*       parent,
                        const QStyleOption* option,
                        QPainter*           painter,
                        const QWidget*      widget) :
-        _cache(cache),
         _style(parent),
         _option(option),
         _painter(painter),
